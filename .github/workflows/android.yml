@@ -1,0 +1,55 @@
+name: Android CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Clone git submodules
+      run: |
+        git submodule init
+        git submodule update
+
+    - name: Set up JDK 8
+      uses: actions/setup-java@v2
+      with:
+        java-version: '8'
+        distribution: 'adopt'
+
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v2
+
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+    - name: Build with Gradle
+      run: ./gradlew assembleDebug
+
+    - name: Create file with artifactName variable
+      run: |
+        REF=$(echo "-${GITHUB_REF#refs/heads/}" | sed 's/\//-/g')
+        if [ ${#REF} -eq 1 ]; then REF=""; fi
+        ARTIFACT_NAME="speedtest-$(cat VERSION)-$GITHUB_RUN_NUMBER$REF"
+        mkdir -p .github/variables
+        echo "{\"variables\": [{\"name\": \"artifactName\", \"value\": \"$ARTIFACT_NAME\" }]}" > .github/variables/variables.json
+    - name: Set artifactName variable
+      uses: deep-mm/set-variables@v1.0
+      with:
+        variableFileName: 'variables'
+
+    - name: Rename apk
+      run: |
+        mkdir gh-artifacts
+        mv app/build/outputs/apk/debug/app-debug.apk gh-artifacts/tmp.apk
+        cd gh-artifacts
+        mv tmp.apk "${{ env.artifactName }}.apk"
+        cd ..
+
+    - name: Upload apk to artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: ${{ env.artifactName }}
+        path: gh-artifacts/*

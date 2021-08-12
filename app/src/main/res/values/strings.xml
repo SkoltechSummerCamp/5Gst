@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Speedtest</string>
+    <string name="startIperf">start</string>
+    <string name="stopIperf">stop</string>
+    <string name="deviceIp">Device ip :</string>
+    <string name="refreshIp">refresh</string>
+    <string name="hideIp">hide</string>
+    <string name="iPerf">iPerf</string>
+    <string-array name="commands">
+        <item>iPerf</item>
+    </string-array>
+</resources>
