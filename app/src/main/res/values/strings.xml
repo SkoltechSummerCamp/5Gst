@@ -6,7 +6,19 @@
     <string name="refreshIp">refresh</string>
     <string name="hideIp">hide</string>
     <string name="iPerf">iPerf</string>
+    <string name="pingTesting">TESTING…</string>
+    <string name="udpPing">UDP PING</string>
+    <string name="bigStop">STOP</string>
+    <string name="pingLabel">Ping:</string>
+    <string name="noneVal">---</string>
+    <string name="ipLabel">ip:</string>>
+    <string name="performAsCommand">PERFORM AS COMMAND</string>
+    <string name="icmpPing">ICMP PING</string>
+    <string name="pingByICMPLabel">ping by ICMP:</string>
+    <string name="startUdpPingServer">start udp ping server</string>
+    <string name="simple_ping">Simple ping:</string>
     <string-array name="commands">
         <item>iPerf</item>
+        <item>Ping</item>>
     </string-array>
 </resources>

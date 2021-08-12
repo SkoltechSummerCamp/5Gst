@@ -32,6 +32,7 @@ jobs:
       run: |
         REF=$(echo "-${GITHUB_REF#refs/heads/}" | sed 's/\//-/g')
         if [ ${#REF} -eq 1 ]; then REF=""; fi
+        ./gradlew :app:writeVersion
         ARTIFACT_NAME="speedtest-$(cat VERSION)-$GITHUB_RUN_NUMBER$REF"
         mkdir -p .github/variables
         echo "{\"variables\": [{\"name\": \"artifactName\", \"value\": \"$ARTIFACT_NAME\" }]}" > .github/variables/variables.json
