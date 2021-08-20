@@ -7,6 +7,7 @@ import android.util.Log
 import androidx.core.view.isVisible
 import ru.scoltech.openran.speedtest.databinding.ActivityMainBinding
 import kotlinx.coroutines.*
+import ru.scoltech.openran.speedtest.iperf.IperfRunner
 import java.net.*
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -215,7 +216,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun stopIperf() {
-        iperfRunner.stop()
+        iperfRunner.killAndWait()
     }
 
     private fun runIcmpPingAsCommand() = runBlocking {

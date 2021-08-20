@@ -5,30 +5,42 @@
 #include <sys/stat.h>
 #include <sys/wait.h>
 #include <cstdlib>
+#include <cerrno>
+#include <cstring>
 
 int main(int argc, char **argv);
 
-static pid_t iperfPid;
-
-extern "C" JNIEXPORT void JNICALL
-Java_ru_scoltech_openran_speedtest_IperfRunner_mkfifo(JNIEnv* env, jobject, jstring jPipePath)
+extern "C" JNIEXPORT int JNICALL
+Java_ru_scoltech_openran_speedtest_iperf_IperfRunner_mkfifo(JNIEnv* env, jobject, jstring jPipePath)
 {
     const char* pipePath = env->GetStringUTFChars(jPipePath, nullptr);
-    mkfifo(pipePath, 0777);
+    int code = mkfifo(pipePath, 0777);
     env->ReleaseStringUTFChars(jPipePath, pipePath);
+    return code == -1 ? errno : 0;
 }
 
-extern "C" JNIEXPORT void JNICALL
-Java_ru_scoltech_openran_speedtest_IperfRunner_exitJni(JNIEnv* env, jobject)
+extern "C" JNIEXPORT int JNICALL
+Java_ru_scoltech_openran_speedtest_iperf_IperfRunner_waitForProcessNoDestroy(__unused JNIEnv* env, jobject, jlong pid)
 {
-    kill(iperfPid, SIGINT);
-    waitpid(iperfPid, nullptr, 0);
+    return waitid(P_PID, static_cast<id_t>(pid), nullptr, WEXITED | WNOWAIT) == -1 ? errno : 0; // NOLINT(hicpp-signed-bitwise)
 }
 
-extern "C" JNIEXPORT void JNICALL
-Java_ru_scoltech_openran_speedtest_IperfRunner_sendForceExitJni(JNIEnv* env, jobject)
+extern "C" JNIEXPORT int JNICALL
+Java_ru_scoltech_openran_speedtest_iperf_IperfRunner_waitForProcess(__unused JNIEnv* env, jobject, jlong pid)
 {
-    kill(iperfPid, SIGINT);
+    return waitpid(static_cast<pid_t>(pid), nullptr, 0) == -1 ? errno : 0;
+}
+
+extern "C" JNIEXPORT int JNICALL
+Java_ru_scoltech_openran_speedtest_iperf_IperfRunner_sendSigInt(__unused JNIEnv* env, jobject, jlong pid)
+{
+    return kill(static_cast<pid_t>(pid), SIGINT) == -1 ? errno : 0;
+}
+
+extern "C" JNIEXPORT int JNICALL
+Java_ru_scoltech_openran_speedtest_iperf_IperfRunner_sendSigKill(__unused JNIEnv* env, jobject, jlong pid)
+{
+    return kill(static_cast<pid_t>(pid), SIGKILL) == -1 ? errno : 0;
 }
 
 int redirectFileToPipe(JNIEnv* env, jstring jPipePath, FILE* file)
@@ -37,29 +49,33 @@ int redirectFileToPipe(JNIEnv* env, jstring jPipePath, FILE* file)
     const int pipeFd = open(pipePath, O_WRONLY);
     env->ReleaseStringUTFChars(jPipePath, pipePath);
 
-    dup2(pipeFd, fileno(file));
+    if (pipeFd == -1 || dup2(pipeFd, fileno(file)) == -1 || fflush(file) == EOF) {
+        fprintf(stderr, "Could not open named pipe to redirect stream: %s", strerror(errno));
+        exit(EXIT_FAILURE);
+    }
     setbuf(file, nullptr);
-    fflush(file);
     return pipeFd;
 }
 
 extern "C" JNIEXPORT int JNICALL
-Java_ru_scoltech_openran_speedtest_IperfRunner_startJni(JNIEnv* env, jobject, jstring jStdoutPipePath, jstring jStderrPipePath, jobjectArray args)
+Java_ru_scoltech_openran_speedtest_iperf_IperfRunner_start(
+        JNIEnv* env,
+        jobject,
+        jstring jStdoutPipePath,
+        jstring jStderrPipePath,
+        jobjectArray args,
+        jlongArray pidHolder
+)
 {
-    int stdoutPipeFd;
-    int stderrPipeFd;
-    int argc;
-    char** argv;
+    pid_t pid = fork();
+    if (pid == -1) {
+        return errno;
+    } else if (pid == 0) {
+        int stderrPipeFd = redirectFileToPipe(env, jStderrPipePath, stderr);
+        int stdoutPipeFd = redirectFileToPipe(env, jStdoutPipePath, stdout);
 
-    iperfPid = fork();
-    if (iperfPid == -1) {
-        return -1;
-    } else if (iperfPid == 0) {
-        stdoutPipeFd = redirectFileToPipe(env, jStdoutPipePath, stdout);
-        stderrPipeFd = redirectFileToPipe(env, jStderrPipePath, stderr);
-
-        argc = env->GetArrayLength(args) + 1;
-        argv = new char *[argc];
+        int argc = env->GetArrayLength(args) + 1;
+        char** argv = new char *[argc];
         argv[0] = "iperf";
         for (int i = 0; i < argc - 1; i++) {
             auto jArg = (jstring) (env->GetObjectArrayElement(args, i));
@@ -73,9 +89,14 @@ Java_ru_scoltech_openran_speedtest_IperfRunner_startJni(JNIEnv* env, jobject, js
             env->ReleaseStringUTFChars(jArg, argv[i + 1]);
         }
 
-        close(stderrPipeFd);
         close(stdoutPipeFd);
-        exit(0);
+        close(stderrPipeFd);
+        exit(EXIT_SUCCESS);
     }
+
+    auto* buffer = new jlong[1];
+    buffer[0] = static_cast<jlong>(pid);
+    env->SetLongArrayRegion(pidHolder, 0, 1, buffer);
+    delete[] buffer;
     return 0;
 }
