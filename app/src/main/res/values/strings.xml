@@ -17,6 +17,11 @@
     <string name="pingByICMPLabel">ping by ICMP:</string>
     <string name="startUdpPingServer">start udp ping server</string>
     <string name="simple_ping">Simple ping:</string>
+    <string name="divice_information">Divice information:</string>
+    <string name="iperf_mobile">iperf mobile args:</string>
+    <string name="iperfServer">iperf server args:</string>
+    <string name="server_ip">server ip:</string>
+    <string name="thisIsServer">this is server</string>
     <string-array name="commands">
         <item>iPerf</item>
         <item>Ping</item>>

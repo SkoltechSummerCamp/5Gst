@@ -1,10 +1,11 @@
 package ru.scoltech.openran.speedtest
 
 import java.io.FileReader
+import java.util.concurrent.atomic.AtomicBoolean
 
 class IperfRunner(writableDir: String) {
     private var inputHandlerThreads: List<Thread>? = null
-
+    private val iperfInRunning = AtomicBoolean(false)
     private val stdoutPipePath = "$writableDir/iperfStdout"
     private val stderrPipePath = "$writableDir/iperfStderr"
 
@@ -12,6 +13,7 @@ class IperfRunner(writableDir: String) {
     var stderrHandler: (String) -> Unit = {}
 
     fun start(args: String) {
+        stop()
         mkfifo(stdoutPipePath)
         mkfifo(stderrPipePath)
 
@@ -30,6 +32,8 @@ class IperfRunner(writableDir: String) {
                 }
             }, name).also { it.start() }
         }
+        iperfInRunning.set(true)
+
     }
 
     private fun parseIperfArgs(args: String): Array<String> {
@@ -37,16 +41,22 @@ class IperfRunner(writableDir: String) {
     }
 
     fun stop() {
-        exitJni()
-
-        inputHandlerThreads!!.forEach { it.interrupt() }
-        inputHandlerThreads!!.forEach { it.join() }
-        inputHandlerThreads = null
+        if (iperfInRunning.get()) {
+            exitJni()
+            inputHandlerThreads!!.forEach { it.interrupt() }
+            inputHandlerThreads!!.forEach { it.join() }
+            inputHandlerThreads = null
+            iperfInRunning.set(false)
+        }
     }
 
     private external fun mkfifo(pipePath: String)
 
-    private external fun startJni(stdoutPipePath: String, stderrPipePath: String, args: Array<String>): Int
+    private external fun startJni(
+        stdoutPipePath: String,
+        stderrPipePath: String,
+        args: Array<String>
+    ): Int
 
     private external fun exitJni()
 

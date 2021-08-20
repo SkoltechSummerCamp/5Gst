@@ -4,210 +4,343 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="#f4f4f4"
     tools:context=".MainActivity">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:background="#2C2727">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="#f4f4f4"
+            android:focusable="true"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/simple_ping"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-
             <LinearLayout
-                android:id="@+id/pingLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/ipLabel"
-                        android:layout_width="64dp"
-                        android:layout_height="45dp"
-                        android:layout_weight="1"
-                        android:text="@string/ipLabel"
-                        android:textAlignment="viewEnd"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-
-                    <EditText
-                        android:id="@+id/serverIP"
-                        android:layout_width="342dp"
-                        android:layout_height="wrap_content"
-                        android:ems="10"
-                        android:inputType="textPersonName" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="65dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/Ping"
-                        android:layout_width="25dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:text="@string/pingLabel"
-                        android:textAlignment="textEnd"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-
-                    <TextView
-                        android:id="@+id/pingValue"
-                        android:layout_width="7dp"
-                        android:layout_height="41dp"
-                        android:layout_weight="1"
-                        android:text="@string/noneVal"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-
-                    <Button
-                        android:id="@+id/pingTestButt"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/udpPing" />
-
-                    <Button
-                        android:id="@+id/justPingButt"
-                        android:layout_width="132dp"
-                        android:layout_height="wrap_content"
-                        android:text="@string/icmpPing" />
-                </LinearLayout>
-
-                <Button
-                    android:id="@+id/pingServerButt"
+                <TextView
+                    android:id="@+id/textView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.85"
-                    android:text="@string/startUdpPingServer" />
+                    android:text="@string/simple_ping"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+                <LinearLayout
+                    android:id="@+id/pingLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/ipLabel"
+                            android:layout_width="64dp"
+                            android:layout_height="45dp"
+                            android:layout_weight="1"
+                            android:text="@string/ipLabel"
+                            android:textAlignment="viewEnd"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+                        <EditText
+                            android:id="@+id/serverIP"
+                            android:layout_width="342dp"
+                            android:layout_height="wrap_content"
+                            android:ems="10"
+                            android:inputType="textPersonName" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="65dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/Ping"
+                            android:layout_width="25dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:text="@string/pingLabel"
+                            android:textAlignment="textEnd"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+                        <TextView
+                            android:id="@+id/pingValue"
+                            android:layout_width="7dp"
+                            android:layout_height="41dp"
+                            android:layout_weight="1"
+                            android:text="@string/noneVal"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+                        <Button
+                            android:id="@+id/pingUDPButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:backgroundTint="#0f62fe"
+                            android:text="@string/udpPing" />
+
+                        <Space
+                            android:layout_width="5dp"
+                            android:layout_height="wrap_content" />
+
+                        <Button
+                            android:id="@+id/icmpPingButton"
+                            android:layout_width="132dp"
+                            android:layout_height="wrap_content"
+                            android:backgroundTint="#0f62fe"
+                            android:text="@string/icmpPing"
+                            tools:ignore="TextContrastCheck" />
+
+                        <Space
+                            android:layout_width="10dp"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+
+                    <Button
+                        android:id="@+id/pingServerButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.85"
+                        android:backgroundTint="#0f62fe"
+                        android:text="@string/startUdpPingServer" />
+
+                </LinearLayout>
+
+                <ImageButton
+                    android:id="@+id/expandButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="#8d8d8d "
+                    app:srcCompat="@android:drawable/arrow_down_float"
+                    tools:ignore="TouchTargetSizeCheck" />
 
             </LinearLayout>
 
-            <ImageButton
-                android:id="@+id/expandButton"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:srcCompat="@android:drawable/arrow_down_float" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="66dp"
-            android:orientation="horizontal"
-            android:padding="10dp">
-
-            <TextView
-                android:id="@+id/deviceIpText"
-                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="@string/deviceIp" />
+                android:orientation="vertical">
 
-            <Button
-                android:id="@+id/refreshButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:minHeight="48dp"
-                android:text="@string/refreshIp" />
+                <TextView
+                    android:id="@+id/deviceInfoLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/divice_information"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
-            <Button
-                android:id="@+id/hideCollapseButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/hideIp" />
+                <LinearLayout
+                    android:id="@+id/deviceInfoLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
-        </LinearLayout>
+                    <androidx.core.widget.NestedScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="102dp"
+                        android:fillViewport="true">
 
-        <TextView
-            android:id="@+id/ipInfo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:scrollbars="vertical" />
+                        <TextView
+                            android:id="@+id/ipInfo"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            android:scrollbars="vertical" />
+                    </androidx.core.widget.NestedScrollView>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="75dp"
-            android:orientation="horizontal"
-            android:padding="10dp">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
 
-            <Spinner
-                android:id="@+id/spinner"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight=".5" />
+                        <Space
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1" />
+
+                        <Button
+                            android:id="@+id/refreshButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:backgroundTint="#0f62fe"
+                            android:minHeight="48dp"
+                            android:text="@string/refreshIp" />
+
+                        <Space
+                            android:layout_width="10dp"
+                            android:layout_height="wrap_content" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <ImageButton
+                    android:id="@+id/expandButton2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="#8d8d8d "
+                    app:srcCompat="@android:drawable/arrow_down_float" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="75dp"
+                android:orientation="horizontal"
+                android:padding="10dp">
 
 
-            <EditText
-                android:id="@+id/iperfArgs"
-                android:layout_width="wrap_content"
+                <TextView
+                    android:id="@+id/iperfMobileLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="44dp"
+                    android:text="@string/iperf_mobile"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+                <EditText
+                    android:id="@+id/iperfArgs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".5"
+                    android:ems="10"
+                    android:importantForAutofill="no"
+
+                    android:inputType="textPersonName" />
+
+            </LinearLayout>
+
+            <View
+                android:id="@+id/divider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="75dp"
+                android:orientation="horizontal"
+                android:padding="10dp">
+
+
+                <TextView
+                    android:id="@+id/serverIPLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="44dp"
+                    android:text="@string/server_ip"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+                <EditText
+                    android:id="@+id/serverIpField"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".5"
+                    android:ems="10"
+                    android:importantForAutofill="no"
+
+                    android:inputType="textPersonName" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight=".5"
-                android:ems="10"
-                android:importantForAutofill="no"
+                android:orientation="horizontal"
+                android:padding="10dp">
 
-                android:inputType="textPersonName" />
 
-        </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="44dp"
+                    android:text="@string/iperfServer"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="10dp">
+                <EditText
+                    android:id="@+id/serverArgs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".5"
+                    android:ems="10"
+                    android:importantForAutofill="no"
 
-            <Space
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="0.85" />
+                    android:inputType="textPersonName" />
 
-            <Button
-                android:id="@+id/startStopButton"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="0.15"
-                android:text="@string/startIperf" />
+            </LinearLayout>
 
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="286dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/iperfOutput"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:fadeScrollbars="false"
-                android:gravity="bottom"
-                android:isScrollContainer="false"
-                android:maxLines="@android:integer/status_bar_notification_info_maxnum"
-                android:nestedScrollingEnabled="false"
-                android:overScrollMode="always"
-                android:padding="10dp"
-                android:scrollbarStyle="outsideInset"
-                android:scrollbars="vertical"
-                android:verticalScrollbarPosition="right" />
+                android:layout_height="85dp"
+                android:orientation="horizontal"
+                android:padding="10dp">
+
+                <Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.85" />
+
+                <Switch
+                    android:id="@+id/thisISserver"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.85"
+                    android:text="@string/thisIsServer"
+                    android:textAlignment="textEnd" />
+
+                <Button
+                    android:id="@+id/startStopButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.15"
+                    android:backgroundTint="#0f62fe"
+                    android:text="@string/startIperf" />
+
+            </LinearLayout>
+
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:background="#2C2727"
+                android:backgroundTint="#2C2727"
+                android:fillViewport="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#2C2727"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/iperfOutput"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#2C2727"
+                        android:fadeScrollbars="false"
+                        android:foregroundGravity="bottom"
+                        android:gravity="bottom"
+                        android:isScrollContainer="false"
+                        android:maxLines="@android:integer/status_bar_notification_info_maxnum"
+                        android:nestedScrollingEnabled="false"
+                        android:overScrollMode="always"
+                        android:padding="10dp"
+                        android:scrollbarStyle="outsideInset"
+                        android:scrollbars="vertical"
+                        android:textColor="#BFB7B7"
+                        android:verticalScrollbarPosition="right" />
+
+                </LinearLayout>
+            </androidx.core.widget.NestedScrollView>
 
         </LinearLayout>
+    </ScrollView>
 
-    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

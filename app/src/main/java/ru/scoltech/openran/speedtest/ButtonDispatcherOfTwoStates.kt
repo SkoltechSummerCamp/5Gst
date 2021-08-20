@@ -5,9 +5,9 @@ import android.widget.Button
 import java.util.concurrent.atomic.AtomicBoolean
 
 class ButtonDispatcherOfTwoStates(
-    button: Button,
-    activityOfButton: Activity,
-    secondTextValue: String
+    private val button: Button,
+    private val activityOfButton: Activity,
+    private val secondTextValue: String
 ) {
     private var inFirstState = true
     var firstAction: () -> (Unit) = {}
@@ -18,16 +18,23 @@ class ButtonDispatcherOfTwoStates(
     init {
         button.setOnClickListener {
             if (!isBlocked.get()) {
-                inFirstState = if (inFirstState) {
+                if (inFirstState) {
                     firstAction()
-                    activityOfButton.runOnUiThread { button.text = secondTextValue }
-                    false
                 } else {
                     secondAction()
-                    activityOfButton.runOnUiThread { button.text = firstTextValue }
-                    true
                 }
+                changeState()
             }
+        }
+    }
+
+    fun changeState() {
+        inFirstState = if (inFirstState) {
+            activityOfButton.runOnUiThread { button.text = secondTextValue }
+            false
+        } else {
+            activityOfButton.runOnUiThread { button.text = firstTextValue }
+            true
         }
     }
 

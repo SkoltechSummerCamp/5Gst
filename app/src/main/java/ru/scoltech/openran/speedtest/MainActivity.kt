@@ -4,16 +4,15 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
 import android.util.Log
-import android.widget.ArrayAdapter
 import androidx.core.view.isVisible
 import ru.scoltech.openran.speedtest.databinding.ActivityMainBinding
 import kotlinx.coroutines.*
-import java.net.Inet4Address
-import java.net.NetworkInterface
+import java.net.*
 import java.util.concurrent.atomic.AtomicBoolean
 
 class MainActivity : AppCompatActivity() {
-    private val PING_SERVER_UDP_PORT = 49121
+
+
     lateinit var binding: ActivityMainBinding
     lateinit var iperfRunner: IperfRunner
 
@@ -23,8 +22,7 @@ class MainActivity : AppCompatActivity() {
     private val justICMPPingInChecking = AtomicBoolean(false)
     val pingerByICMP = ICMPPing()
 
-
-    private lateinit var pingTestButtonDispatcher: RunForShortTimeButtonDispatcher
+    private lateinit var pingByUDPButtonDispatcher: RunForShortTimeButtonDispatcher
     private lateinit var pingServerButtonDispatcher: ButtonDispatcherOfTwoStates
     private lateinit var justICMPPingDispatcher: ButtonDispatcherOfTwoStates
     private lateinit var startStopButtonDispatcher: ButtonDispatcherOfTwoStates
@@ -34,16 +32,10 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        ArrayAdapter.createFromResource(
-            this,
-            R.array.commands,
-            android.R.layout.simple_spinner_item
-        ).also { adapter ->
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            binding.spinner.adapter = adapter
+        binding.refreshButton.setOnClickListener {
+            refreshAddresses()
         }
-        binding.refreshButton.setOnClickListener { refreshAddresses() }
+
         refreshAddresses()
 
         iperfRunner = IperfRunner(applicationContext.filesDir.absolutePath).also {
@@ -57,33 +49,60 @@ class MainActivity : AppCompatActivity() {
         )
 
         startStopButtonDispatcher.firstAction = {
-            Log.d("spiner", binding.spinner.selectedItemPosition.toString())
-            when (binding.spinner.selectedItemPosition) {
-                0 -> startIperf()
-                1 -> runIcmpPingAsCommand()
+            binding.thisISserver.isEnabled = false
+            binding.startStopButton.isEnabled = false
+            Log.d("getReq", "preparing")
+            CoroutineScope(Dispatchers.IO).launch {
+                if (binding.thisISserver.isChecked) {
+                    startIperf()
+                }
+
+                val value = sendGETRequest(
+                    binding.serverIpField.text.toString(),
+                    RequestType.START,
+                    1000,
+                    binding.serverArgs.text.toString()
+                )
+                Log.d("requestValue", value)
+                runOnUiThread {
+                    if (value != "error") {
+                        if (!binding.thisISserver.isChecked) {
+                            startIperf()
+                        }
+                        binding.startStopButton.isEnabled = true
+                    } else {
+                        binding.startStopButton.isEnabled = true
+                        binding.thisISserver.isEnabled = true
+                        startStopButtonDispatcher.changeState()
+                    }
+                    binding.iperfOutput.append("Remote server: $value\n")
+                }
             }
-            binding.spinner.isEnabled = false
         }
+
         startStopButtonDispatcher.secondAction = {
-            when (binding.spinner.selectedItemPosition) {
-                0 -> stopIperf()
-                1 -> stopICMPPing()
+            stopIperf()
+            CoroutineScope(Dispatchers.IO).launch {
+                Log.d("stop request", "sent")
+                sendGETRequest(binding.serverIpField.text.toString(), RequestType.STOP, 1000)
             }
-            binding.spinner.isEnabled = true
+            binding.thisISserver.isEnabled = true
         }
 
-
-
-        pingTestButtonDispatcher = RunForShortTimeButtonDispatcher(
-            binding.pingTestButt,
+        pingByUDPButtonDispatcher = RunForShortTimeButtonDispatcher(
+            binding.pingUDPButton,
             this,
             applicationContext.getString(R.string.pingTesting)
         ) { resetAct ->
-            pingTestButtonAction(resetAct)
+            binding.icmpPingButton.isEnabled = false
+            pingUDPButtonAction {
+                runOnUiThread { binding.icmpPingButton.isEnabled = true }
+                resetAct()
+            }
         }
 
         pingServerButtonDispatcher = ButtonDispatcherOfTwoStates(
-            binding.pingServerButt,
+            binding.pingServerButton,
             this,
             applicationContext.getString(R.string.bigStop)
         )
@@ -93,14 +112,16 @@ class MainActivity : AppCompatActivity() {
         binding.iperfOutput.movementMethod = ScrollingMovementMethod()
 
         justICMPPingDispatcher = ButtonDispatcherOfTwoStates(
-            binding.justPingButt,
+            binding.icmpPingButton,
             this,
             applicationContext.getString(R.string.bigStop)
         )
         justICMPPingDispatcher.firstAction = {
+            binding.pingUDPButton.isEnabled = false
             justICMPPing()
         }
         justICMPPingDispatcher.secondAction = {
+            binding.pingUDPButton.isEnabled = true
             stopICMPPing()
         }
 
@@ -117,12 +138,25 @@ class MainActivity : AppCompatActivity() {
         }
         binding.pingLayout.isVisible = false
 
+
+        binding.expandButton2.setOnClickListener {
+            if (binding.deviceInfoLayout.isVisible) {
+                binding.deviceInfoLayout.isVisible = false
+                binding.expandButton2.setImageResource(android.R.drawable.arrow_down_float)
+
+            } else {
+                binding.deviceInfoLayout.isVisible = true
+                binding.expandButton2.setImageResource(android.R.drawable.arrow_up_float)
+
+            }
+        }
+        binding.deviceInfoLayout.isVisible = false
     }
 
     private fun startPingCheckServer() {
-        binding.pingServerButt.text = getString(R.string.bigStop)
+        binding.pingServerButton.text = getString(R.string.bigStop)
         CoroutineScope(Dispatchers.IO).launch {
-            pcs = PingCheckServer(PING_SERVER_UDP_PORT)
+            pcs = PingCheckServer(ApplicationConstants.PING_SERVER_UDP_PORT)
             pcs.start()
         }
     }
@@ -130,18 +164,16 @@ class MainActivity : AppCompatActivity() {
     private fun stopPingServer() {
         CoroutineScope(Dispatchers.Main).launch {
             Log.d("ping server", "pcs thread is alive: ${pcs.isAlive}")
-            if (pcs.isAlive)
+            if (pcs.isAlive) {
                 pcs.interrupt()
-            binding.pingServerButt.text = getString(R.string.startUdpPingServer)
-            delay(500)
+            }
             Log.d("ping server:", "pcs thread is alive: ${pcs.isAlive}")
         }
     }
 
-    private fun pingTestButtonAction(afterWorkAct: () -> Unit) = runBlocking {
+    private fun pingUDPButtonAction(afterWorkAct: () -> Unit) = runBlocking {
         val pcl = PingCheckClient()
         Log.d("pingTestButtonAction", "started")
-        binding.pingTestButt.text = getString(R.string.pingTesting)
         CoroutineScope(Dispatchers.IO).launch {
             pcl.doPingTest(
                 { value: String ->
@@ -158,7 +190,7 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun refreshAddresses() {
-        binding.ipInfo.text = NetworkInterface.getNetworkInterfaces()
+        val info = NetworkInterface.getNetworkInterfaces()
             .toList()
             .filter { it.inetAddresses.hasMoreElements() }
             .joinToString(separator = System.lineSeparator()) { networkInterface ->
@@ -167,6 +199,8 @@ class MainActivity : AppCompatActivity() {
                     .joinToString(separator = ", ")
                 "${networkInterface.displayName}: $addresses"
             }
+        binding.ipInfo.text = info
+        Log.d("interfaces", info)
     }
 
     private fun handleIperfOutput(text: String) {
@@ -178,15 +212,10 @@ class MainActivity : AppCompatActivity() {
     private fun startIperf() {
         iperfRunner.start(binding.iperfArgs.text.toString())
 
-        binding.iperfArgs.isEnabled = false
-        binding.startStopButton.text = applicationContext.getString(R.string.stopIperf)
     }
 
     private fun stopIperf() {
         iperfRunner.stop()
-
-        binding.iperfArgs.isEnabled = true
-        binding.startStopButton.text = applicationContext.getString(R.string.startIperf)
     }
 
     private fun runIcmpPingAsCommand() = runBlocking {
@@ -207,7 +236,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun justICMPPing() = runBlocking {
         justICMPPingInChecking.set(true)
-        binding.justPingButt.text = getString(R.string.bigStop)
+        binding.icmpPingButton.text = getString(R.string.bigStop)
         CoroutineScope(Dispatchers.IO).launch {
             pingerByICMP.justPingByHost(
                 binding.serverIP.text.toString()
