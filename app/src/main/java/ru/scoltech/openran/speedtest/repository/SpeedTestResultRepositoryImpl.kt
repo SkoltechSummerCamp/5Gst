@@ -6,6 +6,7 @@ import android.database.Cursor
 import android.database.SQLException
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteException
+import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
 import ru.scoltech.openran.speedtest.domain.SpeedTestResult
 import java.util.*
@@ -14,35 +15,19 @@ import kotlin.jvm.Throws
 class SpeedTestResultRepositoryImpl
 @Throws(SQLException::class, SQLiteException::class)
 constructor(context: Context) : SpeedTestResultRepository {
-    private val database: SQLiteDatabase =
-        context.openOrCreateDatabase(DATABASE_NAME, Context.MODE_PRIVATE, null)
-
-    init {
-        database.execSQL(
-            "CREATE TABLE IF NOT EXISTS $SPEEDTEST_RESULT_TABLE_NAME (" +
-                    "$ID_COLUMN_NAME INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
-                    "$UPLOAD_SPEED_COLUMN_NAME INTEGER NOT NULL, " +
-                    "$DOWNLOAD_SPEED_COLUMN_NAME INTEGER NOT NULL, " +
-                    "$PING_COLUMN_NAME INTEGER NOT NULL, " +
-                    "$CREATION_TIME_COLUMN_NAME INTEGER NOT NULL, " +
-                    "$SERVER_ADDRESS_COLUMN_NAME TEXT NOT NULL, " +
-                    "$DESCRIPTION_COLUMN_NAME TEXT NOT NULL, " +
-                    "CHECK(LENGTH($SERVER_ADDRESS_COLUMN_NAME) <= $SERVER_ADDRESS_COLUMN_MAX_LENGTH), " +
-                    "CHECK(LENGTH($DESCRIPTION_COLUMN_NAME) <= $DESCRIPTION_COLUMN_MAX_LENGTH)" +
-                    ");"
-        )
-    }
+    private val databaseHelper: DatabaseHelper = DatabaseHelper(context)
 
     override fun save(result: SpeedTestResult) {
         try {
-            database.insertOrThrow(SPEEDTEST_RESULT_TABLE_NAME, null, ContentValues(6).apply {
-                this.put(UPLOAD_SPEED_COLUMN_NAME, result.downloadSpeed)
-                this.put(DOWNLOAD_SPEED_COLUMN_NAME, result.uploadSpeed)
-                this.put(PING_COLUMN_NAME, result.ping)
-                this.put(CREATION_TIME_COLUMN_NAME, result.creationTime.time)
-                this.put(SERVER_ADDRESS_COLUMN_NAME, result.serverAddress)
-                this.put(DESCRIPTION_COLUMN_NAME, result.description)
-            })
+            databaseHelper.writableDatabase
+                .insertOrThrow(SPEEDTEST_RESULT_TABLE_NAME, null, ContentValues(6).apply {
+                    this.put(UPLOAD_SPEED_COLUMN_NAME, result.downloadSpeed)
+                    this.put(DOWNLOAD_SPEED_COLUMN_NAME, result.uploadSpeed)
+                    this.put(PING_COLUMN_NAME, result.ping)
+                    this.put(CREATION_TIME_COLUMN_NAME, result.creationTime.time)
+                    this.put(SERVER_ADDRESS_COLUMN_NAME, result.serverAddress)
+                    this.put(DESCRIPTION_COLUMN_NAME, result.description)
+                })
         } catch (e: SQLException) {
             Log.e(LOG_TAG, "Could not save $result to the database", e)
         }
@@ -54,16 +39,16 @@ constructor(context: Context) : SpeedTestResultRepository {
                     "Returning empty list...")
             return listOf()
         }
-        return database.querySpeedTestResult(
+        return querySpeedTestResult(
             orderBy = ID_COLUMN_NAME,
             limit = "${page * size}, $size"
         )
     }
 
     override fun findAll() =
-        database.querySpeedTestResult()
+        querySpeedTestResult()
 
-    private fun SQLiteDatabase.querySpeedTestResult(
+    private fun querySpeedTestResult(
         distinct: Boolean = false,
         selection: String? = null,
         selectionArgs: Array<String>? = null,
@@ -72,7 +57,7 @@ constructor(context: Context) : SpeedTestResultRepository {
         orderBy: String? = null,
         limit: String? = null,
     ): List<SpeedTestResult> {
-        return query(
+        return databaseHelper.readableDatabase.query(
             distinct,
             SPEEDTEST_RESULT_TABLE_NAME,
             arrayOf(
@@ -115,9 +100,52 @@ constructor(context: Context) : SpeedTestResultRepository {
         }
     }
 
+    private class DatabaseHelper(context: Context) :
+        SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
+
+        override fun onCreate(db: SQLiteDatabase) {
+            db.execSQL(
+                "CREATE TABLE IF NOT EXISTS $SPEEDTEST_RESULT_TABLE_NAME (" +
+                        "$ID_COLUMN_NAME INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                        "$UPLOAD_SPEED_COLUMN_NAME INTEGER NOT NULL, " +
+                        "$DOWNLOAD_SPEED_COLUMN_NAME INTEGER NOT NULL, " +
+                        "$PING_COLUMN_NAME INTEGER NOT NULL, " +
+                        "$CREATION_TIME_COLUMN_NAME INTEGER NOT NULL, " +
+                        "$SERVER_ADDRESS_COLUMN_NAME TEXT NOT NULL, " +
+                        "$DESCRIPTION_COLUMN_NAME TEXT NOT NULL, " +
+                        "CHECK(LENGTH($SERVER_ADDRESS_COLUMN_NAME) <= $SERVER_ADDRESS_COLUMN_MAX_LENGTH), " +
+                        "CHECK(LENGTH($DESCRIPTION_COLUMN_NAME) <= $DESCRIPTION_COLUMN_MAX_LENGTH)" +
+                        ");"
+            )
+        }
+
+        private fun changeVersion(
+            db: SQLiteDatabase,
+            actionMessage: String,
+            oldVersion: Int,
+            newVersion: Int
+        ) {
+            Log.w(
+                LOG_TAG, "$actionMessage database from version $oldVersion to $newVersion, " +
+                        "which will destroy all old data"
+            )
+            db.execSQL("DROP TABLE IF EXISTS $SPEEDTEST_RESULT_TABLE_NAME;")
+            onCreate(db)
+        }
+
+        override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
+            changeVersion(db, "Upgrading", oldVersion, newVersion)
+        }
+
+        override fun onDowngrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
+            changeVersion(db, "Downgrading", oldVersion, newVersion)
+        }
+    }
+
     companion object {
-        private const val LOG_TAG = "SpeedTestResultRepositoryImpl"
+        private const val LOG_TAG = "SpeedTestResultRepository"
         private const val DATABASE_NAME = "speedtest.db"
+        private const val DATABASE_VERSION = 1
         private const val SPEEDTEST_RESULT_TABLE_NAME = "speedtest_result"
         private const val ID_COLUMN_NAME = "id"
         private const val UPLOAD_SPEED_COLUMN_NAME = "upload_speed"
