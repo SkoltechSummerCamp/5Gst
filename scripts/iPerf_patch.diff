@@ -1,0 +1,14 @@
+0a1
+> // PATCHED BY AleksandrVi vinogradov.alek@gmail.com
+116a118
+>     fprintf(stderr, "\n spawning server\n");
+121a124
+>     fprintf(stderr, "\n server request completed \n");
+122a126
+>     kill(getpid(), 2);
+139a144
+>     fprintf(stderr, "\n spawning clinet\n");
+141d145
+< 
+143a148
+>     fprintf(stderr, "\n client requst completed \n");

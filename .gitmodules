@@ -1,0 +1,3 @@
+[submodule "iPerf"]
+	path = iPerf
+	url = https://github.com/SkoltechSummerCamp/iPerf
