@@ -1,0 +1,22 @@
+<resources>
+    <declare-styleable name="HeaderView">
+        <attr name="section_name" format="string" />
+        <attr name="is_active_back" format="boolean" />
+        <attr name="is_active_button_group" format="boolean" />
+
+    </declare-styleable>
+
+
+    <declare-styleable name="CardView">
+        <attr name="ping" format="integer" />
+        <attr name="status" format="string" />
+        <attr name="integer_speed" format="integer" />
+        <attr name="fraction_speed" format="integer" />
+
+    </declare-styleable>
+
+    <declare-styleable name="SubResultView">
+        <attr name="download_speed" format="string" />
+        <attr name="upload_speed" format="string" />
+    </declare-styleable>
+</resources>

@@ -42,6 +42,10 @@
    if you don't. */
 #define HAVE_DECL_IPV6_ADD_MEMBERSHIP 1
 
+/* Define to 1 if you have the declaration of `IPV6_JOIN_GROUP', and to 0 if
+   you don't. */
+#define HAVE_DECL_IPV6_JOIN_GROUP 1
+
 /* Define to 1 if you have the declaration of `IPV6_MULTICAST_HOPS', and to 0
    if you don't. */
 #define HAVE_DECL_IPV6_MULTICAST_HOPS 1
@@ -58,6 +62,10 @@
    to 0 if you don't. */
 #define HAVE_DECL_IP_ADD_SOURCE_MEMBERSHIP 1
 
+/* Define to 1 if you have the declaration of `IP_MULTICAST_ALL', and to 0 if
+   you don't. */
+#define HAVE_DECL_IP_MULTICAST_ALL 1
+
 /* Define to 1 if you have the declaration of `MCAST_JOIN_GROUP', and to 0 if
    you don't. */
 #define HAVE_DECL_MCAST_JOIN_GROUP 1
@@ -66,13 +74,33 @@
    to 0 if you don't. */
 #define HAVE_DECL_MCAST_JOIN_SOURCE_GROUP 1
 
+/* Define to 1 if you have the declaration of `MSG_DONTWAIT', and to 0 if you
+   don't. */
+#define HAVE_DECL_MSG_DONTWAIT 1
+
+/* Define to 1 if you have the declaration of `pthread_cancel', and to 0 if
+   you don't. */
+#define HAVE_DECL_PTHREAD_CANCEL 1
+
 /* Define to 1 if you have the declaration of `SIGALRM', and to 0 if you
    don't. */
 #define HAVE_DECL_SIGALRM 1
 
+/* Define to 1 if you have the declaration of `SO_BINDTODEVICE', and to 0 if
+   you don't. */
+#define HAVE_DECL_SO_BINDTODEVICE 1
+
+/* Define to 1 if you have the declaration of `SO_DONTROUTE', and to 0 if you
+   don't. */
+#define HAVE_DECL_SO_DONTROUTE 1
+
 /* Define to 1 if you have the declaration of `SO_MAX_PACING_RATE', and to 0
    if you don't. */
 #define HAVE_DECL_SO_MAX_PACING_RATE 1
+
+/* Define to 1 if you have the declaration of `SO_REUSEPORT', and to 0 if you
+   don't. */
+#define HAVE_DECL_SO_REUSEPORT 1
 
 /* Define to 1 if you have the declaration of `SO_SNDTIMEO', and to 0 if you
    don't. */
@@ -82,11 +110,21 @@
    don't. */
 #define HAVE_DECL_SO_TIMESTAMP 1
 
+/* Define if limiting test traffic to the local-only network (via socket
+   SO_DONTROUTE) should be the default */
+/* #undef HAVE_DEFAULT_DONTROUTE_ON */
+
 /* Define to 1 if you don't have `vprintf' but do have `_doprnt.' */
 /* #undef HAVE_DOPRNT */
 
 /* Define if fast sampling for report intervals is desired */
 /* #undef HAVE_FASTSAMPLING */
+
+/* Define to 1 if you have the `freopen' function. */
+#define HAVE_FREOPEN 1
+
+/* Define if syscall(SYS_gettid) available. */
+/* #undef HAVE_GETTID_SYSCALL */
 
 /* Define to 1 if you have the `gettimeofday' function. */
 #define HAVE_GETTIMEOFDAY 1
@@ -163,17 +201,26 @@
 /* Define to 1 if you have the <net/if.h> header file. */
 #define HAVE_NET_IF_H 1
 
+/* Define if packet level debugging is desired */
+/* #undef HAVE_PACKET_DEBUG */
+
 /* */
 #define HAVE_POSIX_THREAD 1
 
 /* Define if you have POSIX threads libraries and header files. */
 /* #undef HAVE_PTHREAD */
 
-/* Define to 1 if you have the `pthread_cancel' function. */
-/* #undef HAVE_PTHREAD_CANCEL */
+/* Have PTHREAD_PRIO_INHERIT. */
+#define HAVE_PTHREAD_PRIO_INHERIT 1
+
+/* Define if role reversal ids are desired */
+#define HAVE_ROLE_REVERSAL_ID 1
 
 /* Define to 1 if you have the `sched_setscheduler' function. */
 #define HAVE_SCHED_SETSCHEDULER 1
+
+/* Define to 1 if you have the `sched_yield' function. */
+#define HAVE_SCHED_YIELD 1
 
 /* Define to 1 if you have the `select' function. */
 #define HAVE_SELECT 1
@@ -195,6 +242,9 @@
 
 /* Define to enable ssm multicast support */
 #define HAVE_SSM_MULTICAST 1
+
+/* Define to 1 if stdbool.h conforms to C99. */
+#define HAVE_STDBOOL_H 1
 
 /* Define to 1 if you have the <stdint.h> header file. */
 #define HAVE_STDINT_H 1
@@ -269,8 +319,8 @@
 /* Define to 1 if you have the <sys/types.h> header file. */
 #define HAVE_SYS_TYPES_H 1
 
-/* Define if udp triggers option is desired and available */
-/* #undef HAVE_UDPTRIGGERS */
+/* Define for thread level debugging of the code */
+/* #undef HAVE_THREAD_DEBUG */
 
 /* Define to 1 if you have the <unistd.h> header file. */
 #define HAVE_UNISTD_H 1
@@ -290,6 +340,12 @@
 /* Define if winsock2.h exists. */
 /* #undef HAVE_WINSOCK2_H */
 
+/* Define to 1 if the system has the type `_Bool'. */
+#define HAVE__BOOL 1
+
+/* Define to disable asserts */
+#define NDEBUG 1
+
 /* Name of package */
 #define PACKAGE "iperf"
 
@@ -300,7 +356,7 @@
 #define PACKAGE_NAME "Iperf"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "Iperf 2.0.13"
+#define PACKAGE_STRING "Iperf 2.1.1"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "iperf"
@@ -309,9 +365,9 @@
 #define PACKAGE_URL ""
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "2.0.13"
+#define PACKAGE_VERSION "2.1.1"
 
-/* Define to the necessary symbol if this constant uses a non-standard name on
+/* Define to necessary symbol if this constant uses a non-standard name on
    your system. */
 /* #undef PTHREAD_CREATE_JOINABLE */
 
@@ -327,9 +383,6 @@
 /* Define to the type of arg 5 for `select'. */
 #define SELECT_TYPE_ARG5 (struct timeval *)
 
-/* The size of `bool', as computed by sizeof. */
-#define SIZEOF_BOOL 0
-
 /* Define to 1 if you have the ANSI C header files. */
 #define STDC_HEADERS 1
 
@@ -343,7 +396,7 @@
 /* #undef TM_IN_SYS_TIME */
 
 /* Version number of package */
-#define VERSION "2.0.13"
+#define VERSION "2.1.1"
 
 /* Define WORDS_BIGENDIAN to 1 if your processor stores words with the most
    significant byte first (like Motorola and SPARC, unlike Intel). */
@@ -360,20 +413,11 @@
 /* */
 #define _REENTRANT 1
 
-/* */
-#define bool int
-
 /* Define to empty if `const' does not conform to ANSI C. */
 /* #undef const */
-
-/* */
-/* #undef false */
 
 /* Define to `unsigned int' if <sys/types.h> does not define. */
 /* #undef size_t */
 
 /* Define to "int" if <sys/types.h> does not define. */
 /* #undef ssize_t */
-
-/* */
-/* #undef true */

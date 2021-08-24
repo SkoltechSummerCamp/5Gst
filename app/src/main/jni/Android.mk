@@ -21,8 +21,6 @@ LOCAL_SRC_FILES := \
         ../../../../iPerf/src/histogram.c \
         ../../../../iPerf/src/Locale.c \
         ../../../../iPerf/src/pdfs.c \
-        ../../../../iPerf/src/ReportCSV.c \
-        ../../../../iPerf/src/ReportDefault.c \
         ../../../../iPerf/src/Reporter.c \
         ../../../../iPerf/src/service.c \
         ../../../../iPerf/src/SocketAddr.c \
@@ -32,12 +30,15 @@ LOCAL_SRC_FILES := \
         ../../../../iPerf/src/Client.cpp \
         ../../../../iPerf/src/isochronous.cpp \
         ../../../../iPerf/src/Launch.cpp \
-        ../../../../iPerf/src/List.cpp \
         ../../../../iPerf/src/PerfSocket.cpp \
         ../../../../iPerf/src/Settings.cpp \
         ../../../../iPerf/src/main.cpp \
         ../../../../iPerf/src/Listener.cpp \
         ../../../../iPerf/src/Server.cpp \
+        ../../../../iPerf/src/active_hosts.cpp \
+        ../../../../iPerf/src/packet_ring.c \
+        ../../../../iPerf/src/ReportOutputs.c \
+        ../../../../iPerf/src/Reports.c \
         ../cpp/src/mainJni.cpp \
 
 LOCAL_C_INCLUDES += \

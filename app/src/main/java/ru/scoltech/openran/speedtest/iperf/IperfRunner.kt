@@ -6,39 +6,43 @@ import java.io.*
 import java.util.concurrent.locks.Condition
 import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock
+import kotlin.concurrent.thread
 import kotlin.jvm.Throws
 
 /**
  * Iperf process runner.
  *
  * Creates named pipes in `writableDir` which are used to redirect iperf `stdout` and `stderr`.
- * One can handle them by setting [stdoutHandler] and [stderrHandler].
+ * One can handle them by setting [stdoutLinesHandler] and [stderrLinesHandler].
  * On finish [onFinishCallback] is called.
  *
  * Note, that [start] method kills previous iperf process with `SIGKILL` if it is still running.
  */
-class IperfRunner(writableDir: String) {
-    /** Set to non null value if and only if the process is running */
-    private var processWaiterThread: Thread? = null
-    private var processPid: Long = 0L
+class IperfRunner(
+    writableDir: String,
 
-    private val lock: Lock = ReentrantLock()
-    private val finishedCondition: Condition = lock.newCondition()
+    /** Function to which the process `stdout` will be redirected line by line. */
+    private val stdoutLinesHandler: (String) -> Unit = {},
 
-    private val stdoutPipePath = "$writableDir/iperfStdout"
-    private val stderrPipePath = "$writableDir/iperfStderr"
-
-    /** Function to which the process `stdout` will be redirected */
-    var stdoutHandler: (String) -> Unit = {}
-
-    /** Function to which the process `stderr` will be redirected */
-    var stderrHandler: (String) -> Unit = {}
+    /** Function to which the process `stderr` will be redirected line by line. */
+    private val stderrLinesHandler: (String) -> Unit = {},
 
     /**
      * Function that will be called on finish.
      * Note that execution will be synchronized on the internal lock.
      */
-    var onFinishCallback: () -> Unit = {}
+    private val onFinishCallback: () -> Unit = {},
+) {
+    /** Set to non null value if and only if the process is running */
+    private var processWaiterThread: Thread? = null
+    private var processPid: Long = 0L
+
+    /** Lock used for synchronization */
+    val lock: Lock = ReentrantLock()
+    private val finishedCondition: Condition = lock.newCondition()
+
+    private val stdoutPipePath = "$writableDir/iperfStdout"
+    private val stderrPipePath = "$writableDir/iperfStderr"
 
     /**
      * Kills previous running process with `SIGKILL` (if any) and runs a new.
@@ -46,6 +50,8 @@ class IperfRunner(writableDir: String) {
      * [forking](https://man7.org/linux/man-pages/man2/fork.2.html) from current process.
      * Communication between processes is done using
      * [named pipes](https://man7.org/linux/man-pages/man3/mkfifo.3.html).
+     *
+     * It is guaranteed that no process is started on [IperfException] or [InterruptedException].
      *
      * @throws IperfException if `SIGKILL` could not be sent,
      *                        named pipe could not be created
@@ -55,8 +61,9 @@ class IperfRunner(writableDir: String) {
      */
     @Throws(IperfException::class, InterruptedException::class)
     fun start(args: String) {
+        Log.d(LOG_TAG, "Starting with command: iperf $args")
         lock.lock()
-        if (processWaiterThread != null) {
+        while (processWaiterThread != null) {
             sendSigKill()
             finishedCondition.await()
         }
@@ -71,17 +78,16 @@ class IperfRunner(writableDir: String) {
         processPid = pidHolder[0]
 
         val outputHandlers = listOf(
-            stderrPipePath to stderrHandler,
-            stdoutPipePath to stdoutHandler,
+            stderrPipePath to stderrLinesHandler,
+            stdoutPipePath to stdoutLinesHandler,
         ).map { (pipePath, handler) ->
             CoroutineScope(Dispatchers.IO).launch { handlePipe(pipePath, handler) }
         }
 
-        processWaiterThread = Thread({
+        processWaiterThread = thread(start = true, name = "Iperf Waiter") {
             waitForProcessNoDestroy(processPid)
             onFinish(outputHandlers)
-        }, "Iperf Waiter")
-            .also { it.start() }
+        }
         lock.unlock()
     }
 
@@ -100,20 +106,12 @@ class IperfRunner(writableDir: String) {
     private fun handlePipe(pipePath: String, handler: (String) -> Unit) {
         try {
             InputStreamReader(FileInputStream(pipePath), Charsets.UTF_8)
-                .buffered().use { reader ->
-                    val buffer = CharArray(DEFAULT_BUFFER_SIZE)
-                    var length = 0
-                    while (length >= 0) {
-                        if (length > 0) {
-                            handler(buffer.concatToString(endIndex = length))
-                        }
-                        length = reader.read(buffer)
-                    }
-                }
+                .buffered()
+                .useLines { lines -> lines.forEach { handler(it) } }
         } catch (e: IOException) {
             val message = "Could not handle iperf output"
             Log.e(LOG_TAG, message, e)
-            stderrHandler("$message: ${e::class.simpleName} (${e.message})")
+            stderrLinesHandler("$message: ${e::class.simpleName} (${e.message})")
         }
     }
 
@@ -132,6 +130,7 @@ class IperfRunner(writableDir: String) {
         }
 
         onFinishCallback()
+        Log.d(LOG_TAG, "Finished executing")
         processWaiterThread = null
         processPid = 0
         finishedCondition.signalAll()
@@ -214,6 +213,36 @@ class IperfRunner(writableDir: String) {
     private external fun waitForProcessNoDestroy(pid: Long) : Int
 
     private external fun waitForProcess(pid: Long): Int
+
+    class Builder(private val writableDir: String) {
+        private var stdoutLinesHandler: (String) -> Unit = {}
+        private var stderrLinesHandler: (String) -> Unit = {}
+        private var onFinishCallback: () -> Unit = {}
+
+        fun stdoutLinesHandler(stdoutLinesHandler: (String) -> Unit): Builder {
+            this.stdoutLinesHandler = stdoutLinesHandler
+            return this
+        }
+
+        fun stderrLinesHandler(stderrLinesHandler: (String) -> Unit): Builder {
+            this.stderrLinesHandler = stderrLinesHandler
+            return this
+        }
+
+        fun onFinishCallback(onFinishCallback: () -> Unit): Builder {
+            this.onFinishCallback = onFinishCallback
+            return this
+        }
+
+        fun build(): IperfRunner {
+            return IperfRunner(
+                writableDir,
+                stdoutLinesHandler,
+                stderrLinesHandler,
+                onFinishCallback,
+            )
+        }
+    }
 
     companion object {
         private val SPACES_REGEX = Regex("\\s+")

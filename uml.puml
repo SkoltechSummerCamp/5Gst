@@ -1,0 +1,244 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+
+class MainActivity extends AppCompatActivity{
+    - Wave cWave
+    - CardView mCard
+
+    - ResultView mResults;
+    - SubResultView mSubResults
+    - HeaderView mHeader;
+
+    -  TextView actionTV;
+    - ActionButton actionBtn;
+    - ShareButton shareBtn;
+    - SaveButton saveBtn;
+
+    - SpeedManager sm;
+
+    - Handler handler;
+    - Runnable task;
+
+    - final static int MEASURING_DELAY = 200;
+    - final static int TASK_DELAY = 1000;
+
+
+    # void onCreate(Bundle savedInstanceState)
+    - void init()
+
+    +  void onClick(View v)
+
+    - List<String> readSpeedFromAssetsCSV(String filename)
+
+    
+
+    - void measureDownloadSpeed()
+    - void measureUploadSpeed()
+    - void stopMeasuring()
+
+    + void onPlayUI()
+    + void onStopUI()
+    - void onResultUI(String downloadSpeed, String uploadSpeed, String ping)
+
+
+    - String getSpeedString(Pair<Integer, Integer> speed)
+
+}
+
+class ActionButton extends androidx.appcompat.widget.AppCompatButton {
+
+    + ActionButton(Context context, AttributeSet attrs)
+
+    + void setStop()
+
+    + void setPlay()
+
+    + void setStart()
+
+    + void setRestart()
+    }
+
+class SaveButton extends androidx.appcompat.widget.AppCompatButton {
+    + SaveButton(Context context, AttributeSet attrs)
+
+    - void saveTask()
+
+}
+
+class ShareButton extends androidx.appcompat.widget.AppCompatButton {
+    + ShareButton(Context context, AttributeSet attrs)
+
+    - void shareTask()
+}
+
+
+class CardView extends LinearLayout {
+
+    - TextView integerSpeedTV;
+    - TextView fractionSpeedTV;
+    - TextView pingTV;
+ 
+    - TextView dotCaption;
+    - TextView mbpsCaption;
+    - TextView pingCaption;
+ 
+    - Wave mWave;
+
+    - String mStatus;
+
+
+    + CardView(Context context, AttributeSet attrs)
+    - void init()
+    - void parseAttrs(Context context, AttributeSet attrs)
+
+    - void setPing(int ping)
+    - void setIntegerSpeed(int speed)
+    - void setFractionSpeed(int speed)
+
+    - void setDrawableStatus()
+    - void setStatus(String status)
+
+    + void setInstantSpeed(int integerSpeed, int fractionSpeed)
+
+
+    + void setDefaultCaptions()
+    + void setEmptyCaptions()
+    + void setMessage(String msg)
+
+    + String getPing()
+    + Wave getWave()
+}
+
+
+
+class HeaderView extends LinearLayout {
+
+    - boolean isActiveReturnBtn;
+    - boolean isActiveButtonGroup;
+    - String sectionNameStr;
+
+    - Button returnBtn;
+    - Button historyBtn;
+    - Button modeBtn;
+
+    - TextView sectionNameTV;
+
+    + HeaderView(Context context, AttributeSet attrs)
+
+    - void init()
+
+    - void parseAttrs(Context context, AttributeSet attrs)
+
+    - void goToStart(Context context)
+
+    - void goToHistory(Context context)
+
+    - void goToDev(Context context)
+
+    - void changeStateButtonGroup(boolean flag)
+
+    - void changeVisibilityReturnBtn(boolean flag)
+
+    + void disableButtonGroup()
+
+    + void enableButtonGroup()
+
+    + void setSectionName(String sectionName)
+
+    + void hideReturnBtn()
+
+    + void showReturnBtn()
+}
+
+
+class ResultView extends TableLayout {
+
+    - TextView downloadSpeedTV;
+    - TextView uploadSpeedTV;
+    - TextView pingTV;
+
+    + ResultView(Context context, AttributeSet attrs)
+    - void init()
+
+
+    + void setDownloadSpeed(String speed)
+    + void setUploadSpeed(String speed)
+    + void setPing(String ping)
+}
+
+
+class SubResultView extends LinearLayout {
+
+    - TextView downloadSpeedTV;
+    - TextView uploadSpeedTV;
+
+    + SubResultView(Context context, AttributeSet attrs)
+    - void init()
+
+    + void setUploadSpeed(String speed)
+    + void setDownloadSpeed(String speed)
+
+
+    + String getDownloadSpeed()
+    + String getUploadSpeed()
+
+
+    + void setEmpty()
+}
+
+class SpeedManager {
+    + List<String> uploadList;
+    + List<String> downloadList;
+
+    + SpeedManager(List<String> list)
+
+
+    - Pair<Integer, Integer> convertBitToMbps(String speed)
+
+
+    + Pair<Integer, Integer> getSpeedWithPrecision(String strSpeed, int precision)
+
+
+    - Pair<Integer, Integer> getAverageSpeed(List<String> list)
+    + Pair<Integer, Integer> getAverageUploadSpeed()
+    + Pair<Integer, Integer> getAverageDownloadSpeed()
+}
+
+class Wave extends View {
+
+    - Paint mPaint;
+    - RectF mRect;
+
+    - int currentSpeed;
+
+
+    + Wave(Context context, @Nullable AttributeSet attrs)
+
+    - void init()
+
+    + void onDraw(Canvas canvas)
+
+    + void attachSpeed(int speed)
+
+    + void attachColor(int color)
+
+
+}
+
+MainActivity *-- HeaderView
+MainActivity *-- CardView
+MainActivity *-- SubResultView
+MainActivity *-- ResultView
+
+MainActivity *-- ShareButton
+MainActivity *-- SaveButton
+MainActivity *-- ActionButton
+
+CardView *-- Wave
+
+MainActivity *-- SpeedManager
+
+
+@enduml
+
