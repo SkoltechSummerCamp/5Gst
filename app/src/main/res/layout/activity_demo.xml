@@ -132,8 +132,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1.3"
                         android:text="@string/main_address_hint"
-                        android:textColor="@color/neutral_100"
-                        android:textSize="20sp" />
+                        android:textColor="@color/neutral_60"
+                        android:textSize="14sp" />
 
                     <EditText
                         android:id="@+id/main_address"
@@ -141,7 +141,9 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:inputType="textPersonName"
-                        android:text="@string/default_main_address" />
+                        android:text="@string/default_main_address"
+                        android:textColor="@color/neutral_60"
+                        android:textSize="14sp" />
                 </LinearLayout>
 
                 <RadioGroup
@@ -154,17 +156,23 @@
                         android:id="@+id/balancer_mode"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:buttonTint="@color/neutral_60"
                         android:checked="true"
+                        android:minHeight="30dp"
                         android:text="@string/balancer_mode"
-                        android:textSize="20sp" />
+                        android:textColor="@color/neutral_60"
+                        android:textSize="14sp" />
 
                     <RadioButton
                         android:id="@+id/direct_mode"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:buttonTint="@color/neutral_60"
                         android:checked="false"
+                        android:minHeight="30dp"
                         android:text="@string/direct_iperf_mode"
-                        android:textSize="20sp" />
+                        android:textColor="@color/neutral_60"
+                        android:textSize="14sp" />
                 </RadioGroup>
 
             </LinearLayout>
