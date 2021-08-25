@@ -14,22 +14,22 @@ public class ActionButton extends androidx.appcompat.widget.AppCompatButton {
 
     public void setStop() {
         this.setContentDescription("stop");
-        this.setBackground(getContext().getDrawable(R.drawable.ic_stop_btn));
+        this.setBackground(getContext().getDrawable(R.drawable.ic_stop));
     }
 
     public void setPlay() { // when continue after stopping
         this.setContentDescription("play");
-        this.setBackground(getContext().getDrawable(R.drawable.ic_play_btn));
+        this.setBackground(getContext().getDrawable(R.drawable.ic_play));
     }
 
     public void setStart() { // when start from main menu
         this.setContentDescription("start");
-        this.setBackground(getContext().getDrawable(R.drawable.ic_start_btn));
+        this.setBackground(getContext().getDrawable(R.drawable.ic_play));
     }
 
     public void setRestart() {
         this.setContentDescription("start");
-        this.setBackground(getContext().getDrawable(R.drawable.ic_restart_btn));
+        this.setBackground(getContext().getDrawable(R.drawable.ic_replay));
     }
 
 

@@ -28,7 +28,7 @@ public class SaveButton extends androidx.appcompat.widget.AppCompatButton {
         }
         final Activity activity = (Activity) context;
 
-        this.setBackground(AppCompatResources.getDrawable(context, R.drawable.ic_save_btn));
+        this.setBackground(AppCompatResources.getDrawable(context, R.drawable.ic_save));
         this.setOnClickListener(view -> {
             SpeedManager sm = SpeedManager.getInstance();
             saveTask(activity, sm.generateImage(activity));

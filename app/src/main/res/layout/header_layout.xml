@@ -18,15 +18,15 @@
             android:layout_width="36dp"
             android:layout_height="36dp"
             android:layout_gravity="center"
-            android:background="@drawable/ic_return_btn"
-            android:foreground="@drawable/ic_return_btn" />
+            android:background="@drawable/ic_return"
+            android:foreground="@drawable/ic_return" />
 
         <TextView
             android:id="@+id/section_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="5dp"
             android:layout_weight="10"
             android:text="@string/section_name"
             android:textAppearance="@style/headline_4" />
@@ -45,8 +45,8 @@
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:layout_weight="1"
-                android:background="@drawable/ic_history_btn"
-                android:foreground="@drawable/ic_history_btn" />
+                android:background="@drawable/ic_history"
+                android:foreground="@drawable/ic_history" />
 
             <Button
                 android:id="@+id/mode_switch_btn"
@@ -54,8 +54,8 @@
                 android:layout_height="36dp"
                 android:layout_marginStart="21dp"
                 android:layout_weight="1"
-                android:background="@drawable/ic_dev_mode_btn"
-                android:foreground="@drawable/ic_dev_mode_btn"/>
+                android:background="@drawable/ic_dev"
+                android:foreground="@drawable/ic_dev" />
 
         </LinearLayout>
     </LinearLayout>

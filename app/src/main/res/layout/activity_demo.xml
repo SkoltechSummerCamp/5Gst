@@ -92,7 +92,7 @@
                 android:layout_marginHorizontal="20dp"
 
 
-                android:background="@drawable/ic_start_btn"
+                android:background="@drawable/ic_play"
 
                 android:contentDescription="@string/start"
                 android:onClick="onClick" />
