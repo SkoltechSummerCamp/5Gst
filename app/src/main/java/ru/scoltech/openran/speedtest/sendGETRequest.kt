@@ -7,6 +7,7 @@ import kotlinx.coroutines.channels.Channel
 import java.io.IOException
 import java.net.*
 import java.nio.charset.StandardCharsets
+import kotlin.jvm.Throws
 
 enum class RequestType { START, STOP }
 
@@ -17,29 +18,15 @@ suspend fun sendGETRequest(
     timeout: Long,
     value: String = ""
 ): String {
-    var currentPort = ApplicationConstants.HTTP_SERVER_PORT;
-
-    var currentAddress: InetAddress = try {
-        when {
-            !address.contains(':') || (address.first() == '[' && address.last() == ']') ->
-                InetAddress.getByName(address) //IPv4 or IPv6
-            address.split(":").size == 2 && address.split(":")[1].isDigitsOnly() -> {
-                val addressAndPort = address.split(":")
-                currentPort = addressAndPort[1].toInt()
-                InetAddress.getByName(addressAndPort[0])
-            }//IPv4 with port
-            address.contains("]:") && address.first() == '[' && address.split("]:").size == 2
-                    && address.split("]:")[1].isDigitsOnly() -> {
-                val addressAndPort = address.split("]:")
-                currentPort = addressAndPort[1].toInt()
-                InetAddress.getByName(addressAndPort[0] + ']')
-            }//IPv6 with port
-            else -> return "error"
-        }
+    val currentSocketAddress: InetSocketAddress = try {
+        parseInetSocketAddress(address, ApplicationConstants.DEFAULT_HTTP_SERVER_PORT)
     } catch (e: UnknownHostException) {
-        Log.e("sendGETRequest", e.message!!)
+        Log.e("sendGETRequest", "Could not parse address", e)
         return "error"
     }
+    val currentAddress = currentSocketAddress.address
+    val currentPort = currentSocketAddress.port
+
     val url = when (requestType) {
         RequestType.START ->
             "http://${currentAddress.hostAddress}:$currentPort/start-iperf?args=${
@@ -73,4 +60,27 @@ suspend fun sendGETRequest(
         connection.disconnect()
     }
     return channel.receive()
+}
+
+@Throws(UnknownHostException::class)
+fun parseInetSocketAddress(address: String, defaultPort: Int): InetSocketAddress {
+    return when {
+        !address.contains(':') || (address.first() == '[' && address.last() == ']') ->
+            InetSocketAddress(InetAddress.getByName(address), defaultPort)  // IPv4 or IPv6
+        address.split(":").size == 2 && address.split(":")[1].isDigitsOnly() -> {
+            // IPv4 with port
+            val addressAndPort = address.split(":")
+            InetSocketAddress(InetAddress.getByName(addressAndPort[0]), addressAndPort[1].toInt())
+        }
+        address.contains("]:") && address.first() == '[' && address.split("]:").size == 2
+                && address.split("]:")[1].isDigitsOnly() -> {
+            // IPv6 with port
+            val addressAndPort = address.split("]:")
+            InetSocketAddress(
+                InetAddress.getByName(addressAndPort[0] + ']'),
+                addressAndPort[1].toInt()
+            )
+        }
+        else -> throw UnknownHostException("Invalid address format: $address")
+    }
 }

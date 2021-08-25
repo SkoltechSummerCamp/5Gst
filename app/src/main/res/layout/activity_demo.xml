@@ -106,6 +106,70 @@
 
         </LinearLayout>
 
+        <RelativeLayout
+            android:id="@+id/start_screen_settings"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="20dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/main_address_hint"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.3"
+                        android:text="@string/main_address_hint"
+                        android:textColor="@color/neutral_100"
+                        android:textSize="20sp" />
+
+                    <EditText
+                        android:id="@+id/main_address"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:inputType="textPersonName"
+                        android:text="@string/default_main_address" />
+                </LinearLayout>
+
+                <RadioGroup
+                    android:id="@+id/mode_radio_group"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                    <RadioButton
+                        android:id="@+id/balancer_mode"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:text="@string/balancer_mode"
+                        android:textSize="20sp" />
+
+                    <RadioButton
+                        android:id="@+id/direct_mode"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:checked="false"
+                        android:text="@string/direct_iperf_mode"
+                        android:textSize="20sp" />
+                </RadioGroup>
+
+            </LinearLayout>
+        </RelativeLayout>
+
     </LinearLayout>
 
 
