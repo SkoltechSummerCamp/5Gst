@@ -187,51 +187,51 @@ private constructor(
         beforeStart: () -> Unit,
     ) {
         runCatchingStop {
-            val serverMessage = if (useBalancer) {
-                try {
-                    sendGETRequest(
-                        "${serverAddress.ip}:${serverAddress.port}",
-                        RequestType.START,
-                        1000L,
-                        "-s $additionalServerArgs",
-                    )
-                } catch (e: Exception) {
-                    throw FatalException(
-                        "Could not connect to server: ${e::class.qualifiedName}: ${e.message}"
-                    )
-                }
-            } else {
-                ""
-            }
+            sendRequestToService("-s $additionalServerArgs", RequestType.START)
             checkStop()
+            lock.withLock {
+                beforeStart()
+            }
 
+            while (true) {
+                try {
+                    iperfRunner.start(
+                        "-c ${serverAddress.ip} -p ${serverAddress.portIperf} " +
+                                "-f b -P 10 --sum-only -i 0.1 -b 120m $additionalClientArgs"
+                    )
+                    idleTaskKiller.register(IPERF_IDLE_TIME) {
+                        iperfRunner.sendSigKill()
+                    }
+                    break
+                } catch (e: InterruptedException) {
+                    val message = "Interrupted iPerf start. Ignoring..."
+                    Log.e(LOG_TAG, message, e)
+                    onLog(LOG_TAG, message)
+                } catch (e: IperfException) {
+                    stopWithFatalError("Could not start iPerf", e)
+                    return
+                }
+            }
+        }
+    }
+
+    private suspend fun sendRequestToService(serverArgs: String, requestType: RequestType) {
+        if (useBalancer) {
+            val serverMessage = try {
+                sendGETRequest(
+                    "${serverAddress.ip}:${serverAddress.port}",
+                    requestType,
+                    1000L,
+                    serverArgs,
+                )
+            } catch (e: Exception) {
+                throw FatalException(
+                    "Could not connect to server: ${e::class.qualifiedName}: ${e.message}"
+                )
+            }
             if (serverMessage == "error") {
                 // TODO server message
-                stopWithFatalError(serverMessage)
-            } else {
-                lock.withLock {
-                    beforeStart()
-                }
-
-                while (true) {
-                    try {
-                        iperfRunner.start(
-                            "-c ${serverAddress.ip} -p ${serverAddress.portIperf} " +
-                                    "-f b -P 10 --sum-only -i 0.1 -b 120m $additionalClientArgs"
-                        )
-                        idleTaskKiller.register(IPERF_IDLE_TIME) {
-                            iperfRunner.sendSigKill()
-                        }
-                        break
-                    } catch (e: InterruptedException) {
-                        val message = "Interrupted iPerf start. Ignoring..."
-                        Log.e(LOG_TAG, message, e)
-                        onLog(LOG_TAG, message)
-                    } catch (e: IperfException) {
-                        stopWithFatalError("Could not start iPerf")
-                        return
-                    }
-                }
+                throw FatalException(serverMessage)
             }
         }
     }
@@ -325,33 +325,43 @@ private constructor(
             runBlocking {
                 idleTaskKiller.unregister()
             }
-            when (state) {
-                State.DOWNLOAD -> {
-                    val delayBeforeUpload = onDownloadFinish(downloadSpeedStatistics)
-                    if (useBalancer) {
-                        CoroutineScope(Dispatchers.IO).launch {
-                            // TODO cancel on stop
-                            delay(delayBeforeUpload)
-                            startUpload()
+        }
+
+        runCatchingStop {
+            if (useBalancer) {
+                runBlocking {
+                    sendRequestToService("", RequestType.STOP)
+                }
+            }
+            lock.withLock {
+                when (state) {
+                    State.DOWNLOAD -> {
+                        val delayBeforeUpload = onDownloadFinish(downloadSpeedStatistics)
+                        if (useBalancer) {
+                            CoroutineScope(Dispatchers.IO).launch {
+                                // TODO cancel on stop
+                                delay(delayBeforeUpload)
+                                startUpload()
+                            }
+                        } else {
+                            onFinish()
+                            state = State.NONE
                         }
-                    } else {
+                    }
+                    State.UPLOAD -> {
+                        onUploadFinish(uploadSpeedStatistics)
                         onFinish()
                         state = State.NONE
                     }
-                }
-                State.UPLOAD -> {
-                    onUploadFinish(uploadSpeedStatistics)
-                    onFinish()
-                    state = State.NONE
-                }
-                State.STOPPED -> {
-                    onStopped()
-                    state = State.NONE
-                }
-                State.NONE -> {
-                    val message = "Invalid manager state (NONE) on iperf stop"
-                    Log.e(LOG_TAG, message)
-                    onLog(LOG_TAG, message)
+                    State.STOPPED -> {
+                        onStopped()
+                        state = State.NONE
+                    }
+                    State.NONE -> {
+                        val message = "Invalid manager state (NONE) on iperf stop"
+                        Log.e(LOG_TAG, message)
+                        onLog(LOG_TAG, message)
+                    }
                 }
             }
         }

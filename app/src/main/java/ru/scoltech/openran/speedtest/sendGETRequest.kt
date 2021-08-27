@@ -59,6 +59,9 @@ suspend fun sendGETRequest(
         channel.trySend("error")
         connection.disconnect()
     }
+    if (requestType == RequestType.STOP) {
+        return ""
+    }
     return channel.receive()
 }
 
