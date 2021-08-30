@@ -22,6 +22,12 @@ class IdleTaskKiller {
         }
     }
 
+    fun registerBlocking(allowedIdleMillis: Long, killTask: () -> Unit) {
+        runBlocking {
+            register(allowedIdleMillis, killTask)
+        }
+    }
+
     fun updateTaskState() {
         updatedMoment = System.currentTimeMillis()
     }
@@ -30,5 +36,11 @@ class IdleTaskKiller {
     suspend fun unregister() {
         killerJob?.cancelAndJoin()
         killerJob = null
+    }
+
+    fun unregisterBlocking() {
+        runBlocking {
+            unregister()
+        }
     }
 }

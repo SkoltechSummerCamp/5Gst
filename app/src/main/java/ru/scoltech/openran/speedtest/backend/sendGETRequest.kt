@@ -1,9 +1,10 @@
-package ru.scoltech.openran.speedtest
+package ru.scoltech.openran.speedtest.backend
 
 import android.util.Log
 import androidx.core.text.isDigitsOnly
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
+import ru.scoltech.openran.speedtest.ApplicationConstants
 import java.io.IOException
 import java.net.*
 import java.nio.charset.StandardCharsets

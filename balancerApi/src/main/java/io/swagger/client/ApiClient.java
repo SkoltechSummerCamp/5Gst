@@ -12,6 +12,7 @@
 
 package io.swagger.client;
 
+import com.google.gson.JsonSyntaxException;
 import com.squareup.okhttp.*;
 import com.squareup.okhttp.internal.http.HttpMethod;
 import com.squareup.okhttp.logging.HttpLoggingInterceptor;
@@ -880,6 +881,13 @@ public class ApiClient {
                     result = (T) handleResponse(response, returnType);
                 } catch (ApiException e) {
                     callback.onFailure(e, response.code(), response.headers().toMultimap());
+                    return;
+                } catch (JsonSyntaxException e) {
+                    callback.onFailure(
+                            new ApiException(e.getClass().getName() + ": " + e.getMessage()),
+                            response.code(),
+                            response.headers().toMultimap()
+                    );
                     return;
                 }
                 callback.onSuccess(result, response.code(), response.headers().toMultimap());

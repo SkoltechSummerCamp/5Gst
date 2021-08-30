@@ -7,10 +7,9 @@ import android.util.Log
 import androidx.core.view.isVisible
 import kotlinx.coroutines.*
 import ru.scoltech.openran.speedtest.*
+import ru.scoltech.openran.speedtest.backend.*
 import ru.scoltech.openran.speedtest.databinding.ActivityDevBinding
-import ru.scoltech.openran.speedtest.iperf.IperfRunner
 import java.net.*
-import java.util.concurrent.atomic.AtomicBoolean
 
 class DevActivity : AppCompatActivity() {
 
@@ -21,12 +20,11 @@ class DevActivity : AppCompatActivity() {
     @Volatile
     private lateinit var pcs: PingCheckServer
 
-    private val justICMPPingInChecking = AtomicBoolean(false)
-    val pingerByICMP = ICMPPing()
+    val icmpPinger = IcmpPinger()
 
     private lateinit var pingByUDPButtonDispatcher: RunForShortTimeButtonDispatcher
     private lateinit var pingServerButtonDispatcher: ButtonDispatcherOfTwoStates
-    private lateinit var justICMPPingDispatcher: ButtonDispatcherOfTwoStates
+    private lateinit var icmpPingDispatcher: ButtonDispatcherOfTwoStates
     private lateinit var startStopButtonDispatcher: ButtonDispatcherOfTwoStates
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -113,18 +111,18 @@ class DevActivity : AppCompatActivity() {
 
         binding.iperfOutput.movementMethod = ScrollingMovementMethod()
 
-        justICMPPingDispatcher = ButtonDispatcherOfTwoStates(
+        icmpPingDispatcher = ButtonDispatcherOfTwoStates(
             binding.icmpPingButton,
             this,
             applicationContext.getString(R.string.bigStop)
         )
-        justICMPPingDispatcher.firstAction = {
+        icmpPingDispatcher.firstAction = {
             binding.pingUDPButton.isEnabled = false
-            justICMPPing()
+            startIcmpPing()
         }
-        justICMPPingDispatcher.secondAction = {
+        icmpPingDispatcher.secondAction = {
             binding.pingUDPButton.isEnabled = true
-            stopICMPPing()
+            stopIcmpPing()
         }
 
         binding.expandButton.setOnClickListener {
@@ -174,7 +172,7 @@ class DevActivity : AppCompatActivity() {
     }
 
     private fun pingUDPButtonAction(afterWorkAct: () -> Unit) = runBlocking {
-        val pcl = PingCheckClient()
+        val pcl = UdpPingCheckClient()
         Log.d("pingTestButtonAction", "started")
         CoroutineScope(Dispatchers.IO).launch {
             pcl.doPingTest(
@@ -221,30 +219,42 @@ class DevActivity : AppCompatActivity() {
         iperfRunner.killAndWait()
     }
 
-    private fun runIcmpPingAsCommand() = runBlocking {
+    private fun startRawIcmpPing() {
         val args = binding.iperfArgs.text.toString()
-        CoroutineScope(Dispatchers.IO).launch {
-            pingerByICMP.performPingWithArgs(args) { line ->
+        // TODO split address and args?
+        icmpPinger.startRaw(args)
+            .onSuccess { line ->
                 runOnUiThread {
                     binding.iperfOutput.append(line + "\n")
                 }
             }
-        }
+            .onError {
+                // TODO show error to the user
+                Log.e(LOG_TAG, "Ping failed", it)
+            }
+            .start()
     }
 
-    private fun stopICMPPing() {
-        pingerByICMP.stopExecuting()
+    private fun stopIcmpPing() {
+        icmpPinger.stop()
     }
 
-
-    private fun justICMPPing() = runBlocking {
-        justICMPPingInChecking.set(true)
+    private fun startIcmpPing() {
         binding.icmpPingButton.text = getString(R.string.bigStop)
-        CoroutineScope(Dispatchers.IO).launch {
-            pingerByICMP.justPingByHost(
-                binding.serverIP.text.toString()
-            ) { value -> runOnUiThread { binding.pingValue.text = value } }
-            justICMPPingInChecking.set(false)
-        }
+        icmpPinger.start(binding.serverIP.text.toString())
+            .onSuccess {
+                runOnUiThread {
+                    binding.pingValue.text = it.toString()
+                }
+            }
+            .onError {
+                // TODO show error to the user
+                Log.e(LOG_TAG, "Ping failed", it)
+            }
+            .start()
+    }
+
+    companion object {
+        private const val LOG_TAG = "DevActivity"
     }
 }

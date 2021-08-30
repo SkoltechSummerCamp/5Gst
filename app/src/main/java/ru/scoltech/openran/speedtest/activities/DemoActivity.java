@@ -29,7 +29,6 @@ import kotlin.text.StringsKt;
 import ru.scoltech.openran.speedtest.ApplicationConstants;
 import ru.scoltech.openran.speedtest.R;
 import ru.scoltech.openran.speedtest.SpeedManager;
-import ru.scoltech.openran.speedtest.SpeedTestManager;
 import ru.scoltech.openran.speedtest.Wave;
 import ru.scoltech.openran.speedtest.customButtons.ActionButton;
 import ru.scoltech.openran.speedtest.customButtons.SaveButton;
@@ -38,6 +37,7 @@ import ru.scoltech.openran.speedtest.customViews.CardView;
 import ru.scoltech.openran.speedtest.customViews.HeaderView;
 import ru.scoltech.openran.speedtest.customViews.ResultView;
 import ru.scoltech.openran.speedtest.customViews.SubResultView;
+import ru.scoltech.openran.speedtest.manager.DownloadUploadSpeedTestManager;
 
 
 public class DemoActivity extends AppCompatActivity {
@@ -62,7 +62,7 @@ public class DemoActivity extends AppCompatActivity {
     private Handler handler;
     private Runnable task;
 
-    private SpeedTestManager speedTestManager;
+    private DownloadUploadSpeedTestManager speedTestManager;
 
     private final static int MEASURING_DELAY = 200;
     private final static int TASK_DELAY = 2500;
@@ -145,10 +145,10 @@ public class DemoActivity extends AppCompatActivity {
         }
 
         // TODO split on methods
-        speedTestManager = new SpeedTestManager.Builder(this)
+        speedTestManager = new DownloadUploadSpeedTestManager.Builder(this)
                 .onPingUpdate((ping) -> runOnUiThread(() -> mCard.setPing((int) ping)))
-                .onDownloadSpeedUpdate((speedBitsPS) -> runOnUiThread(() -> {
-                    Pair<Integer, Integer> instSpeed = sm.getSpeedWithPrecision((int) speedBitsPS, 2);
+                .onDownloadSpeedUpdate((statistics, speedBitsPS) -> runOnUiThread(() -> {
+                    Pair<Integer, Integer> instSpeed = sm.getSpeedWithPrecision(speedBitsPS.intValue(), 2);
                     mCard.setInstantSpeed(instSpeed.first, instSpeed.second);
 
                     //animation
@@ -160,8 +160,8 @@ public class DemoActivity extends AppCompatActivity {
                     return TASK_DELAY;
                 })
                 .onUploadStart(() -> runOnUiThread(() -> cWave.attachColor(getColor(R.color.gold))))
-                .onUploadSpeedUpdate((speedBitsPS) -> runOnUiThread(() -> {
-                    Pair<Integer, Integer> instSpeed = sm.getSpeedWithPrecision((int) speedBitsPS, 2);
+                .onUploadSpeedUpdate((statistics, speedBitsPS) -> runOnUiThread(() -> {
+                    Pair<Integer, Integer> instSpeed = sm.getSpeedWithPrecision(speedBitsPS.intValue(), 2);
                     mCard.setInstantSpeed(instSpeed.first, instSpeed.second);
 
                     //animation
@@ -177,7 +177,7 @@ public class DemoActivity extends AppCompatActivity {
                     String ping = mCard.getPing();
                     onResultUI(downloadSpeed, uploadSpeed, ping);
                 }))
-                .onStopped(() -> runOnUiThread(() -> {
+                .onStop(() -> runOnUiThread(() -> {
                     onStopUI();
                     actionBtn.setPlay();
                     mSubResults.setEmpty();
@@ -208,7 +208,8 @@ public class DemoActivity extends AppCompatActivity {
                         getPreferences(MODE_PRIVATE).getString(
                                 ApplicationConstants.MAIN_ADDRESS_KEY,
                                 getString(R.string.default_main_address)
-                        )
+                        ),
+                        TASK_DELAY
                 );
 
             } else if (actionBtn.getContentDescription().toString().equals("stop")) {

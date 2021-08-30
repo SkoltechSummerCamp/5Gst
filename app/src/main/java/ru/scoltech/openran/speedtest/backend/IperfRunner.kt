@@ -1,4 +1,4 @@
-package ru.scoltech.openran.speedtest.iperf
+package ru.scoltech.openran.speedtest.backend
 
 import android.util.Log
 import kotlinx.coroutines.*
@@ -7,6 +7,7 @@ import java.util.concurrent.locks.Condition
 import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.thread
+import kotlin.concurrent.withLock
 import kotlin.jvm.Throws
 
 /**
@@ -17,6 +18,8 @@ import kotlin.jvm.Throws
  * On finish [onFinishCallback] is called.
  *
  * Note, that [start] method kills previous iperf process with `SIGKILL` if it is still running.
+ *
+ * @author Mihail Kazakov
  */
 class IperfRunner(
     writableDir: String,
@@ -61,34 +64,34 @@ class IperfRunner(
      */
     @Throws(IperfException::class, InterruptedException::class)
     fun start(args: String) {
-        Log.d(LOG_TAG, "Starting with command: iperf $args")
-        lock.lock()
-        while (processWaiterThread != null) {
-            sendSigKill()
-            finishedCondition.await()
-        }
+        lock.withLock {
+            while (processWaiterThread != null) {
+                sendSigKill()
+                finishedCondition.await()
+            }
+            Log.d(LOG_TAG, "Starting with command: iperf $args")
 
-        forceMkfifo(stdoutPipePath, "stdout")
-        forceMkfifo(stderrPipePath, "stderr")
+            forceMkfifo(stdoutPipePath, "stdout")
+            forceMkfifo(stderrPipePath, "stderr")
 
-        val pidHolder = longArrayOf(0)
-        runCheckingErrno("Could not fork process and launch iperf") {
-            start(stdoutPipePath, stderrPipePath, splitArgs(args), pidHolder)
-        }
-        processPid = pidHolder[0]
+            val pidHolder = longArrayOf(0)
+            runCheckingErrno("Could not fork process and launch iperf") {
+                start(stdoutPipePath, stderrPipePath, splitArgs(args), pidHolder)
+            }
+            processPid = pidHolder[0]
 
-        val outputHandlers = listOf(
-            stderrPipePath to stderrLinesHandler,
-            stdoutPipePath to stdoutLinesHandler,
-        ).map { (pipePath, handler) ->
-            CoroutineScope(Dispatchers.IO).launch { handlePipe(pipePath, handler) }
-        }
+            val outputHandlers = listOf(
+                stderrPipePath to stderrLinesHandler,
+                stdoutPipePath to stdoutLinesHandler,
+            ).map { (pipePath, handler) ->
+                CoroutineScope(Dispatchers.IO).launch { handlePipe(pipePath, handler) }
+            }
 
-        processWaiterThread = thread(start = true, name = "Iperf Waiter") {
-            waitForProcessNoDestroy(processPid)
-            onFinish(outputHandlers)
+            processWaiterThread = thread(start = true, name = "Iperf Waiter") {
+                waitForProcessNoDestroy(processPid)
+                onFinish(outputHandlers)
+            }
         }
-        lock.unlock()
     }
 
     private fun forceMkfifo(path: String, redirectingFile: String) {
@@ -105,7 +108,7 @@ class IperfRunner(
 
     private fun handlePipe(pipePath: String, handler: (String) -> Unit) {
         try {
-            InputStreamReader(FileInputStream(pipePath), Charsets.UTF_8)
+            FileReader(pipePath)
                 .buffered()
                 .useLines { lines -> lines.forEach { handler(it) } }
         } catch (e: IOException) {
@@ -120,21 +123,21 @@ class IperfRunner(
     }
 
     private fun onFinish(outputHandlers: List<Job>) {
-        lock.lock()
-        waitForProcess(processPid)
+        lock.withLock {
+            waitForProcess(processPid)
 
-        runBlocking {
-            outputHandlers.forEach {
-                it.join()
+            runBlocking {
+                outputHandlers.forEach {
+                    it.join()
+                }
             }
-        }
 
-        onFinishCallback()
-        Log.d(LOG_TAG, "Finished executing")
-        processWaiterThread = null
-        processPid = 0
-        finishedCondition.signalAll()
-        lock.unlock()
+            onFinishCallback()
+            Log.d(LOG_TAG, "Finished executing")
+            processWaiterThread = null
+            processPid = 0
+            finishedCondition.signalAll()
+        }
     }
 
     /**
@@ -148,12 +151,12 @@ class IperfRunner(
      */
     @Throws(IperfException::class, InterruptedException::class)
     fun killAndWait() {
-        lock.lock()
-        if (processWaiterThread != null) {
-            sendSigInt()
-            finishedCondition.await()
+        lock.withLock {
+            if (processWaiterThread != null) {
+                sendSigInt()
+                finishedCondition.await()
+            }
         }
-        lock.unlock()
     }
 
     /**
@@ -177,11 +180,11 @@ class IperfRunner(
     }
 
     private fun kill(signalName: String, sendSignal: (Long) -> Int) {
-        lock.lock()
-        if (processWaiterThread != null) {
-            runCheckingErrno(getKillErrorMessage(signalName)) { sendSignal(processPid) }
+        lock.withLock {
+            if (processWaiterThread != null) {
+                runCheckingErrno(getKillErrorMessage(signalName)) { sendSignal(processPid) }
+            }
         }
-        lock.unlock()
     }
 
     private fun getMkfifoErrorMessage(pipePath: String, redirectingFile: String) =

@@ -1,4 +1,4 @@
-package ru.scoltech.openran.speedtest
+package ru.scoltech.openran.speedtest.backend
 
 import kotlinx.coroutines.delay
 import java.io.IOException
@@ -11,7 +11,7 @@ import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
 
 
-class PingCheckClient {
+class UdpPingCheckClient {
     @Volatile
     var isDone = true
     var inPingChecking = AtomicBoolean(false)
