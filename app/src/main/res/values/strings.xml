@@ -37,7 +37,7 @@
     <string name="empty">_____</string>
     <string name="start">start</string>
     <string name="download_speed">Download speed </string>
-    <string name="default_main_address">45.134.27.29:5555</string>
+    <string name="default_main_address">5gst.ru:5555</string>
     <string name="main_address_hint">Main address:</string>
     <string name="balancer_mode">Balancer mode</string>
     <string name="direct_iperf_mode">Direct iPerf mode</string>
