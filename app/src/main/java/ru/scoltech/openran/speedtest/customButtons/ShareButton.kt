@@ -17,7 +17,6 @@ import ru.scoltech.openran.speedtest.util.ExternalStorageSaver
 class ShareButton(context: Context, attrs: AttributeSet?) : AppCompatButton(context, attrs) {
     init {
         require(context is Activity) { "SaveButton context should be a subclass of Activity" }
-        background = AppCompatResources.getDrawable(context, R.drawable.ic_share)
         setOnClickListener { shareTask(context) }
     }
 

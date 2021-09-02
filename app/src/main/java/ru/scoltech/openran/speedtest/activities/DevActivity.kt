@@ -1,5 +1,6 @@
 package ru.scoltech.openran.speedtest.activities
 
+import android.content.pm.ActivityInfo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod

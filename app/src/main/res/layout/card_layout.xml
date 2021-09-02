@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="300dp"
@@ -9,7 +10,7 @@
     android:orientation="vertical">
 
     <!--    Speed info-->
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/speed_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -23,12 +24,12 @@
 
             android:gravity="top"
             android:lineSpacingExtra="0sp"
+            android:text="@string/_0"
+            android:textAppearance="@style/Headline1"
+            android:textColor="@color/neutral_10"
 
-
-
-            android:text="0"
-            android:textAppearance="@style/headline_1"
-            android:textColor="@color/colorLightBackground" />
+            app:layout_constraintRight_toLeftOf="@+id/dot_speed"
+            tools:ignore="MissingConstraints" />
 
         <TextView
             android:id="@+id/dot_speed"
@@ -37,15 +38,19 @@
             android:gravity="top"
 
             android:lineSpacingExtra="0sp"
-            android:text="."
+            android:text="@string/dot"
+            android:textAppearance="@style/Headline1"
+            android:textColor="@color/colorLightBackground"
 
-            android:textAppearance="@style/headline_1"
-            android:textColor="@color/colorLightBackground" />
+            app:layout_constraintLeft_toLeftOf="@+id/speed_info"
+            app:layout_constraintRight_toRightOf="@+id/speed_info"
+            tools:ignore="MissingConstraints" />
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            app:layout_constraintLeft_toRightOf="@+id/dot_speed"
+            tools:ignore="MissingConstraints">
 
             <TextView
                 android:id="@+id/fraction_speed"
@@ -54,9 +59,8 @@
 
                 android:gravity="top"
                 android:lineSpacingExtra="0sp"
-
-                android:text="0"
-                android:textAppearance="@style/headline_1"
+                android:text="@string/_0"
+                android:textAppearance="@style/Headline1"
                 android:textColor="@color/colorLightBackground" />
 
             <TextView
@@ -67,25 +71,25 @@
                 android:layout_marginTop="-10dp"
 
                 android:text="@string/mbps"
-                android:textAppearance="@style/headline_2"
-                android:textColor="@color/colorLightBackground" />
-        </LinearLayout>
+                android:textAppearance="@style/Headline2"
+                android:textColor="@color/colorLightBackground"
+                app:layout_constraintTop_toBottomOf="@+id/fraction_speed" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ru.scoltech.openran.speedtest.Wave
         android:id="@+id/progress_wave"
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:layout_below="@id/speed_info"
         android:layout_marginTop="20dp" />
 
     <!--    Ping info-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="right"
+        android:gravity="end"
         android:orientation="horizontal">
 
         <TextView
@@ -96,7 +100,7 @@
             android:layout_marginEnd="40dp"
 
             android:text="@string/ping"
-            android:textAppearance="@style/headline_4"
+            android:textAppearance="@style/Headline4"
             android:textColor="@color/colorLightBackground" />
 
         <TextView
@@ -107,8 +111,8 @@
 
             android:layout_marginEnd="40dp"
 
-            android:text="-"
-            android:textAppearance="@style/headline_4"
+            android:text="@string/empty"
+            android:textAppearance="@style/Headline4"
             android:textColor="@color/colorLightBackground" />
 
     </LinearLayout>

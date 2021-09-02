@@ -13,20 +13,25 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SpeedtestApplication"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activities.DevActivity">
+        <activity
+            android:name=".activities.DevActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.DemoActivity">
+        <activity
+            android:name=".activities.DemoActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.shareFileProvider"

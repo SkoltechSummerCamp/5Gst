@@ -18,8 +18,8 @@
             android:layout_height="wrap_content"
 
             android:text="@string/download"
-            android:textAppearance="@style/headline_3"
-            android:textColor="@color/neutral_100" />
+            android:textAppearance="@style/Headline3"
+            android:textColor="?android:attr/textColorPrimary" />
 
         <TextView
             android:id="@+id/value_download"
@@ -27,8 +27,8 @@
             android:layout_height="wrap_content"
 
             android:text="@string/empty"
-            android:textAppearance="@style/headline_4"
-            android:textColor="@color/neutral_100" />
+            android:textAppearance="@style/Headline4"
+            android:textColor="?android:attr/textColorPrimary" />
 
         <TextView
             android:id="@+id/caption_download"
@@ -36,8 +36,8 @@
             android:layout_height="wrap_content"
 
             android:text="@string/mbps"
-            android:textAppearance="@style/subtitle_1"
-            android:textColor="@color/neutral_100" />
+            android:textAppearance="@style/Subtitle1"
+            android:textColor="?android:attr/textColorPrimary" />
     </LinearLayout>
 
     <!--    Upload col-->
@@ -46,7 +46,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
-        android:layout_toEndOf="@+id/block_download"
         android:gravity="center"
         android:orientation="vertical">
 
@@ -56,8 +55,8 @@
             android:layout_height="wrap_content"
 
             android:text="@string/upload"
-            android:textAppearance="@style/headline_3"
-            android:textColor="@color/neutral_100" />
+            android:textAppearance="@style/Headline3"
+            android:textColor="?android:attr/textColorPrimary" />
 
         <TextView
             android:id="@+id/value_upload"
@@ -65,8 +64,8 @@
             android:layout_height="wrap_content"
 
             android:text="@string/empty"
-            android:textAppearance="@style/headline_4"
-            android:textColor="@color/neutral_100" />
+            android:textAppearance="@style/Headline4"
+            android:textColor="?android:attr/textColorPrimary" />
 
         <TextView
             android:id="@+id/caption_upload"
@@ -74,8 +73,8 @@
             android:layout_height="wrap_content"
 
             android:text="@string/mbps"
-            android:textAppearance="@style/subtitle_1"
-            android:textColor="@color/neutral_100" />
+            android:textAppearance="@style/Subtitle1"
+            android:textColor="?android:attr/textColorPrimary" />
     </LinearLayout>
 
 

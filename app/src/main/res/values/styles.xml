@@ -1,69 +1,57 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="headline_1">
+    <style name="DarkTheme" parent="Theme.AppCompat.DayNight">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="Headline1">
         <item name="android:textSize">64sp</item>
-        <item name="android:textColor">@color/neutral_100</item>
         <item name="android:fontFamily">@font/futura_pt_medium</item>
     </style>
 
-    <style name="headline_2">
-        <item name="android:textSize">
-            24sp
-        </item>
-        <item name="android:letterSpacing">
-            0.05
-        </item>
-        <item name="android:textColor">@color/neutral_100</item>
+    <style name="Headline2">
+        <item name="android:textSize">24sp</item>
+        <item name="android:letterSpacing">0.05</item>
         <item name="android:fontFamily">@font/futura_pt_demi</item>
     </style>
 
-    <style name="headline_3">
-        <item name="android:textSize">
-            24sp
-        </item>
-        <item name="android:letterSpacing">
-            0.1
-        </item>
-        <item name="android:textColor">@color/neutral_100</item>
+    <style name="Headline3">
+        <item name="android:textSize">24sp</item>
+        <item name="android:letterSpacing">0.1</item>
         <item name="android:fontFamily">@font/futura_pt_medium</item>
     </style>
 
-    <style name="headline_4">
-        <item name="android:textSize">
-            24sp
-        </item>
-        <item name="android:textColor">@color/neutral_100</item>
+    <style name="Headline4">
+        <item name="android:textSize">24sp</item>
         <item name="android:fontFamily">@font/futura_pt_medium</item>
     </style>
 
-    <style name="subtitle_1">
+    <style name="Subtitle1">
         <item name="android:textSize">20sp</item>
-        <item name="android:textColor">@color/neutral_100</item>
         <item name="android:fontFamily">@font/futura_pt_medium</item>
     </style>
 
-    <style name="subtitle_2">
+    <style name="Subtitle2">
         <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/neutral_100</item>
         <item name="android:fontFamily">@font/arial_bold</item>
     </style>
 
-    <style name="subtitle_3">
+    <style name="Subtitle3">
         <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/neutral_100</item>
         <item name="android:fontFamily">@font/arial_regular</item>
     </style>
 
-    <style name="mono">
+    <style name="Mono">
         <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/neutral_100</item>
         <item name="android:fontFamily">@font/oxygen_mono_regular</item>
     </style>
 

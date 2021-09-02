@@ -15,19 +15,21 @@
             android:layout_gravity="bottom"
 
             android:text="@string/download_speed"
-            android:textAppearance="@style/subtitle_1" />
+            android:textAppearance="@style/Subtitle1"
+            android:textColor="?android:attr/textColorPrimary" />
 
         <TextView
             android:id="@+id/download_value_res"
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="right"
+            android:layout_gravity="end"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
 
-            android:text="234.34"
-            android:textAppearance="@style/headline_4" />
+            android:text="@string/_0"
+            android:textAppearance="@style/Headline4"
+            android:textColor="?android:attr/textColorPrimary" />
 
         <TextView
 
@@ -36,7 +38,8 @@
             android:layout_gravity="bottom"
 
             android:text="@string/mbps"
-            android:textAppearance="@style/subtitle_1" />
+            android:textAppearance="@style/Subtitle1"
+            android:textColor="?android:attr/textColorPrimary" />
     </TableRow>
 
     <TableRow
@@ -49,21 +52,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:text="Upload speed"
+            android:text="@string/upload_speed"
 
-            android:textAppearance="@style/subtitle_1" />
+            android:textAppearance="@style/Subtitle1"
+            android:textColor="?android:attr/textColorPrimary" />
 
         <TextView
             android:id="@+id/upload_value_res"
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="right"
+            android:layout_gravity="end"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
-            android:text="234.34"
+            android:text="@string/_0"
 
-            android:textAppearance="@style/headline_4" />
+            android:textAppearance="@style/Headline4"
+            android:textColor="?android:attr/textColorPrimary" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -71,7 +76,8 @@
             android:layout_gravity="bottom"
             android:text="@string/mbps"
 
-            android:textAppearance="@style/subtitle_1" />
+            android:textAppearance="@style/Subtitle1"
+            android:textColor="?android:attr/textColorPrimary" />
     </TableRow>
 
     <TableRow
@@ -84,20 +90,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:text="Ping"
+            android:text="@string/_ping"
 
-            android:textAppearance="@style/subtitle_1" />
+            android:textAppearance="@style/Subtitle1"
+            android:textColor="?android:attr/textColorPrimary" />
 
         <TextView
             android:id="@+id/ping_value_res"
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="right"
+            android:layout_gravity="end"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
-            android:text="23"
-            android:textAppearance="@style/headline_4" />
+            android:text="@string/_0"
+            android:textAppearance="@style/Headline4"
+            android:textColor="?android:attr/textColorPrimary" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -105,7 +113,8 @@
             android:layout_gravity="bottom"
             android:text="@string/ms"
 
-            android:textAppearance="@style/subtitle_1" />
+            android:textAppearance="@style/Subtitle1"
+            android:textColor="?android:attr/textColorPrimary" />
     </TableRow>
 
 </TableLayout>

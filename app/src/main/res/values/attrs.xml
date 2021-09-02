@@ -19,4 +19,12 @@
         <attr name="download_speed" format="string" />
         <attr name="upload_speed" format="string" />
     </declare-styleable>
+
+    <declare-styleable name="DarkTheme">
+        <attr name="colorBackground" format="color" />
+        <attr name="colorRegularText" format="color" />
+        <attr name="colorCardText" format="color" />
+        <attr name="colorCardBackground" format="color" />
+        <attr name="colorButtonIcon" format="color" />
+    </declare-styleable>
 </resources>

@@ -41,4 +41,8 @@
     <string name="main_address_hint">Main address:</string>
     <string name="balancer_mode">Balancer mode</string>
     <string name="direct_iperf_mode">Direct iPerf mode</string>
+    <string name="_0">0</string>
+    <string name="upload_speed">Upload speed</string>
+    <string name="_ping">Ping</string>
+    <string name="dot">.</string>
 </resources>
