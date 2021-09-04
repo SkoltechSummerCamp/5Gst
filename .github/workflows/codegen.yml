@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Clear AUTOBUILD directory
+        run: rm -rf AUTOBUILD
+
+      - name: Generate python client
+        uses: ducksify/swagger-codegen-action@v3.0
+        with:
+          args: >
+            generate 
+            -i yaml/swagger.yaml 
+            -l python
+            -o AUTOBUILD/pythonBalancerClient/
+            -c config/pythonClientConfig.json
+
+      - name: Generate java client
+        uses: ducksify/swagger-codegen-action@v3.0
+        with:
+          args: >
+            generate 
+            -i yaml/swagger.yaml 
+            -l java
+            -o AUTOBUILD/javaBalancerClient/
+            -c config/javaClientConfig.json
+
+      - name: Generate python stub server
+        uses: ducksify/swagger-codegen-action@v3.0
+        with:
+          args: >
+            generate 
+            -i yaml/swagger.yaml 
+            -l python-flask
+            -o AUTOBUILD/pythonBalancerStubServer/
+            -c config/pythonStubServerConfig.json
+
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+            commit_message: Regenerate the clients and server stub
+            file_pattern: AUTOBUILD/

@@ -1,0 +1,6 @@
+{
+  "hideGenerationTimestamp": true,
+  "java8": true,
+  "checkDuplicatedModelName": true,
+  "dateLibrary": "java8"
+}
