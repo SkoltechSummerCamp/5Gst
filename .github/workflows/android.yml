@@ -24,6 +24,11 @@ jobs:
     - name: Setup Android NDK
       run: yes | "$ANDROID_HOME/tools/bin/sdkmanager" "ndk;19.2.5345600"
 
+    - name: Patch swagger API
+      run: |
+        cd swaggerApi
+        git apply ../swaggerApi.patch
+
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle

@@ -1,2 +1,6 @@
+import java.nio.file.Paths
+
 rootProject.name = "SpeedtestApplication"
 include ':app', ':balancerApi'
+
+project(':balancerApi').projectDir = file(Paths.get("swaggerApi", "AUTOBUILD", "javaBalancerClient"))

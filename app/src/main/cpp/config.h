@@ -38,6 +38,14 @@
    don't. */
 #define HAVE_DECL_EWOULDBLOCK 1
 
+/* Define to 1 if you have the declaration of `IFF_TAP', and to 0 if you
+   don't. */
+#define HAVE_DECL_IFF_TAP 1
+
+/* Define to 1 if you have the declaration of `IFF_TUN', and to 0 if you
+   don't. */
+#define HAVE_DECL_IFF_TUN 1
+
 /* Define to 1 if you have the declaration of `IPV6_ADD_MEMBERSHIP', and to 0
    if you don't. */
 #define HAVE_DECL_IPV6_ADD_MEMBERSHIP 1
@@ -78,6 +86,14 @@
    don't. */
 #define HAVE_DECL_MSG_DONTWAIT 1
 
+/* Define to 1 if you have the declaration of `MSG_PEEK', and to 0 if you
+   don't. */
+#define HAVE_DECL_MSG_PEEK 1
+
+/* Define to 1 if you have the declaration of `MSG_WAITALL', and to 0 if you
+   don't. */
+#define HAVE_DECL_MSG_WAITALL 1
+
 /* Define to 1 if you have the declaration of `pthread_cancel', and to 0 if
    you don't. */
 #define HAVE_DECL_PTHREAD_CANCEL 1
@@ -109,6 +125,18 @@
 /* Define to 1 if you have the declaration of `SO_TIMESTAMP', and to 0 if you
    don't. */
 #define HAVE_DECL_SO_TIMESTAMP 1
+
+/* Define to 1 if you have the declaration of `TCP_NODELAY', and to 0 if you
+   don't. */
+#define HAVE_DECL_TCP_NODELAY 1
+
+/* Define to 1 if you have the declaration of `TCP_NOTSENT_LOWAT', and to 0 if
+   you don't. */
+#define HAVE_DECL_TCP_NOTSENT_LOWAT 1
+
+/* Define to 1 if you have the declaration of `TCP_WINDOW_CLAMP', and to 0 if
+   you don't. */
+#define HAVE_DECL_TCP_WINDOW_CLAMP 1
 
 /* Define if limiting test traffic to the local-only network (via socket
    SO_DONTROUTE) should be the default */
@@ -168,6 +196,9 @@
 /* Define to 1 if you have the <linux/if_packet.h> header file. */
 #define HAVE_LINUX_IF_PACKET_H 1
 
+/* Define to 1 if you have the <linux/if_tun.h> header file. */
+#define HAVE_LINUX_IF_TUN_H 1
+
 /* Define to 1 if you have the <linux/ip.h> header file. */
 #define HAVE_LINUX_IP_H 1
 
@@ -194,6 +225,9 @@
 
 /* Define to 1 if you have the <netinet/in.h> header file. */
 #define HAVE_NETINET_IN_H 1
+
+/* Define to 1 if you have the <netinet/tcp.h> header file. */
+#define HAVE_NETINET_TCP_H 1
 
 /* Define to 1 if you have the <net/ethernet.h> header file. */
 #define HAVE_NET_ETHERNET_H 1
@@ -322,6 +356,12 @@
 /* Define for thread level debugging of the code */
 /* #undef HAVE_THREAD_DEBUG */
 
+/* TUNTAP_TAP support is available */
+/* #undef HAVE_TUNTAP_TAP 1 */
+
+/* TUNTAP_TUN support is available */
+/* #undef HAVE_TUNTAP_TUN 1 */
+
 /* Define to 1 if you have the <unistd.h> header file. */
 #define HAVE_UNISTD_H 1
 
@@ -356,7 +396,7 @@
 #define PACKAGE_NAME "Iperf"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "Iperf 2.1.1"
+#define PACKAGE_STRING "Iperf 2.1.4"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "iperf"
@@ -365,7 +405,7 @@
 #define PACKAGE_URL ""
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "2.1.1"
+#define PACKAGE_VERSION "2.1.4"
 
 /* Define to necessary symbol if this constant uses a non-standard name on
    your system. */
@@ -396,7 +436,7 @@
 /* #undef TM_IN_SYS_TIME */
 
 /* Version number of package */
-#define VERSION "2.1.1"
+#define VERSION "2.1.4"
 
 /* Define WORDS_BIGENDIAN to 1 if your processor stores words with the most
    significant byte first (like Motorola and SPARC, unlike Intel). */
