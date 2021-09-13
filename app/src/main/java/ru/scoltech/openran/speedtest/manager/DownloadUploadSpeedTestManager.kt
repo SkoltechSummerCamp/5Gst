@@ -1,17 +1,20 @@
 package ru.scoltech.openran.speedtest.manager
 
 import android.content.Context
-import kotlinx.coroutines.*
-import ru.scoltech.openran.speedtest.ApplicationConstants
-import ru.scoltech.openran.speedtest.backend.parseInetSocketAddress
+import io.swagger.client.model.ServerAddr
+import ru.scoltech.openran.speedtest.parser.MultithreadedIperfOutputParser
+import ru.scoltech.openran.speedtest.task.TaskChain
+import ru.scoltech.openran.speedtest.task.TaskChainBuilder
+import ru.scoltech.openran.speedtest.task.impl.*
+import java.lang.Exception
 import java.lang.Runnable
-import java.net.UnknownHostException
+import java.net.InetSocketAddress
 import java.util.*
+import java.util.concurrent.atomic.AtomicReference
 import java.util.concurrent.locks.ReentrantLock
 import java.util.function.BiConsumer
 import java.util.function.Consumer
 import java.util.function.LongConsumer
-import java.util.function.ToLongFunction
 import kotlin.concurrent.withLock
 
 class DownloadUploadSpeedTestManager
@@ -20,112 +23,116 @@ private constructor(
     private val onPingUpdate: (Long) -> Unit,
     private val onDownloadStart: () -> Unit,
     private val onDownloadSpeedUpdate: (LongSummaryStatistics, Long) -> Unit,
-    private val onDownloadFinish: (LongSummaryStatistics) -> Long,
+    private val onDownloadFinish: (LongSummaryStatistics) -> Unit,
     private val onUploadStart: () -> Unit,
     private val onUploadSpeedUpdate: (LongSummaryStatistics, Long) -> Unit,
     private val onUploadFinish: (LongSummaryStatistics) -> Unit,
     private val onFinish: () -> Unit,
     private val onStop: () -> Unit,
-    private val onLog: (String, String) -> Unit,
-    private val onFatalError: (String) -> Unit,
+    private val onLog: (String, String, Exception?) -> Unit,
+    private val onFatalError: (String, Exception?) -> Unit,
 ) {
     private val lock = ReentrantLock()
-
-    private var downloadManager: SpeedTestManager? = null
-    private var uploadManager: SpeedTestManager? = null
-    private var delayJob: Job? = null
+    private var taskChain: TaskChain<*>? = null
 
     fun start(useBalancer: Boolean, mainAddress: String, idleBetweenTasksMelees: Long) {
-        val startLock = ReentrantLock()
-        val startedCondition = startLock.newCondition()
+        val localTaskChain = if (useBalancer) {
+            buildChainUsingBalancer(idleBetweenTasksMelees)
+        } else {
+            buildDirectIperfChain()
+        }
 
-        startLock.withLock {
-            CoroutineScope(Dispatchers.IO).launch {
-                lock.withLock {
-                    startLock.withLock(startedCondition::signal)
-                    internalStart(useBalancer, mainAddress, idleBetweenTasksMelees)
-                }
-            }
-            // guarantees that the `lock` was acquired
-            // so render thread won't try to stop execution before actual start
-            startedCondition.await()
+        lock.withLock {
+            taskChain = localTaskChain.apply { start(mainAddress) }
         }
     }
 
-    private fun internalStart(
-        useBalancer: Boolean,
-        mainAddress: String,
-        idleBetweenTasksMelees: Long,
-    ) {
-        val address = try {
-            val defaultPort = if (useBalancer) {
-                ApplicationConstants.DEFAULT_BALANCER_PORT
-            } else {
-                ApplicationConstants.DEFAULT_IPERF_SERVER_PORT
-            }
-            parseInetSocketAddress(mainAddress, defaultPort)
-        } catch (e: UnknownHostException) {
-            onFatalError("Unknown host ($mainAddress): ${e.message}")
-            return
-        }
+    fun buildChainUsingBalancer(idleBetweenTasksMelees: Long): TaskChain<String> {
+        val balancerApiBuilder = BalancerApiBuilder()
+            .setConnectTimeout(DEFAULT_TIMEOUT)
+            .setReadTimeout(DEFAULT_TIMEOUT)
+            .setWriteTimeout(DEFAULT_TIMEOUT)
 
-        stop()
-        val builder = SpeedTestManager.Builder(
-            context,
-            "$DEFAULT_COMMON_CLIENT_ARGS $DEFAULT_UPLOAD_CLIENT_ARGS",
-            address,
+        val obtainServiceAddressesTask = ObtainServiceAddressesTask(balancerApiBuilder)
+        val startServiceIperfTask = StartServiceIperfTask(
+            balancerApiBuilder,
+            "-s $DEFAULT_DOWNLOAD_SERVER_ARGS"
         )
-            .serverArgs("-s $DEFAULT_UPLOAD_SERVER_ARGS")
-            .useBalancer(useBalancer)
-            .checkPing(false)
-            .onPingUpdate(onPingUpdate)
-            .onStart(onUploadStart)
-            .onSpeedUpdate(onUploadSpeedUpdate)
-            .onLog(onLog)
-            .onFinish {
-                onUploadFinish(it)
-                onFinish()
-            }
-            .onStop(onStop)
-            .onFatalError(onFatalError)
+        val stopServiceIperfTask = StopServiceIperfTask(balancerApiBuilder)
+        val startIperfTask = StartIperfTask(
+            context.filesDir.absolutePath,
+            "$DEFAULT_COMMON_CLIENT_ARGS $DEFAULT_DOWNLOAD_CLIENT_ARGS",
+            MultithreadedIperfOutputParser(),
+            balancerApiBuilder.connectTimeout.toLong(),
+            onDownloadStart,
+            onDownloadSpeedUpdate,
+            onDownloadFinish,
+            onLog
+        )
 
-        val localUploadManager = builder.build()
-        val localDelayJob = CoroutineScope(Dispatchers.Default)
-            .launch(start = CoroutineStart.LAZY) {
-                try {
-                    delay(idleBetweenTasksMelees)
-                } catch (e: CancellationException) {
-                    onStop()
-                    return@launch
-                }
-                localUploadManager.start()
+        val balancerAddress = AtomicReference<InetSocketAddress>()
+        val chainBuilder = TaskChainBuilder<String>().onFatalError(onFatalError).onStop(onStop)
+        chainBuilder.initializeNewChain()
+            .andThen(ParseAddressTask())
+            .andThenUnstoppable {
+                balancerAddress.set(it)
+                it
             }
-        delayJob = localDelayJob
-        uploadManager = localUploadManager
+            .andThen(obtainServiceAddressesTask)
+            .andThen(
+                PingServiceAddressesTask(
+                    balancerApiBuilder.connectTimeout.toLong(),
+                    onPingUpdate
+                )
+            )
+            .andThenTry(startServiceIperfTask) {
+                andThen(startIperfTask)
+            }.andThenFinally(stopServiceIperfTask)
+            .andThen(DelayTask(idleBetweenTasksMelees))
+            .andThenUnstoppable { balancerAddress.get() }
+            .andThen(obtainServiceAddressesTask)
+            .andThenUnstoppable { it[0] }
+            .andThenTry(startServiceIperfTask.copy(args = "-s $DEFAULT_UPLOAD_SERVER_ARGS")) {
+                andThen(
+                    startIperfTask.copy(
+                        args = "$DEFAULT_COMMON_CLIENT_ARGS $DEFAULT_UPLOAD_CLIENT_ARGS",
+                        onStart = onUploadStart,
+                        onSpeedUpdate = onUploadSpeedUpdate,
+                        onFinish = onUploadFinish,
+                    )
+                )
+            }.andThenFinally(stopServiceIperfTask)
+            .andThenUnstoppable { onFinish() }
+        return chainBuilder.finishChainCreation()
+    }
 
-        downloadManager = builder
-            .clientArgs("$DEFAULT_COMMON_CLIENT_ARGS $DEFAULT_DOWNLOAD_CLIENT_ARGS")
-            .serverArgs("-s $DEFAULT_DOWNLOAD_SERVER_ARGS")
-            .checkPing(true)
-            .onStart(onDownloadStart)
-            .onSpeedUpdate(onDownloadSpeedUpdate)
-            .onFinish {
-                onDownloadFinish(it)
-                if (useBalancer) {
-                    localDelayJob.start()
-                } else {
-                    onFinish()
-                }
+    fun buildDirectIperfChain(): TaskChain<String> {
+        val chainBuilder = TaskChainBuilder<String>().onFatalError(onFatalError).onStop(onStop)
+        chainBuilder.initializeNewChain()
+            .andThen(ParseAddressTask())
+            .andThenUnstoppable {
+                listOf(ServerAddr().ip(it.address.hostAddress).portIperf(it.port))
             }
-            .build()
-            .apply { start() }
+            .andThen(PingServiceAddressesTask(DEFAULT_TIMEOUT.toLong(), onPingUpdate))
+            .andThen(
+                StartIperfTask(
+                    context.filesDir.absolutePath,
+                    "$DEFAULT_COMMON_CLIENT_ARGS $DEFAULT_DOWNLOAD_CLIENT_ARGS",
+                    MultithreadedIperfOutputParser(),
+                    DEFAULT_TIMEOUT.toLong(),
+                    onDownloadStart,
+                    onDownloadSpeedUpdate,
+                    onDownloadFinish,
+                    onLog
+                )
+            )
+            .andThenUnstoppable { onFinish() }
+        return chainBuilder.finishChainCreation()
     }
 
     fun stop() {
         lock.withLock {
-            downloadManager?.stop()
-            uploadManager?.stop()
-            delayJob?.cancel()
+            taskChain?.stop()
         }
     }
 
@@ -134,15 +141,15 @@ private constructor(
         private var onDownloadStart: Runnable = Runnable {}
         private var onDownloadSpeedUpdate: BiConsumer<LongSummaryStatistics, Long> =
             BiConsumer { _, _ -> }
-        private var onDownloadFinish: ToLongFunction<LongSummaryStatistics> = ToLongFunction { 0 }
+        private var onDownloadFinish: Consumer<LongSummaryStatistics> = Consumer {}
         private var onUploadStart: Runnable = Runnable {}
         private var onUploadSpeedUpdate: BiConsumer<LongSummaryStatistics, Long> =
             BiConsumer { _, _ -> }
         private var onUploadFinish: Consumer<LongSummaryStatistics> = Consumer {}
         private var onFinish: Runnable = Runnable {}
         private var onStop: Runnable = Runnable {}
-        private var onLog: BiConsumer<String, String> = BiConsumer { _, _ -> }
-        private var onFatalError: Consumer<String> = Consumer {}
+        private var onLog: (String, String, Exception?) -> Unit = { _, _, _ -> }
+        private var onFatalError: BiConsumer<String, Exception?> = BiConsumer { _, _ -> }
 
         fun build(): DownloadUploadSpeedTestManager {
             return DownloadUploadSpeedTestManager(
@@ -150,13 +157,13 @@ private constructor(
                 onPingUpdate::accept,
                 onDownloadStart::run,
                 onDownloadSpeedUpdate::accept,
-                onDownloadFinish::applyAsLong,
+                onDownloadFinish::accept,
                 onUploadStart::run,
                 onUploadSpeedUpdate::accept,
                 onUploadFinish::accept,
                 onFinish::run,
                 onStop::run,
-                onLog::accept,
+                onLog::invoke,
                 onFatalError::accept,
             )
         }
@@ -176,7 +183,7 @@ private constructor(
             return this
         }
 
-        fun onDownloadFinish(onDownloadFinish: ToLongFunction<LongSummaryStatistics>): Builder {
+        fun onDownloadFinish(onDownloadFinish: Consumer<LongSummaryStatistics>): Builder {
             this.onDownloadFinish = onDownloadFinish
             return this
         }
@@ -206,12 +213,12 @@ private constructor(
             return this
         }
 
-        fun onLog(onLog: BiConsumer<String, String>): Builder {
+        fun onLog(onLog: (String, String, Exception?) -> Unit): Builder {
             this.onLog = onLog
             return this
         }
 
-        fun onFatalError(onFatalError: Consumer<String>): Builder {
+        fun onFatalError(onFatalError: BiConsumer<String, Exception?>): Builder {
             this.onFatalError = onFatalError
             return this
         }
@@ -223,5 +230,6 @@ private constructor(
         private const val DEFAULT_DOWNLOAD_SERVER_ARGS = "-u"
         private const val DEFAULT_UPLOAD_CLIENT_ARGS = ""
         private const val DEFAULT_UPLOAD_SERVER_ARGS = ""
+        private const val DEFAULT_TIMEOUT = 1000
     }
 }

@@ -21,6 +21,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import java.util.Locale;
 import java.util.Map;
 
+import kotlin.Unit;
 import kotlin.collections.MapsKt;
 import kotlin.collections.SetsKt;
 import kotlin.text.StringsKt;
@@ -68,6 +69,7 @@ public class DemoActivity extends AppCompatActivity {
         int currentNightMode = getResources().getConfiguration().uiMode
                 & Configuration.UI_MODE_NIGHT_MASK;
 
+        @SuppressWarnings("unchecked")
         Map<Integer, String> themeLogMessage = MapsKt.mapOf(
                 new kotlin.Pair<>(Configuration.UI_MODE_NIGHT_NO, "onCreate: Light Theme"),
                 new kotlin.Pair<>(Configuration.UI_MODE_NIGHT_YES, "onCreate: Dark Theme"),
@@ -164,10 +166,7 @@ public class DemoActivity extends AppCompatActivity {
                     cWave.attachSpeed(instSpeed.first);
                     cWave.invalidate();
                 }))
-                .onDownloadFinish((statistics) -> {
-                    runOnUiThread(() -> mSubResults.setDownloadSpeed(getSpeedString(sm.getAverageSpeed(statistics))));
-                    return TASK_DELAY;
-                })
+                .onDownloadFinish((statistics) -> runOnUiThread(() -> mSubResults.setDownloadSpeed(getSpeedString(sm.getAverageSpeed(statistics)))))
                 .onUploadStart(() -> runOnUiThread(() -> cWave.attachColor(getColor(R.color.gold))))
                 .onUploadSpeedUpdate((statistics, speedBitsPS) -> runOnUiThread(() -> {
                     Pair<Integer, Integer> instSpeed = sm.getSpeedWithPrecision(speedBitsPS.intValue(), 2);
@@ -191,15 +190,23 @@ public class DemoActivity extends AppCompatActivity {
                     actionBtn.setPlay();
                     mSubResults.setEmpty();
                 }))
-                .onFatalError((s) -> runOnUiThread(() -> {
+                .onFatalError((s, exception) -> runOnUiThread(() -> {
                     // TODO bad tag
-                    Log.e("FATAL", s);
+                    Log.e("FATAL", s, exception);
 
                     onStopUI();
                     actionBtn.setPlay();
                     mSubResults.setEmpty();
                 }))
-                .onLog(Log::v)
+                .onLog((tag, message, exception) -> {
+                    if (exception == null) {
+                        Log.v(tag, message);
+                    } else {
+                        Log.v(tag, message + "; " + exception.getClass() + ": " + exception.getMessage());
+                    }
+
+                    return Unit.INSTANCE;
+                })
                 .build();
     }
 
