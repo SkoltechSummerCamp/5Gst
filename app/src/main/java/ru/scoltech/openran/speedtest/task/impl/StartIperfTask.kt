@@ -6,6 +6,7 @@ import ru.scoltech.openran.speedtest.backend.IperfRunner
 import ru.scoltech.openran.speedtest.parser.IperfOutputParser
 import ru.scoltech.openran.speedtest.task.FatalException
 import ru.scoltech.openran.speedtest.task.Task
+import ru.scoltech.openran.speedtest.util.Equalizer
 import ru.scoltech.openran.speedtest.util.IdleTaskKiller
 import ru.scoltech.openran.speedtest.util.Promise
 import ru.scoltech.openran.speedtest.util.TaskKiller
@@ -18,6 +19,7 @@ data class StartIperfTask(
     private val writableDir: String,
     private val args: String,
     private val speedParser: IperfOutputParser,
+    private val speedEqualizer: Equalizer<*>,
     private val idleTimeoutMillis: Long,
     private val onStart: () -> Unit,
     private val onSpeedUpdate: (LongSummaryStatistics, Long) -> Unit,
@@ -29,7 +31,9 @@ data class StartIperfTask(
         killer: TaskKiller
     ): Promise<(ServerAddr) -> Unit, (String, Exception?) -> Unit> = Promise { onSuccess, _ ->
         val idleTaskKiller = IdleTaskKiller()
-        val processor = IperfOutputProcessor(idleTaskKiller) { onSuccess?.invoke(argument) }
+        val processor = IperfOutputProcessor(idleTaskKiller, speedEqualizer.copy()) {
+            onSuccess?.invoke(argument)
+        }
 
         val iperfRunner = IperfRunner.Builder(writableDir)
             .stdoutLinesHandler(processor::onIperfStdoutLine)
@@ -65,6 +69,7 @@ data class StartIperfTask(
 
     private inner class IperfOutputProcessor(
         private val idleTaskKiller: IdleTaskKiller,
+        private val speedEqualizer: Equalizer<*>,
         private val onFinish: () -> Unit,
     ) {
         private val lock = ReentrantLock()
@@ -81,8 +86,15 @@ data class StartIperfTask(
             }
 
             lock.withLock {
-                speedStatistics.accept(speed)
-                onSpeedUpdate(speedStatistics, speed)
+                if (speedEqualizer.accept(speed)) {
+                    speedStatistics.accept(speed)
+                    val equalizedSpeed = try {
+                        speedEqualizer.getEqualized()
+                    } catch (e: Equalizer.NoValueException) {
+                        return
+                    }
+                    onSpeedUpdate(speedStatistics, equalizedSpeed.toLong())
+                }
             }
         }
 

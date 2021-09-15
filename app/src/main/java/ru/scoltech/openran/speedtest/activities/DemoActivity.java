@@ -158,6 +158,12 @@ public class DemoActivity extends AppCompatActivity {
         // TODO split on methods
         speedTestManager = new DownloadUploadSpeedTestManager.Builder(this)
                 .onPingUpdate((ping) -> runOnUiThread(() -> mCard.setPing((int) ping)))
+                .onDownloadStart(() -> runOnUiThread(() -> {
+                    mCard.setInstantSpeed(0, 0);
+
+                    cWave.attachSpeed(0);
+                    cWave.invalidate();
+                }))
                 .onDownloadSpeedUpdate((statistics, speedBitsPS) -> runOnUiThread(() -> {
                     Pair<Integer, Integer> instSpeed = sm.getSpeedWithPrecision(speedBitsPS.intValue(), 2);
                     mCard.setInstantSpeed(instSpeed.first, instSpeed.second);
@@ -167,7 +173,13 @@ public class DemoActivity extends AppCompatActivity {
                     cWave.invalidate();
                 }))
                 .onDownloadFinish((statistics) -> runOnUiThread(() -> mSubResults.setDownloadSpeed(getSpeedString(sm.getAverageSpeed(statistics)))))
-                .onUploadStart(() -> runOnUiThread(() -> cWave.attachColor(getColor(R.color.gold))))
+                .onUploadStart(() -> runOnUiThread(() -> {
+                    mCard.setInstantSpeed(0, 0);
+
+                    cWave.attachColor(getColor(R.color.gold));
+                    cWave.attachSpeed(0);
+                    cWave.invalidate();
+                }))
                 .onUploadSpeedUpdate((statistics, speedBitsPS) -> runOnUiThread(() -> {
                     Pair<Integer, Integer> instSpeed = sm.getSpeedWithPrecision(speedBitsPS.intValue(), 2);
                     mCard.setInstantSpeed(instSpeed.first, instSpeed.second);
@@ -271,6 +283,7 @@ public class DemoActivity extends AppCompatActivity {
         mCard.setDefaultCaptions();
 
         cWave.attachColor(getColor(R.color.mint));
+        cWave.invalidate();
 
         mSubResults.setVisibility(View.VISIBLE);
         mSubResults.setEmpty();
