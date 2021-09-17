@@ -3,15 +3,10 @@ name: Android CI
 on: [push, pull_request]
 
 jobs:
-  build:
-
+  prepare:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-      with:
-        submodules: 'recursive'
-
     - name: Set up JDK 8
       uses: actions/setup-java@v2
       with:
@@ -24,6 +19,15 @@ jobs:
     - name: Setup Android NDK
       run: yes | "$ANDROID_HOME/tools/bin/sdkmanager" "ndk;19.2.5345600"
 
+  debug-build:
+    needs: prepare
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: 'recursive'
+
     - name: Patch swagger API
       run: |
         cd swaggerApi
@@ -31,8 +35,6 @@ jobs:
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
-    - name: Build with Gradle
-      run: ./gradlew assembleDebug
 
     - name: Create file with artifactName variable
       run: |
@@ -47,16 +49,78 @@ jobs:
       with:
         variableFileName: 'variables'
 
+    - name: Build with Gradle
+      run: ./gradlew :app:assembleDebug
+
     - name: Rename apk
       run: |
-        mkdir gh-artifacts
-        mv app/build/outputs/apk/debug/app-debug.apk gh-artifacts/tmp.apk
-        cd gh-artifacts
-        mv tmp.apk "${{ env.artifactName }}.apk"
-        cd ..
+        mkdir gh-artifacts-debug-build
+        mv app/build/outputs/apk/debug/app-debug.apk gh-artifacts-debug-build/${{ env.artifactName }}-debug.apk
 
     - name: Upload apk to artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: ${{ env.artifactName }}
-        path: gh-artifacts/*
+        name: ${{ env.artifactName }}-debug
+        path: gh-artifacts-debug-build/*
+
+  release-build:
+    needs: prepare
+    runs-on: ubuntu-latest
+    if: ${{ startsWith(github.ref, 'refs/tags/') }}
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
+
+      - name: Patch swagger API
+        run: |
+          cd swaggerApi
+          git apply ../swaggerApi.patch
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Create file with artifactName variable
+        run: |
+          REF=$(echo "-${GITHUB_REF#refs/heads/}" | sed 's/\//-/g')
+          if [ ${#REF} -eq 1 ]; then REF=""; fi
+          ./gradlew :app:writeVersion
+          ARTIFACT_NAME="speedtest-$(cat VERSION)-$GITHUB_RUN_NUMBER$REF"
+          mkdir -p .github/variables
+          echo "{\"variables\": [{\"name\": \"artifactName\", \"value\": \"$ARTIFACT_NAME\" }]}" > .github/variables/variables.json
+      - name: Set artifactName variable
+        uses: deep-mm/set-variables@v1.0
+        with:
+          variableFileName: 'variables'
+
+      - name: Get signing key
+        uses: actions/checkout@v2
+        with:
+          repository: ${{ secrets.RELEASE_KEYSTORE_GIT_REPOSITORY }}
+          token: ${{ secrets.ACTION_GITHUB_TOKEN }}
+          path: release-keystore
+
+      - name: Move signing key
+        run: mv release-keystore/release.keystore keystores
+
+      - name: Build with Gradle
+        env:
+          RELEASE_KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
+          RELEASE_SIGN_KEY_ALIAS: ${{ secrets.RELEASE_SIGN_KEY_ALIAS }}
+          RELEASE_SIGN_KEY_PASSWORD: ${{ secrets.RELEASE_SIGN_KEY_PASSWORD }}
+        run: |
+          ./gradlew :app:assembleRelease
+          ./gradlew :app:bundleRelease
+
+      - name: Rename artifacts
+        run: |
+          mkdir gh-artifacts-release-build
+          mv app/build/outputs/apk/release/app-release.apk gh-artifacts-release-build/${{ env.artifactName }}-release.apk
+          mv app/build/outputs/bundle/release/app-release.aab gh-artifacts-release-build/${{ env.artifactName }}-release.aab
+
+      - name: Upload apk to artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.artifactName }}-release
+          path: gh-artifacts-release-build/*
