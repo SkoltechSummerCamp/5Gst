@@ -18,8 +18,6 @@ import ru.scoltech.openran.speedtest.activities.DevActivity;
 public class HeaderView extends LinearLayout {
 
     private Button returnBtn;
-    private Button historyBtn;
-    private Button modeBtn;
 
     private TextView sectionNameTV;
 
@@ -33,18 +31,12 @@ public class HeaderView extends LinearLayout {
         parseAttrs(context, attrs);
 
         returnBtn.setOnClickListener(v -> goToStart(v.getContext()));
-
-        historyBtn.setOnClickListener(v -> goToHistory(v.getContext()));
-
-        modeBtn.setOnClickListener(v -> goToDev(v.getContext()));
     }
 
     private void init() {
         sectionNameTV = findViewById(R.id.section_name);
 
         returnBtn = findViewById(R.id.return_btn);
-        historyBtn = findViewById(R.id.history_go_btn);
-        modeBtn = findViewById(R.id.mode_switch_btn);
     }
 
     private void parseAttrs(Context context, AttributeSet attrs) {
@@ -84,16 +76,6 @@ public class HeaderView extends LinearLayout {
         context.startActivity(intent);
     }
 
-    private void goToHistory(Context context) {
-        Log.d("HEADER", "goToHistory: pressed btn");
-    }
-
-    private void goToDev(Context context) {
-        Log.d("HEADER", "goToDev: pressed btn");
-        Intent intent = new Intent(context, DevActivity.class);
-        context.startActivity(intent);
-    }
-
     private void changeStateButtonGroup(boolean flag) {
         if (flag) {
             enableButtonGroup();
@@ -111,19 +93,11 @@ public class HeaderView extends LinearLayout {
     }
 
     public void disableButtonGroup() {
-        historyBtn.setEnabled(false);
-        historyBtn.setAlpha(0.5f);
-
-        modeBtn.setEnabled(false);
-        modeBtn.setAlpha(0.5f);
+        // no operations
     }
 
     public void enableButtonGroup() {
-        historyBtn.setEnabled(true);
-        historyBtn.setAlpha(1f);
-
-        modeBtn.setEnabled(true);
-        modeBtn.setAlpha(1f);
+        // no operations
     }
 
     public void setSectionName(String sectionName) {

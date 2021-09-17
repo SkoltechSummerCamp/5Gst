@@ -152,7 +152,7 @@ public class SpeedManager {
 
         String timestamp = new SimpleDateFormat("HH:mm\tdd.MM.yyyy", Locale.ROOT).format(new Date());
         comboCanvas.drawText(timestamp, background.getWidth() - 50f, background.getHeight() - 20f, textPaint);
-        comboCanvas.drawText("Speedtest 5G", background.getWidth() - 50f, background.getHeight() - 50f, textPaint);
+        comboCanvas.drawText("5G Speedtest", background.getWidth() - 50f, background.getHeight() - 50f, textPaint);
 
         return combo;
 

@@ -203,22 +203,12 @@ public class DemoActivity extends AppCompatActivity {
                     mSubResults.setEmpty();
                 }))
                 .onFatalError((s, exception) -> runOnUiThread(() -> {
-                    // TODO bad tag
-                    Log.e("FATAL", s, exception);
+                    Log.e("SpeedtestFatal", s, exception);
 
                     onStopUI();
                     actionBtn.setPlay();
                     mSubResults.setEmpty();
                 }))
-                .onLog((tag, message, exception) -> {
-                    if (exception == null) {
-                        Log.v(tag, message);
-                    } else {
-                        Log.v(tag, message + "; " + exception.getClass() + ": " + exception.getMessage());
-                    }
-
-                    return Unit.INSTANCE;
-                })
                 .build();
     }
 

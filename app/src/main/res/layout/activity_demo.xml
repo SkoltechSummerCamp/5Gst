@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             app:is_active_back="false"
             app:is_active_button_group="true"
-            app:section_name="SpeedTest 5G" />
+            app:section_name="5G Speedtest" />
 
         <ru.scoltech.openran.speedtest.customViews.CardView
             android:id="@+id/card"

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Speedtest</string>
+    <string name="app_name">5Gst</string>
     <string name="startIperf">start</string>
     <string name="stopIperf">stop</string>
     <string name="deviceIp">Device ip :</string>
