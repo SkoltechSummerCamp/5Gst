@@ -68,7 +68,7 @@
 
             android:text="@string/tap_to_start_session"
             android:textAppearance="@style/Subtitle2"
-            android:textColor="?android:attr/textColorPrimary" />
+            android:textColor="#B1B1B1" />
 
         <LinearLayout
             android:layout_width="match_parent"
