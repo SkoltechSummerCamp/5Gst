@@ -18,7 +18,7 @@ public class Wave extends View {
     private static final float mFirstWaveFrequency = 1.2f;
     private static final float mSecondWaveFrequency = 1.0f;
     private static final int mSecondWaveOffset = 15;
-    private static final float mOffsetAddendum = 1.0f;
+    private static final int mOffsetAddendum = 15;
     private Paint mPaint;
     private int mCurrentSpeed;
     private float mOffsetX;
