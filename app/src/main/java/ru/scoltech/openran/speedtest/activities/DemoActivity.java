@@ -2,7 +2,6 @@ package ru.scoltech.openran.speedtest.activities;
 
 
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.Editable;
@@ -161,8 +160,8 @@ public class DemoActivity extends AppCompatActivity {
                 .onDownloadStart(() -> runOnUiThread(() -> {
                     mCard.setInstantSpeed(0, 0);
 
+                    cWave.start();
                     cWave.attachSpeed(0);
-                    cWave.invalidate();
                 }))
                 .onDownloadSpeedUpdate((statistics, speedBitsPS) -> runOnUiThread(() -> {
                     Pair<Integer, Integer> instSpeed = sm.getSpeedWithPrecision(speedBitsPS.intValue(), 2);
@@ -170,15 +169,17 @@ public class DemoActivity extends AppCompatActivity {
 
                     //animation
                     cWave.attachSpeed(instSpeed.first);
-                    cWave.invalidate();
                 }))
-                .onDownloadFinish((statistics) -> runOnUiThread(() -> mSubResults.setDownloadSpeed(getSpeedString(sm.getAverageSpeed(statistics)))))
+                .onDownloadFinish((statistics) -> runOnUiThread(() -> {
+                    mSubResults.setDownloadSpeed(getSpeedString(sm.getAverageSpeed(statistics)));
+                    cWave.stop();
+                }))
                 .onUploadStart(() -> runOnUiThread(() -> {
                     mCard.setInstantSpeed(0, 0);
 
+                    cWave.start();
                     cWave.attachColor(getColor(R.color.gold));
                     cWave.attachSpeed(0);
-                    cWave.invalidate();
                 }))
                 .onUploadSpeedUpdate((statistics, speedBitsPS) -> runOnUiThread(() -> {
                     Pair<Integer, Integer> instSpeed = sm.getSpeedWithPrecision(speedBitsPS.intValue(), 2);
@@ -186,9 +187,11 @@ public class DemoActivity extends AppCompatActivity {
 
                     //animation
                     cWave.attachSpeed(instSpeed.first);
-                    cWave.invalidate();
                 }))
-                .onUploadFinish((statistics) -> runOnUiThread(() -> mSubResults.setUploadSpeed(getSpeedString(sm.getAverageSpeed(statistics)))))
+                .onUploadFinish((statistics) -> runOnUiThread(() -> {
+                    cWave.stop();
+                    mSubResults.setUploadSpeed(getSpeedString(sm.getAverageSpeed(statistics)));
+                }))
                 .onFinish(() -> runOnUiThread(() -> {
                     actionBtn.setPlay();
 
@@ -274,7 +277,6 @@ public class DemoActivity extends AppCompatActivity {
         mCard.setDefaultCaptions();
 
         cWave.attachColor(getColor(R.color.mint));
-        cWave.invalidate();
 
         mSubResults.setVisibility(View.VISIBLE);
         mSubResults.setEmpty();
@@ -295,6 +297,7 @@ public class DemoActivity extends AppCompatActivity {
         mHeader.enableButtonGroup();
         mHeader.showReturnBtn();
 
+        cWave.stop();
         actionBtn.setPlay();
 
         mSubResults.setEmpty();
