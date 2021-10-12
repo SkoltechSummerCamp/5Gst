@@ -45,4 +45,6 @@
     <string name="upload_speed">Upload speed</string>
     <string name="_ping">Ping</string>
     <string name="dot">.</string>
+    <string name="policy_title">Terms and Conditions</string>
+    <string name="policy_content">By using this app you agree to our <a href="https://5gst.ru/static/Privacy_Policy_for_5G_Speed_Test_App.html">Privacy Policy</a></string>
 </resources>

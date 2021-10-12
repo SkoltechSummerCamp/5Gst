@@ -6,6 +6,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.util.Pair;
 import android.view.View;
@@ -14,11 +15,13 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 import kotlin.Unit;
 import kotlin.collections.MapsKt;
@@ -154,6 +157,13 @@ public class DemoActivity extends AppCompatActivity {
             this.<RadioButton>findViewById(R.id.direct_mode).setChecked(true);
         }
 
+        if (!getPreferences(MODE_PRIVATE).getBoolean(ApplicationConstants.PRIVACY_SHOWN, false)) {
+            SharedPreferences.Editor preferencesEditor = getPreferences(MODE_PRIVATE).edit();
+            preferencesEditor.putBoolean(ApplicationConstants.PRIVACY_SHOWN, true);
+            preferencesEditor.apply();
+            findViewById(R.id.main_layout).post(this::showPrivacyPopUp);
+        }
+
         // TODO split on methods
         speedTestManager = new DownloadUploadSpeedTestManager.Builder(this)
                 .onPingUpdate((ping) -> runOnUiThread(() -> mCard.setPing((int) ping)))
@@ -213,6 +223,18 @@ public class DemoActivity extends AppCompatActivity {
                     mSubResults.setEmpty();
                 }))
                 .build();
+    }
+
+    private void showPrivacyPopUp() {
+        AlertDialog alert = new AlertDialog.Builder(this)
+                .setTitle(getString(R.string.policy_title))
+                .setMessage(R.string.policy_content)
+                .setPositiveButton(android.R.string.ok, null)
+                .create();
+        alert.show();
+
+        ((TextView) Objects.requireNonNull(alert.findViewById(android.R.id.message)))
+                .setMovementMethod(LinkMovementMethod.getInstance());
     }
 
     public void onClick(View v) {
