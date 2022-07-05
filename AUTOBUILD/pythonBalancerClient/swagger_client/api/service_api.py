@@ -223,43 +223,45 @@ class ServiceApi(object):
             _request_timeout=params.get('_request_timeout'),
             collection_formats=collection_formats)
 
-    def service_delete(self, **kwargs):  # noqa: E501
+    def service_delete(self, data, **kwargs):  # noqa: E501
         """service_delete  # noqa: E501
 
         Unregister caller as service  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.service_delete(async_req=True)
+        >>> thread = api.service_delete(data, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool
+        :param ServerAddressRequest data: (required)
         :return: ServerAddressRequest
                  If the method is called asynchronously,
                  returns the request thread.
         """
         kwargs['_return_http_data_only'] = True
         if kwargs.get('async_req'):
-            return self.service_delete_with_http_info(**kwargs)  # noqa: E501
+            return self.service_delete_with_http_info(data, **kwargs)  # noqa: E501
         else:
-            (data) = self.service_delete_with_http_info(**kwargs)  # noqa: E501
+            (data) = self.service_delete_with_http_info(data, **kwargs)  # noqa: E501
             return data
 
-    def service_delete_with_http_info(self, **kwargs):  # noqa: E501
+    def service_delete_with_http_info(self, data, **kwargs):  # noqa: E501
         """service_delete  # noqa: E501
 
         Unregister caller as service  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.service_delete_with_http_info(async_req=True)
+        >>> thread = api.service_delete_with_http_info(data, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool
+        :param ServerAddressRequest data: (required)
         :return: ServerAddressRequest
                  If the method is called asynchronously,
                  returns the request thread.
         """
 
-        all_params = []  # noqa: E501
+        all_params = ['data']  # noqa: E501
         all_params.append('async_req')
         all_params.append('_return_http_data_only')
         all_params.append('_preload_content')
@@ -274,6 +276,10 @@ class ServiceApi(object):
                 )
             params[key] = val
         del params['kwargs']
+        # verify the required parameter 'data' is set
+        if self.api_client.client_side_validation and ('data' not in params or
+                                                       params['data'] is None):  # noqa: E501
+            raise ValueError("Missing the required parameter `data` when calling `service_delete`")  # noqa: E501
 
         collection_formats = {}
 
@@ -287,6 +293,8 @@ class ServiceApi(object):
         local_var_files = {}
 
         body_params = None
+        if 'data' in params:
+            body_params = params['data']
         # HTTP header `Accept`
         header_params['Accept'] = self.api_client.select_header_accept(
             ['application/json'])  # noqa: E501

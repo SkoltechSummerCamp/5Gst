@@ -74,7 +74,8 @@ public class ServiceApiTest {
      */
     @Test
     public void serviceDeleteTest() throws Exception {
-        ServerAddressRequest response = api.serviceDelete();
+        ServerAddressRequest data = null;
+        ServerAddressRequest response = api.serviceDelete(data);
 
         // TODO: test validations
     }

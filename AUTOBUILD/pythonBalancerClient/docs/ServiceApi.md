@@ -110,7 +110,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **service_delete**
-> ServerAddressRequest service_delete()
+> ServerAddressRequest service_delete(data)
 
 
 
@@ -131,16 +131,20 @@ configuration.password = 'YOUR_PASSWORD'
 
 # create an instance of the API class
 api_instance = swagger_client.ServiceApi(swagger_client.ApiClient(configuration))
+data = swagger_client.ServerAddressRequest() # ServerAddressRequest | 
 
 try:
-    api_response = api_instance.service_delete()
+    api_response = api_instance.service_delete(data)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling ServiceApi->service_delete: %s\n" % e)
 ```
 
 ### Parameters
-This endpoint does not need any parameter.
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **data** | [**ServerAddressRequest**](ServerAddressRequest.md)|  | 
 
 ### Return type
 

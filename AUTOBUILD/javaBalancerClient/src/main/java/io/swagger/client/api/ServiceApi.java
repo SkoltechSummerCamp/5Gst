@@ -292,13 +292,14 @@ public class ServiceApi {
     }
     /**
      * Build call for serviceDelete
+     * @param data  (required)
      * @param progressListener Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call serviceDeleteCall(final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
-        Object localVarPostBody = null;
+    public com.squareup.okhttp.Call serviceDeleteCall(ServerAddressRequest data, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+        Object localVarPostBody = data;
 
         // create path and map variables
         String localVarPath = "/service/";
@@ -339,10 +340,15 @@ public class ServiceApi {
     }
 
     @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call serviceDeleteValidateBeforeCall(final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private com.squareup.okhttp.Call serviceDeleteValidateBeforeCall(ServerAddressRequest data, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+        
+        // verify the required parameter 'data' is set
+        if (data == null) {
+            throw new ApiException("Missing the required parameter 'data' when calling serviceDelete(Async)");
+        }
         
 
-        com.squareup.okhttp.Call call = serviceDeleteCall(progressListener, progressRequestListener);
+        com.squareup.okhttp.Call call = serviceDeleteCall(data, progressListener, progressRequestListener);
         return call;
 
     }
@@ -350,22 +356,24 @@ public class ServiceApi {
     /**
      * 
      * Unregister caller as service
+     * @param data  (required)
      * @return ServerAddressRequest
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public ServerAddressRequest serviceDelete() throws ApiException {
-        ApiResponse<ServerAddressRequest> resp = serviceDeleteWithHttpInfo();
+    public ServerAddressRequest serviceDelete(ServerAddressRequest data) throws ApiException {
+        ApiResponse<ServerAddressRequest> resp = serviceDeleteWithHttpInfo(data);
         return resp.getData();
     }
 
     /**
      * 
      * Unregister caller as service
+     * @param data  (required)
      * @return ApiResponse&lt;ServerAddressRequest&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public ApiResponse<ServerAddressRequest> serviceDeleteWithHttpInfo() throws ApiException {
-        com.squareup.okhttp.Call call = serviceDeleteValidateBeforeCall(null, null);
+    public ApiResponse<ServerAddressRequest> serviceDeleteWithHttpInfo(ServerAddressRequest data) throws ApiException {
+        com.squareup.okhttp.Call call = serviceDeleteValidateBeforeCall(data, null, null);
         Type localVarReturnType = new TypeToken<ServerAddressRequest>(){}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
@@ -373,11 +381,12 @@ public class ServiceApi {
     /**
      *  (asynchronously)
      * Unregister caller as service
+     * @param data  (required)
      * @param callback The callback to be executed when the API call finishes
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
-    public com.squareup.okhttp.Call serviceDeleteAsync(final ApiCallback<ServerAddressRequest> callback) throws ApiException {
+    public com.squareup.okhttp.Call serviceDeleteAsync(ServerAddressRequest data, final ApiCallback<ServerAddressRequest> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -398,7 +407,7 @@ public class ServiceApi {
             };
         }
 
-        com.squareup.okhttp.Call call = serviceDeleteValidateBeforeCall(progressListener, progressRequestListener);
+        com.squareup.okhttp.Call call = serviceDeleteValidateBeforeCall(data, progressListener, progressRequestListener);
         Type localVarReturnType = new TypeToken<ServerAddressRequest>(){}.getType();
         apiClient.executeAsync(call, localVarReturnType, callback);
         return call;

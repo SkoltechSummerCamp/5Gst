@@ -115,7 +115,7 @@ Name | Type | Description  | Notes
 
 <a name="serviceDelete"></a>
 # **serviceDelete**
-> ServerAddressRequest serviceDelete()
+> ServerAddressRequest serviceDelete(data)
 
 
 
@@ -138,8 +138,9 @@ Basic.setUsername("YOUR USERNAME");
 Basic.setPassword("YOUR PASSWORD");
 
 ServiceApi apiInstance = new ServiceApi();
+ServerAddressRequest data = new ServerAddressRequest(); // ServerAddressRequest | 
 try {
-    ServerAddressRequest result = apiInstance.serviceDelete();
+    ServerAddressRequest result = apiInstance.serviceDelete(data);
     System.out.println(result);
 } catch (ApiException e) {
     System.err.println("Exception when calling ServiceApi#serviceDelete");
@@ -148,7 +149,10 @@ try {
 ```
 
 ### Parameters
-This endpoint does not need any parameter.
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **data** | [**ServerAddressRequest**](ServerAddressRequest.md)|  |
 
 ### Return type
 
