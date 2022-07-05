@@ -1,14 +1,12 @@
 package ru.scoltech.openran.speedtest.manager
 
 import android.content.Context
-import io.swagger.client.model.ServerAddr
+import io.swagger.client.model.ServerAddressResponse
 import ru.scoltech.openran.speedtest.parser.MultithreadedIperfOutputParser
 import ru.scoltech.openran.speedtest.task.TaskChain
 import ru.scoltech.openran.speedtest.task.TaskChainBuilder
 import ru.scoltech.openran.speedtest.task.impl.*
 import ru.scoltech.openran.speedtest.util.SkipThenAverageEqualizer
-import java.lang.Exception
-import java.lang.Runnable
 import java.net.InetSocketAddress
 import java.util.*
 import java.util.concurrent.atomic.AtomicReference
@@ -84,6 +82,7 @@ private constructor(
                 it
             }
             .andThen(obtainServiceAddressesTask)
+            .andThenUnstoppable { listOf(it) }
             .andThen(
                 PingServiceAddressesTask(
                     balancerApiBuilder.connectTimeout.toLong(),
@@ -96,7 +95,6 @@ private constructor(
             .andThen(DelayTask(idleBetweenTasksMelees))
             .andThenUnstoppable { balancerAddress.get() }
             .andThen(obtainServiceAddressesTask)
-            .andThenUnstoppable { it[0] }
             .andThenTry(startServiceIperfTask.copy(args = "-s $DEFAULT_UPLOAD_SERVER_ARGS")) {
                 andThen(
                     startIperfTask.copy(
@@ -120,7 +118,7 @@ private constructor(
         chainBuilder.initializeNewChain()
             .andThen(ParseAddressTask())
             .andThenUnstoppable {
-                listOf(ServerAddr().ip(it.address.hostAddress).portIperf(it.port))
+                listOf(ServerAddressResponse().ip(it.address.hostAddress).portIperf(it.port))
             }
             .andThen(PingServiceAddressesTask(DEFAULT_TIMEOUT.toLong(), onPingUpdate))
             .andThen(

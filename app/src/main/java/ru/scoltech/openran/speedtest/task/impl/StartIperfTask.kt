@@ -1,6 +1,6 @@
 package ru.scoltech.openran.speedtest.task.impl
 
-import io.swagger.client.model.ServerAddr
+import io.swagger.client.model.ServerAddressResponse
 import ru.scoltech.openran.speedtest.backend.IperfException
 import ru.scoltech.openran.speedtest.backend.IperfRunner
 import ru.scoltech.openran.speedtest.parser.IperfOutputParser
@@ -25,11 +25,11 @@ data class StartIperfTask(
     private val onSpeedUpdate: (LongSummaryStatistics, Long) -> Unit,
     private val onFinish: (LongSummaryStatistics) -> Unit,
     private val onLog: (String, String, Exception?) -> Unit,
-) : Task<ServerAddr, ServerAddr> {
+) : Task<ServerAddressResponse, ServerAddressResponse> {
     override fun prepare(
-        argument: ServerAddr,
+        argument: ServerAddressResponse,
         killer: TaskKiller
-    ): Promise<(ServerAddr) -> Unit, (String, Exception?) -> Unit> = Promise { onSuccess, _ ->
+    ): Promise<(ServerAddressResponse) -> Unit, (String, Exception?) -> Unit> = Promise { onSuccess, _ ->
         val idleTaskKiller = IdleTaskKiller()
         val processor = IperfOutputProcessor(idleTaskKiller, speedEqualizer.copy()) {
             onSuccess?.invoke(argument)

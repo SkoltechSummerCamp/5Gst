@@ -1,6 +1,6 @@
 package ru.scoltech.openran.speedtest.task.impl
 
-import io.swagger.client.model.ServerAddr
+import io.swagger.client.model.ServerAddressResponse
 import ru.scoltech.openran.speedtest.backend.IcmpPinger
 import ru.scoltech.openran.speedtest.task.Task
 import ru.scoltech.openran.speedtest.util.Promise
@@ -9,14 +9,14 @@ import ru.scoltech.openran.speedtest.util.TaskKiller
 data class PingServiceAddressesTask(
     private val timeout: Long,
     private val onPingUpdate: (Long) -> Unit
-) : Task<List<ServerAddr>, ServerAddr> {
+) : Task<List<ServerAddressResponse>, ServerAddressResponse> {
     /**
      * @param argument Service addresses
      */
     override fun prepare(
-        argument: List<ServerAddr>,
+        argument: List<ServerAddressResponse>,
         killer: TaskKiller
-    ): Promise<(ServerAddr) -> Unit, (String, Exception?) -> Unit> = Promise { onSuccess, onError ->
+    ): Promise<(ServerAddressResponse) -> Unit, (String, Exception?) -> Unit> = Promise { onSuccess, onError ->
         // TODO support many addresses
         val address = argument[0]
         val icmpPinger = IcmpPinger()

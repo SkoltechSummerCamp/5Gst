@@ -1,7 +1,7 @@
 package ru.scoltech.openran.speedtest.task.impl
 
 import com.squareup.okhttp.HttpUrl
-import io.swagger.client.model.ServerAddr
+import io.swagger.client.model.ServerAddressResponse
 import ru.scoltech.openran.speedtest.backend.addPathSegments
 import ru.scoltech.openran.speedtest.task.FatalException
 import ru.scoltech.openran.speedtest.task.Task
@@ -12,14 +12,14 @@ import java.net.InetSocketAddress
 data class ObtainServiceAddressesTask(
     private val balancerApiBuilder: BalancerApiBuilder,
     private val balancerPathSegments: List<String> = DEFAULT_BALANCER_REQUEST_PATH_SEGMENTS,
-) : Task<InetSocketAddress, List<ServerAddr>> {
+) : Task<InetSocketAddress, ServerAddressResponse> {
     /**
      * @param argument Balancer address
      */
     override fun prepare(
         argument: InetSocketAddress,
         killer: TaskKiller
-    ): Promise<(List<ServerAddr>) -> Unit, (String, Exception?) -> Unit> {
+    ): Promise<(ServerAddressResponse) -> Unit, (String, Exception?) -> Unit> {
         return Promise { onSuccess, onError ->
             val balancerAddress = HttpUrl.Builder()
                 .scheme("http")
@@ -31,7 +31,7 @@ data class ObtainServiceAddressesTask(
 
             try {
                 val call = BalancerApi(balancerApiBuilder.setBasePath(balancerAddress))
-                    .clientObtainIpAsync(ObtainIpCallback(onSuccess, onError))
+                    .serviceAcquireCreateAsync(AcquireServiceCallback(onSuccess, onError))
                 killer.register {
                     call.cancel()
                 }
@@ -41,10 +41,10 @@ data class ObtainServiceAddressesTask(
         }
     }
 
-    private inner class ObtainIpCallback(
-        private val onSuccess: ((List<ServerAddr>) -> Unit)?,
+    private inner class AcquireServiceCallback(
+        private val onSuccess: ((ServerAddressResponse) -> Unit)?,
         private val onError: ((String, BalancerApiException?) -> Unit)?
-    ) : BalancerApiCallback<List<ServerAddr>> {
+    ) : BalancerApiCallback<ServerAddressResponse> {
         override fun onFailure(
             e: BalancerApiException?,
             statusCode: Int,
@@ -59,15 +59,11 @@ data class ObtainServiceAddressesTask(
         }
 
         override fun onSuccess(
-            result: List<ServerAddr>,
+            result: ServerAddressResponse,
             statusCode: Int,
             responseHeaders: MutableMap<String, MutableList<String>>
         ) {
-            if (result.isEmpty()) {
-                onError?.invoke("Could not obtain server ip", null)
-            } else {
-                onSuccess?.invoke(result)
-            }
+            onSuccess?.invoke(result)
         }
 
         override fun onUploadProgress(bytesWritten: Long, contentLength: Long, done: Boolean) {

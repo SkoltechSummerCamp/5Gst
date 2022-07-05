@@ -1,6 +1,6 @@
 package ru.scoltech.openran.speedtest.task.impl
 
-import io.swagger.client.model.ServerAddr
+import io.swagger.client.model.ServerAddressResponse
 import ru.scoltech.openran.speedtest.backend.ServiceApi
 import ru.scoltech.openran.speedtest.task.Task
 import ru.scoltech.openran.speedtest.util.Promise
@@ -9,11 +9,11 @@ import ru.scoltech.openran.speedtest.util.TaskKiller
 data class StartServiceIperfTask(
     private val balancerApiBuilder: BalancerApiBuilder,
     private val args: String,
-) : Task<ServerAddr, ServerAddr> {
+) : Task<ServerAddressResponse, ServerAddressResponse> {
     override fun prepare(
-        argument: ServerAddr,
+        argument: ServerAddressResponse,
         killer: TaskKiller
-    ): Promise<(ServerAddr) -> Unit, (String, Exception?) -> Unit> = Promise { onSuccess, onError ->
+    ): Promise<(ServerAddressResponse) -> Unit, (String, Exception?) -> Unit> = Promise { onSuccess, onError ->
         val serviceApi = ServiceApi(balancerApiBuilder.httpClient)
 
         killer.register(serviceApi::cancelStartIperf)
