@@ -1,50 +1,67 @@
-name: CI
+name: Code generation using swagger
 
 on:
   push:
     branches: [ main ]
 
 jobs:
-  build:
+  generate:
     runs-on: ubuntu-latest
+    container: swaggerapi/swagger-codegen-cli:2.4.27
 
     steps:
-      - uses: actions/checkout@v2
-      
+      - uses: actions/checkout@v3
+
       - name: Clear AUTOBUILD directory
         run: rm -rf AUTOBUILD
 
       - name: Generate python client
-        uses: ducksify/swagger-codegen-action@v3.0
-        with:
-          args: >
-            generate 
-            -i yaml/swagger.yaml 
-            -l python
-            -o AUTOBUILD/pythonBalancerClient/
-            -c config/pythonClientConfig.json
+        run: >
+          java
+          -jar
+          /opt/swagger-codegen-cli/swagger-codegen-cli.jar
+          generate
+          -i yaml/swagger.yaml
+          -l python
+          -o AUTOBUILD/pythonBalancerClient/
+          -c config/pythonClientConfig.json
 
       - name: Generate java client
-        uses: ducksify/swagger-codegen-action@v3.0
-        with:
-          args: >
-            generate 
-            -i yaml/swagger.yaml 
-            -l java
-            -o AUTOBUILD/javaBalancerClient/
-            -c config/javaClientConfig.json
+        run: >
+          java
+          -jar
+          /opt/swagger-codegen-cli/swagger-codegen-cli.jar
+          generate
+          -i yaml/swagger.yaml
+          -l java
+          -o AUTOBUILD/javaBalancerClient/
+          -c config/javaClientConfig.json
 
-      - name: Generate python stub server
-        uses: ducksify/swagger-codegen-action@v3.0
+      # Swagger codegen container has invalid git installed,
+      # so we need another container to push changes
+      - name: Upload generated code to artifacts
+        uses: actions/upload-artifact@v2
         with:
-          args: >
-            generate 
-            -i yaml/swagger.yaml 
-            -l python-flask
-            -o AUTOBUILD/pythonBalancerStubServer/
-            -c config/pythonStubServerConfig.json
+          name: AUTOBUILD
+          path: AUTOBUILD
+
+  push:
+    runs-on: ubuntu-latest
+    needs: generate
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Clear AUTOBUILD directory
+        run: rm -rf AUTOBUILD
+
+      - name: Download generated code
+        uses: actions/download-artifact@v2
+        with:
+          name: AUTOBUILD
+          path: AUTOBUILD
 
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
-            commit_message: Regenerate the clients and server stub
+            commit_message: 'Generate code using swagger-codegen'
             file_pattern: AUTOBUILD/
