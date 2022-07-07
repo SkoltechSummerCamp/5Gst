@@ -139,6 +139,7 @@ class OptionsActivity : AppCompatActivity() {
         }
         binding.pingLayout.isVisible = false
 
+        binding.optionHeader.disableButtonGroup();
 
         binding.expandButton2.setOnClickListener {
             if (binding.deviceInfoLayout.isVisible) {

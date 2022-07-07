@@ -21,6 +21,7 @@
             android:orientation="vertical">
 
             <ru.scoltech.openran.speedtest.customViews.HeaderView
+                android:id="@+id/option_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:section_name="Dev - iperf" />
