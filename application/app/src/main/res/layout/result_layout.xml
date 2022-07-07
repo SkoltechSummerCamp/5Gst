@@ -7,7 +7,10 @@
     <TableRow
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        >
 
         <TextView
             android:layout_width="wrap_content"
@@ -46,7 +49,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -84,7 +89,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp">
 
         <TextView
             android:layout_width="wrap_content"
