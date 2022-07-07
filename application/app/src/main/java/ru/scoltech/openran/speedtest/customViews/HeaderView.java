@@ -10,9 +10,10 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import ru.scoltech.openran.speedtest.R;
-import ru.scoltech.openran.speedtest.activities.DemoActivity;
-import ru.scoltech.openran.speedtest.activities.DevActivity;
+import ru.scoltech.openran.speedtest.activities.OptionsActivity;
 
 
 public class HeaderView extends LinearLayout {
@@ -72,7 +73,17 @@ public class HeaderView extends LinearLayout {
 
     //TODO global: check if it efficient way to go to main menu, especially from the same activity
     private void goToStart(Context context) {
-        Intent intent = new Intent(context, DemoActivity.class);
+        AppCompatActivity activity = (AppCompatActivity) context;
+        activity.finish();
+    }
+
+    private void goToHistory(Context context) {
+        Log.d("HEADER", "goToHistory: pressed btn");
+    }
+
+    private void goToDev(Context context) {
+        Log.d("HEADER", "goToDev: pressed btn");
+        Intent intent = new Intent(context, OptionsActivity.class);
         context.startActivity(intent);
     }
 
