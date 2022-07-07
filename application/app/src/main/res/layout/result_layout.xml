@@ -17,6 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
 
+            android:fontFamily="@font/futura_pt_medium"
             android:text="@string/download_speed"
             android:textAppearance="@style/Subtitle1"
             android:textColor="?android:attr/textColorPrimary" />
@@ -30,6 +31,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
 
+            android:fontFamily="@font/futura_pt_medium"
             android:text="@string/_0"
             android:textAppearance="@style/Headline4"
             android:textColor="?android:attr/textColorPrimary" />
@@ -40,6 +42,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
 
+            android:fontFamily="@font/futura_pt_medium"
             android:text="@string/mbps"
             android:textAppearance="@style/Subtitle1"
             android:textColor="?android:attr/textColorPrimary" />
@@ -57,8 +60,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:text="@string/upload_speed"
+            android:fontFamily="@font/futura_pt_medium"
 
+            android:text="@string/upload_speed"
             android:textAppearance="@style/Subtitle1"
             android:textColor="?android:attr/textColorPrimary" />
 
@@ -70,8 +74,9 @@
             android:layout_gravity="end"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
-            android:text="@string/_0"
+            android:fontFamily="@font/futura_pt_medium"
 
+            android:text="@string/_0"
             android:textAppearance="@style/Headline4"
             android:textColor="?android:attr/textColorPrimary" />
 
@@ -79,8 +84,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:text="@string/mbps"
+            android:fontFamily="@font/futura_pt_medium"
 
+            android:text="@string/mbps"
             android:textAppearance="@style/Subtitle1"
             android:textColor="?android:attr/textColorPrimary" />
     </TableRow>
@@ -97,8 +103,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:text="@string/_ping"
+            android:fontFamily="@font/futura_pt_medium"
 
+            android:text="@string/_ping"
             android:textAppearance="@style/Subtitle1"
             android:textColor="?android:attr/textColorPrimary" />
 
@@ -110,6 +117,7 @@
             android:layout_gravity="end"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
+            android:fontFamily="@font/futura_pt_medium"
             android:text="@string/_0"
             android:textAppearance="@style/Headline4"
             android:textColor="?android:attr/textColorPrimary" />
@@ -118,8 +126,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:text="@string/ms"
+            android:fontFamily="@font/futura_pt_medium"
 
+            android:text="@string/ms"
             android:textAppearance="@style/Subtitle1"
             android:textColor="?android:attr/textColorPrimary" />
     </TableRow>

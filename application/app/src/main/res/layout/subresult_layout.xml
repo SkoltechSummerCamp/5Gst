@@ -17,6 +17,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
+            android:fontFamily="@font/futura_pt_demi"
+            android:letterSpacing="0"
             android:text="@string/download"
             android:textAppearance="@style/Headline3"
             android:textColor="?android:attr/textColorPrimary" />
@@ -26,6 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
+            android:fontFamily="@font/futura_pt_demi"
             android:text="@string/empty"
             android:textAppearance="@style/Headline4"
             android:textColor="?android:attr/textColorPrimary" />
@@ -35,6 +38,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
+            android:fontFamily="@font/futura_pt_demi"
             android:text="@string/mbps"
             android:textAppearance="@style/Subtitle1"
             android:textColor="?android:attr/textColorPrimary" />
@@ -54,6 +58,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
+            android:fontFamily="@font/futura_pt_demi"
+            android:letterSpacing="0"
             android:text="@string/upload"
             android:textAppearance="@style/Headline3"
             android:textColor="?android:attr/textColorPrimary" />
@@ -63,6 +69,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
+            android:fontFamily="@font/futura_pt_demi"
             android:text="@string/empty"
             android:textAppearance="@style/Headline4"
             android:textColor="?android:attr/textColorPrimary" />
@@ -72,6 +79,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
+            android:fontFamily="@font/futura_pt_demi"
             android:text="@string/mbps"
             android:textAppearance="@style/Subtitle1"
             android:textColor="?android:attr/textColorPrimary" />

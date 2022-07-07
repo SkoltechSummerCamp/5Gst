@@ -32,6 +32,7 @@
             android:layout_marginStart="5dp"
             android:layout_weight="10"
 
+            android:fontFamily="@font/futura_pt_heavy"
             android:text="@string/section_name"
             android:textAppearance="@style/Headline4"
             android:textColor="?android:attr/textColorPrimary" />
