@@ -1,14 +1,24 @@
-name: Publish docker image to Docker Hub
+name: "[Balancer] Publish docker image to Docker Hub"
 
 on: 
   push:
     branches: [main, develop]
+    paths:
+      - 'balancer/**'
+      - '.github/**'
   pull_request:
     branches: [main, develop]
+    paths:
+      - 'balancer/**'
+      - '.github/**'
 
 jobs:
   publish-to-dockerhub:
     runs-on: ubuntu-20.04
+    defaults:
+      run:
+        working-directory: ./balancer
+
     steps:
       - uses: actions/checkout@v2
       
@@ -24,6 +34,6 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v2
         with:
-          context: .
+          context: ./balancer
           push: true
           tags: skoltech/speedtest-balancer:${{ env.version }}.${{ github.run_number }} #skoltech/speedtest-balancer:latest

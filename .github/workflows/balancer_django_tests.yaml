@@ -1,6 +1,10 @@
-name: Django tests
+name: "[Balancer] Django tests"
 
-on: [push]
+on:
+  push:
+    paths:
+      - 'balancer/**'
+      - '.github/**'
 
 jobs:
   test:
@@ -9,6 +13,10 @@ jobs:
       SECRET_KEY: SECRET_KEY
       DEBUG: False
       SUPPORT_EMAIL: noreply@5gst.ru
+    defaults:
+      run:
+        working-directory: ./balancer
+
     steps:
     - uses: actions/checkout@main
     - name: Install pip, pipenv and packages from Pipfile
