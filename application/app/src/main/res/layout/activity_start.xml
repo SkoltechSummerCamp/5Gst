@@ -22,41 +22,6 @@
             app:is_active_button_group="true"
             app:section_name="5G Speedtest" />
 
-        <ru.scoltech.openran.speedtest.customViews.CardView
-            android:id="@+id/card"
-
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:layout_marginTop="30dp"
-
-            android:visibility="gone" />
-
-        <ru.scoltech.openran.speedtest.customViews.ResultView
-            android:id="@+id/result"
-
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:layout_gravity="center"
-
-            android:layout_marginStart="20dp"
-
-            android:layout_marginTop="30dp"
-            android:layout_marginEnd="20dp"
-            android:visibility="gone" />
-
-        <ru.scoltech.openran.speedtest.customViews.SubResultView
-            android:id="@+id/subresult"
-
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-
-            android:layout_marginTop="30dp"
-            android:gravity="center"
-
-            android:visibility="gone" />
-
         <TextView
             android:id="@+id/action_text"
             android:layout_width="wrap_content"
@@ -79,18 +44,6 @@
             android:gravity="center"
             android:orientation="horizontal">
 
-            <ru.scoltech.openran.speedtest.customButtons.SaveButton
-                android:id="@+id/save_btn"
-                style="?android:attr/buttonBarButtonStyle"
-
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-
-                android:foreground="@drawable/ic_save"
-                android:foregroundTint="?android:attr/panelColorForeground"
-
-                android:visibility="gone" />
-
             <ru.scoltech.openran.speedtest.customButtons.ActionButton
                 android:id="@+id/action_btn"
                 style="?android:attr/buttonBarButtonStyle"
@@ -107,19 +60,6 @@
                 android:foregroundTint="?android:attr/panelColorForeground"
 
                 android:onClick="onClick" />
-
-            <ru.scoltech.openran.speedtest.customButtons.ShareButton
-                android:id="@+id/share_btn"
-                style="?android:attr/buttonBarButtonStyle"
-
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-
-                android:fontFamily="@font/futura_pt_heavy"
-                android:foreground="@drawable/ic_share"
-                android:foregroundTint="?android:attr/panelColorForeground"
-
-                android:visibility="gone" />
 
 
         </LinearLayout>
