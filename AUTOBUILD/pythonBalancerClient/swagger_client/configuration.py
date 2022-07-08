@@ -40,7 +40,7 @@ class Configuration(object):
             return
 
         # Default Base url
-        self.host = "http://127.0.0.1:8000/Skoltech_OpenRAN_5G/iperf_load_balancer/0.1.0"
+        self.host = "https://localhost/Skoltech_OpenRAN_5G/iperf_load_balancer/0.1.0"
         # Temp file folder for downloading files
         self.temp_folder_path = None
 

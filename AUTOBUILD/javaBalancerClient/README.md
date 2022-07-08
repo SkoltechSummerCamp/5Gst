@@ -104,7 +104,7 @@ public class ServiceApiExample {
 
 ## Documentation for API Endpoints
 
-All URIs are relative to *http://127.0.0.1:8000/Skoltech_OpenRAN_5G/iperf_load_balancer/0.1.0*
+All URIs are relative to *https://localhost/Skoltech_OpenRAN_5G/iperf_load_balancer/0.1.0*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------

@@ -54,7 +54,7 @@ import io.swagger.client.auth.OAuth;
 
 public class ApiClient {
 
-    private String basePath = "http://127.0.0.1:8000/Skoltech_OpenRAN_5G/iperf_load_balancer/0.1.0";
+    private String basePath = "https://localhost/Skoltech_OpenRAN_5G/iperf_load_balancer/0.1.0";
     private boolean debugging = false;
     private Map<String, String> defaultHeaderMap = new HashMap<String, String>();
     private String tempFolderPath = null;
@@ -108,7 +108,7 @@ public class ApiClient {
     /**
      * Set base path
      *
-     * @param basePath Base path of the URL (e.g http://127.0.0.1:8000/Skoltech_OpenRAN_5G/iperf_load_balancer/0.1.0
+     * @param basePath Base path of the URL (e.g https://localhost/Skoltech_OpenRAN_5G/iperf_load_balancer/0.1.0
      * @return An instance of OkHttpClient
      */
     public ApiClient setBasePath(String basePath) {
