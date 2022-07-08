@@ -10,11 +10,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
-import datetime
 import os
 from pathlib import Path
 
 from dotenv import load_dotenv
+from drf_yasg import openapi
 
 load_dotenv()
 
@@ -106,6 +106,17 @@ LOGGING = {
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [],
     'DEFAULT_PERMISSION_CLASSES': [],
+}
+
+SWAGGER_SETTINGS = {
+    'DEFAULT_INFO': openapi.Info(
+        title="Balancer API",
+        default_version='0.1.0',
+        description="Speedtest load balancer",
+        contact=openapi.Contact(email=os.environ["SUPPORT_EMAIL"]),
+        license=openapi.License(name="BSD 3-Clause",
+                                url='https://raw.githubusercontent.com/SkoltechSummerCamp/5Gst/main/LICENSE'),
+    )
 }
 
 # Internationalization

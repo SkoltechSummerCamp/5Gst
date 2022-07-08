@@ -1,0 +1,111 @@
+name: "[Balancer] API client generation using swagger"
+
+on:
+  push:
+    paths:
+      - 'balancer/**'
+      - '.github/**'
+
+jobs:
+  generate-swagger:
+    runs-on: ubuntu-latest
+    env:
+      SECRET_KEY: SECRET_KEY
+      DEBUG: False
+      SUPPORT_EMAIL: ${{ secrets.SUPPORT_EMAIL }}
+    defaults:
+      run:
+        working-directory: ./balancer
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install pip, pipenv and packages from Pipfile
+        run: |
+          python -m pip install --upgrade pip
+          pip install pipenv
+          pipenv install
+
+      - name: Run tests
+        run: |
+          pipenv run python manage.py generate_swagger swagger.yaml
+
+      - name: Upload swagger schema to artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: swagger-schema
+          path: balancer/swagger.yaml
+
+  generate-code:
+    runs-on: ubuntu-latest
+    needs: generate-swagger
+    container: swaggerapi/swagger-codegen-cli:2.4.27
+    defaults:
+      run:
+        working-directory: ./balancer
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Download swagger schema
+        uses: actions/download-artifact@v2
+        with:
+          name: swagger-schema
+          path: balancer
+
+      - name: Clear AUTOBUILD directory
+        run: rm -rf ../AUTOBUILD
+
+      - name: Generate python client
+        run: >
+          java
+          -jar
+          /opt/swagger-codegen-cli/swagger-codegen-cli.jar
+          generate
+          -i swagger.yaml
+          -l python
+          -o ../AUTOBUILD/pythonBalancerClient/
+          -c .swagger-codegen-config/pythonClientConfig.json
+
+      - name: Generate java client
+        run: >
+          java
+          -jar
+          /opt/swagger-codegen-cli/swagger-codegen-cli.jar
+          generate
+          -i swagger.yaml
+          -l java
+          -o ../AUTOBUILD/javaBalancerClient/
+          -c .swagger-codegen-config/javaClientConfig.json
+
+      # Swagger codegen container has invalid git installed,
+      # so we need another container to push changes
+      - name: Upload generated code to artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: AUTOBUILD
+          path: AUTOBUILD
+
+  push:
+    runs-on: ubuntu-latest
+    needs: generate-code
+    defaults:
+      run:
+        working-directory: ./balancer
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Clear AUTOBUILD directory
+        run: rm -rf ../AUTOBUILD
+
+      - name: Download generated code
+        uses: actions/download-artifact@v2
+        with:
+          name: AUTOBUILD
+          path: AUTOBUILD
+
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+            commit_message: 'Generate code using swagger-codegen'
+            file_pattern: AUTOBUILD/
