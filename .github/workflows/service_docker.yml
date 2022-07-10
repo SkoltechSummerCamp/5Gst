@@ -1,14 +1,24 @@
-name: Build docker image
+name: "[Service] Build docker image"
 
 on: 
   push:
     branches: [main, develop]
+    paths:
+      - 'service/**'
+      - '.github/**'
   pull_request:
     branches: [main, develop]
+    paths:
+      - 'service/**'
+      - '.github/**'
 
 jobs:
   build-iperf:
     runs-on: ubuntu-20.04
+    defaults:
+      run:
+        working-directory: ./service
+
     steps:
       - uses: actions/checkout@v2
         with:
@@ -27,17 +37,22 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: ${{ env.artifactName }}
-          path: gh-artifacts/*
-          
+          path: service/gh-artifacts/*
+
   speedtest-service:
     runs-on: ubuntu-20.04
     needs: build-iperf
+    defaults:
+      run:
+        working-directory: ./service
+
     steps:
       - uses: actions/checkout@v2
       
       - uses: actions/download-artifact@v2
         with:
           name: iperf-2.0.13.${{ github.run_number }}
+          path: service
       
       - name: Setup artifact content
         run: |
@@ -54,11 +69,14 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: ${{ env.artifactName }}
-          path: gh-artifacts/*
-          
+          path: service/gh-artifacts/*
+
   publish-to-dockerhub:
     runs-on: ubuntu-20.04
     needs: speedtest-service
+    defaults:
+      run:
+        working-directory: ./service
     
     steps:
       - uses: actions/checkout@v2
@@ -69,7 +87,7 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: speedtest-service-${{ env.version }}.${{ github.run_number }}
-          path: gh-artifacts
+          path: service/gh-artifacts
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v1
@@ -80,7 +98,7 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v2
         with:
-          context: ./gh-artifacts
+          context: ./service/gh-artifacts
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/speedtest-service:${{ env.version }}
 
