@@ -1,7 +1,7 @@
 #/bin/sh
 cd ../iPerf
 head -1 src/Launch.cpp | grep vinogradov.alek@gmail.com
-#If the patch has not been applied then the $? which is the exit status 
+#If the patch has not been applied then the $? which is the exit status
 #for last command would have a success status code = 0
 if [ $? -eq 1 ];
 then
@@ -15,4 +15,3 @@ bash configure
 make
 cd ../service
 cp ../iPerf/src/iperf iperf.elf
-

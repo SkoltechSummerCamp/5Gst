@@ -29,7 +29,7 @@ jobs:
       - name: Setup artifact content
         run: |
           mkdir gh-artifacts
-          mv iPerf/src/iperf gh-artifacts/
+          mv ../iPerf/src/iperf gh-artifacts/
           
           echo "artifactName=iperf-2.0.13.$GITHUB_RUN_NUMBER" > $GITHUB_ENV
       
