@@ -43,7 +43,7 @@ LOCAL_SRC_FILES := \
 
 LOCAL_C_INCLUDES += \
         $(LOCAL_PATH)/../cpp \
-        $(LOCAL_PATH)/../../../../iPerf/include
+        $(LOCAL_PATH)/../../../../../iPerf/include
 
 LOCAL_DISABLE_FORMAT_STRING_CHECKS := true
 include $(BUILD_SHARED_LIBRARY)
