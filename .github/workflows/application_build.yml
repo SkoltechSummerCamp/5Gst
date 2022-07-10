@@ -1,6 +1,14 @@
 name: "[Application] Build Android artifacts"
 
-on: [push, pull_request]
+on:
+  push:
+    paths:
+      - 'balancer/**'
+      - '.github/**'
+  pull_request:
+    paths:
+      - 'balancer/**'
+      - '.github/**'
 
 jobs:
   debug-build:
