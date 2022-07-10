@@ -5,6 +5,10 @@ on:
     paths:
       - 'balancer/**'
       - '.github/**'
+  pull_request:
+    paths:
+      - 'balancer/**'
+      - '.github/**'
 
 jobs:
   test:

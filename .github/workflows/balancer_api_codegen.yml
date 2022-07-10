@@ -5,6 +5,10 @@ on:
     paths:
       - 'balancer/**'
       - '.github/**'
+  pull_request:
+    paths:
+      - 'balancer/**'
+      - '.github/**'
 
 jobs:
   generate-swagger:
@@ -26,7 +30,7 @@ jobs:
           pip install pipenv
           pipenv install
 
-      - name: Run tests
+      - name: Generate swagger schema
         run: |
           pipenv run python manage.py generate_swagger swagger.yaml
 
