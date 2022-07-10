@@ -100,8 +100,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Clear AUTOBUILD directory
-        run: rm -rf ../AUTOBUILD
+      - name: Clear previously generated code
+        run: |
+          rm -rf ../AUTOBUILD
+          rm -rf ../application/balancerApi
+          rm -rf ../service/swagger_client
 
       - name: Download generated code
         uses: actions/download-artifact@v2
@@ -109,7 +112,12 @@ jobs:
           name: AUTOBUILD
           path: AUTOBUILD
 
+      - name: Move generated code to projects
+        run: |
+          cp -r ../AUTOBUILD/javaBalancerClient/ ../application/balancerApi
+          cp -r ../AUTOBUILD/pythonBalancerClient/ ../service/swagger_client          
+
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
             commit_message: 'Generate code using swagger-codegen'
-            file_pattern: AUTOBUILD/
+            file_pattern: application/balancerApi service/swagger_client
