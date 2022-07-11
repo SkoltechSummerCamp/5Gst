@@ -82,13 +82,7 @@ import java.util.*;
 public class ServiceApiExample {
 
     public static void main(String[] args) {
-        ApiClient defaultClient = Configuration.getDefaultApiClient();
         
-        // Configure HTTP basic authorization: Basic
-        HttpBasicAuth Basic = (HttpBasicAuth) defaultClient.getAuthentication("Basic");
-        Basic.setUsername("YOUR USERNAME");
-        Basic.setPassword("YOUR PASSWORD");
-
         ServiceApi apiInstance = new ServiceApi();
         try {
             ServerAddressResponse result = apiInstance.serviceAcquireCreate();
@@ -121,11 +115,8 @@ Class | Method | HTTP request | Description
 
 ## Documentation for Authorization
 
+All endpoints do not require authorization.
 Authentication schemes defined for the API:
-### Basic
-
-- **Type**: HTTP basic authentication
-
 
 ## Recommendation
 
