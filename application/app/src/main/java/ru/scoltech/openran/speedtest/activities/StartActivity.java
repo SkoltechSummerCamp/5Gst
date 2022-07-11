@@ -28,7 +28,7 @@ import ru.scoltech.openran.speedtest.R;
 
 
 public class StartActivity extends AppCompatActivity {
-    private String TAG = "START_ACTIVITY";
+    private static final String TAG = StartActivity.class.getName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
