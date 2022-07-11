@@ -116,7 +116,8 @@ SWAGGER_SETTINGS = {
         contact=openapi.Contact(email=os.environ["SUPPORT_EMAIL"]),
         license=openapi.License(name="BSD 3-Clause",
                                 url='https://raw.githubusercontent.com/SkoltechSummerCamp/5Gst/main/LICENSE'),
-    )
+    ),
+    'SECURITY_DEFINITIONS': {},
 }
 
 # Internationalization

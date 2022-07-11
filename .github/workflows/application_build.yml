@@ -3,11 +3,11 @@ name: "[Application] Build Android artifacts"
 on:
   push:
     paths:
-      - 'balancer/**'
+      - 'application/**'
       - '.github/**'
   pull_request:
     paths:
-      - 'balancer/**'
+      - 'application/**'
       - '.github/**'
 
 jobs:
