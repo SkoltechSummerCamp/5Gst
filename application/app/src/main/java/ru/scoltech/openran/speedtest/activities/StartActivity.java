@@ -60,7 +60,7 @@ public class StartActivity extends AppCompatActivity {
 
         final EditText mainAddress = findViewById(R.id.main_address);
         mainAddress.setText(
-                getSharedPreferences("speedTest_options",MODE_PRIVATE).getString(
+                getSharedPreferences(getString(R.string.globalSharedPreferences),MODE_PRIVATE).getString(
                         ApplicationConstants.MAIN_ADDRESS_KEY,
                         getString(R.string.default_main_address)
                 )
@@ -81,7 +81,7 @@ public class StartActivity extends AppCompatActivity {
 
                 final CharSequence newMainAddress = StringsKt.isBlank(s)? getString(R.string.default_main_address) : s;
 
-                SharedPreferences.Editor preferences = getSharedPreferences("speedTest_options",MODE_PRIVATE).edit();
+                SharedPreferences.Editor preferences = getSharedPreferences(getString(R.string.globalSharedPreferences),MODE_PRIVATE).edit();
                 preferences.putString(
                         ApplicationConstants.MAIN_ADDRESS_KEY,
                         newMainAddress.toString()
@@ -92,7 +92,7 @@ public class StartActivity extends AppCompatActivity {
 
         final RadioGroup modeRadioGroup = findViewById(R.id.mode_radio_group);
         modeRadioGroup.setOnCheckedChangeListener((group, checkedId) -> {
-            SharedPreferences.Editor preferences = getSharedPreferences("speedTest_options",MODE_PRIVATE).edit();
+            SharedPreferences.Editor preferences = getSharedPreferences(getString(R.string.globalSharedPreferences),MODE_PRIVATE).edit();
             preferences.putBoolean(
                     ApplicationConstants.USE_BALANCER_KEY,
                     checkedId == R.id.balancer_mode
@@ -100,7 +100,7 @@ public class StartActivity extends AppCompatActivity {
             preferences.apply();
         });
 
-        final boolean useBalancer = getSharedPreferences("speedTest_options",MODE_PRIVATE)
+        final boolean useBalancer = getSharedPreferences(getString(R.string.globalSharedPreferences),MODE_PRIVATE)
                                     .getBoolean(ApplicationConstants.USE_BALANCER_KEY, true);
         if (useBalancer) {
             this.<RadioButton>findViewById(R.id.balancer_mode).setChecked(true);
@@ -109,7 +109,7 @@ public class StartActivity extends AppCompatActivity {
         }
 
         if (!getSharedPreferences("speedTest_options",MODE_PRIVATE).getBoolean(ApplicationConstants.PRIVACY_SHOWN, false)) {
-            SharedPreferences.Editor preferencesEditor = getSharedPreferences("speedTest_options",MODE_PRIVATE).edit();
+            SharedPreferences.Editor preferencesEditor = getSharedPreferences(getString(R.string.globalSharedPreferences),MODE_PRIVATE).edit();
             preferencesEditor.putBoolean(ApplicationConstants.PRIVACY_SHOWN, true);
             preferencesEditor.apply();
             findViewById(R.id.main_layout).post(this::showPrivacyPopUp);

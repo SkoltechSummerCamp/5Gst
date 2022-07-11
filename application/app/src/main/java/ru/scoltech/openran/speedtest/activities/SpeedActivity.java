@@ -70,6 +70,8 @@ public class SpeedActivity extends AppCompatActivity {
         shareBtn = findViewById(R.id.share_btn);
         saveBtn = findViewById(R.id.save_btn);
 
+//        onResultUI("~~","~~","~~");
+
         speedTestManager = new DownloadUploadSpeedTestManager.Builder(this)
                 .onPingUpdate((ping) -> runOnUiThread(() -> mCard.setPing((int) ping)))
                 .onDownloadStart(() -> runOnUiThread(() -> {
@@ -198,11 +200,11 @@ public class SpeedActivity extends AppCompatActivity {
         saveBtn.setVisibility(View.GONE);
 
         speedTestManager.start(
-                getSharedPreferences("speedTest_options",MODE_PRIVATE).getBoolean(
+                getSharedPreferences( getString(R.string.globalSharedPreferences),MODE_PRIVATE).getBoolean(
                         ApplicationConstants.USE_BALANCER_KEY,
                         true
                 ),
-                getSharedPreferences("speedTest_options",MODE_PRIVATE).getString(
+                getSharedPreferences(getString(R.string.globalSharedPreferences),MODE_PRIVATE).getString(
                         ApplicationConstants.MAIN_ADDRESS_KEY,
                         getString(R.string.default_main_address)
                 ),
