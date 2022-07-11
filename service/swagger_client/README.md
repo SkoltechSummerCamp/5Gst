@@ -51,11 +51,6 @@ import swagger_client
 from swagger_client.rest import ApiException
 from pprint import pprint
 
-# Configure HTTP basic authorization: Basic
-configuration = swagger_client.Configuration()
-configuration.username = 'YOUR_USERNAME'
-configuration.password = 'YOUR_PASSWORD'
-
 # create an instance of the API class
 api_instance = swagger_client.ServiceApi(swagger_client.ApiClient(configuration))
 
@@ -86,10 +81,7 @@ Class | Method | HTTP request | Description
 
 ## Documentation For Authorization
 
-
-## Basic
-
-- **Type**: HTTP basic authentication
+ All endpoints do not require authorization.
 
 
 ## Author

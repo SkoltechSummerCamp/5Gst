@@ -20,18 +20,9 @@ Acquires service for further iperf tests
 ### Example
 ```java
 // Import classes:
-//import io.swagger.client.ApiClient;
 //import io.swagger.client.ApiException;
-//import io.swagger.client.Configuration;
-//import io.swagger.client.auth.*;
 //import io.swagger.client.api.ServiceApi;
 
-ApiClient defaultClient = Configuration.getDefaultApiClient();
-
-// Configure HTTP basic authorization: Basic
-HttpBasicAuth Basic = (HttpBasicAuth) defaultClient.getAuthentication("Basic");
-Basic.setUsername("YOUR USERNAME");
-Basic.setPassword("YOUR PASSWORD");
 
 ServiceApi apiInstance = new ServiceApi();
 try {
@@ -52,7 +43,7 @@ This endpoint does not need any parameter.
 
 ### Authorization
 
-[Basic](../README.md#Basic)
+No authorization required
 
 ### HTTP request headers
 
@@ -70,18 +61,9 @@ Register caller as service
 ### Example
 ```java
 // Import classes:
-//import io.swagger.client.ApiClient;
 //import io.swagger.client.ApiException;
-//import io.swagger.client.Configuration;
-//import io.swagger.client.auth.*;
 //import io.swagger.client.api.ServiceApi;
 
-ApiClient defaultClient = Configuration.getDefaultApiClient();
-
-// Configure HTTP basic authorization: Basic
-HttpBasicAuth Basic = (HttpBasicAuth) defaultClient.getAuthentication("Basic");
-Basic.setUsername("YOUR USERNAME");
-Basic.setPassword("YOUR PASSWORD");
 
 ServiceApi apiInstance = new ServiceApi();
 ServerAddressRequest data = new ServerAddressRequest(); // ServerAddressRequest | 
@@ -106,7 +88,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[Basic](../README.md#Basic)
+No authorization required
 
 ### HTTP request headers
 
@@ -124,18 +106,9 @@ Unregister caller as service
 ### Example
 ```java
 // Import classes:
-//import io.swagger.client.ApiClient;
 //import io.swagger.client.ApiException;
-//import io.swagger.client.Configuration;
-//import io.swagger.client.auth.*;
 //import io.swagger.client.api.ServiceApi;
 
-ApiClient defaultClient = Configuration.getDefaultApiClient();
-
-// Configure HTTP basic authorization: Basic
-HttpBasicAuth Basic = (HttpBasicAuth) defaultClient.getAuthentication("Basic");
-Basic.setUsername("YOUR USERNAME");
-Basic.setPassword("YOUR PASSWORD");
 
 ServiceApi apiInstance = new ServiceApi();
 ServerAddressRequest data = new ServerAddressRequest(); // ServerAddressRequest | 
@@ -160,7 +133,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[Basic](../README.md#Basic)
+No authorization required
 
 ### HTTP request headers
 

@@ -24,13 +24,8 @@ import swagger_client
 from swagger_client.rest import ApiException
 from pprint import pprint
 
-# Configure HTTP basic authorization: Basic
-configuration = swagger_client.Configuration()
-configuration.username = 'YOUR_USERNAME'
-configuration.password = 'YOUR_PASSWORD'
-
 # create an instance of the API class
-api_instance = swagger_client.ServiceApi(swagger_client.ApiClient(configuration))
+api_instance = swagger_client.ServiceApi()
 
 try:
     api_response = api_instance.service_acquire_create()
@@ -48,7 +43,7 @@ This endpoint does not need any parameter.
 
 ### Authorization
 
-[Basic](../README.md#Basic)
+No authorization required
 
 ### HTTP request headers
 
@@ -72,13 +67,8 @@ import swagger_client
 from swagger_client.rest import ApiException
 from pprint import pprint
 
-# Configure HTTP basic authorization: Basic
-configuration = swagger_client.Configuration()
-configuration.username = 'YOUR_USERNAME'
-configuration.password = 'YOUR_PASSWORD'
-
 # create an instance of the API class
-api_instance = swagger_client.ServiceApi(swagger_client.ApiClient(configuration))
+api_instance = swagger_client.ServiceApi()
 data = swagger_client.ServerAddressRequest() # ServerAddressRequest | 
 
 try:
@@ -100,7 +90,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[Basic](../README.md#Basic)
+No authorization required
 
 ### HTTP request headers
 
@@ -124,13 +114,8 @@ import swagger_client
 from swagger_client.rest import ApiException
 from pprint import pprint
 
-# Configure HTTP basic authorization: Basic
-configuration = swagger_client.Configuration()
-configuration.username = 'YOUR_USERNAME'
-configuration.password = 'YOUR_PASSWORD'
-
 # create an instance of the API class
-api_instance = swagger_client.ServiceApi(swagger_client.ApiClient(configuration))
+api_instance = swagger_client.ServiceApi()
 data = swagger_client.ServerAddressRequest() # ServerAddressRequest | 
 
 try:
@@ -152,7 +137,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[Basic](../README.md#Basic)
+No authorization required
 
 ### HTTP request headers
 
