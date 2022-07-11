@@ -14,6 +14,10 @@ import ru.scoltech.openran.speedtest.R
 import ru.scoltech.openran.speedtest.SpeedManager
 import ru.scoltech.openran.speedtest.util.ExternalStorageSaver
 
+/*
+* A class that allows you to share an image of the speed test result.
+* To create a picture it uses: result_layout.xml
+*/
 class ShareButton(context: Context, attrs: AttributeSet?) : AppCompatButton(context, attrs) {
     init {
         require(context is Activity) { "SaveButton context should be a subclass of Activity" }

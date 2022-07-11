@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ru.scoltech.openran.speedtest.activities.DemoActivity">
+    tools:context="ru.scoltech.openran.speedtest.activities.StartActivity">
 
 
     <LinearLayout
@@ -22,42 +22,6 @@
             app:is_active_button_group="true"
             app:section_name="5G Speedtest" />
 
-        <ru.scoltech.openran.speedtest.customViews.CardView
-            android:id="@+id/card"
-
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:layout_marginTop="30dp"
-
-            android:visibility="gone" />
-
-        <ru.scoltech.openran.speedtest.customViews.ResultView
-
-            android:id="@+id/result"
-
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:layout_gravity="center"
-
-            android:layout_marginStart="20dp"
-
-            android:layout_marginTop="30dp"
-            android:layout_marginEnd="20dp"
-            android:visibility="gone" />
-
-        <ru.scoltech.openran.speedtest.customViews.SubResultView
-            android:id="@+id/subresult"
-
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-
-            android:layout_marginTop="30dp"
-            android:gravity="center"
-
-            android:visibility="gone" />
-
         <TextView
             android:id="@+id/action_text"
             android:layout_width="wrap_content"
@@ -66,9 +30,11 @@
             android:layout_gravity="center"
             android:layout_marginTop="130dp"
 
+            android:fontFamily="@font/futura_pt_heavy"
             android:text="@string/tap_to_start_session"
             android:textAppearance="@style/Subtitle2"
-            android:textColor="?android:attr/textColorPrimary" />
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="16sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -77,18 +43,6 @@
             android:layout_marginTop="30dp"
             android:gravity="center"
             android:orientation="horizontal">
-
-            <ru.scoltech.openran.speedtest.customButtons.SaveButton
-                android:id="@+id/save_btn"
-                style="?android:attr/buttonBarButtonStyle"
-
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-
-                android:foreground="@drawable/ic_save"
-                android:foregroundTint="?android:attr/panelColorForeground"
-
-                android:visibility="gone" />
 
             <ru.scoltech.openran.speedtest.customButtons.ActionButton
                 android:id="@+id/action_btn"
@@ -106,18 +60,6 @@
                 android:foregroundTint="?android:attr/panelColorForeground"
 
                 android:onClick="onClick" />
-
-            <ru.scoltech.openran.speedtest.customButtons.ShareButton
-                android:id="@+id/share_btn"
-                style="?android:attr/buttonBarButtonStyle"
-
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-
-                android:foreground="@drawable/ic_share"
-                android:foregroundTint="?android:attr/panelColorForeground"
-
-                android:visibility="gone" />
 
 
         </LinearLayout>
@@ -145,13 +87,15 @@
 
                     <TextView
                         android:id="@+id/main_address_hint"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
 
+                        android:fontFamily="@font/futura_pt_heavy"
                         android:text="@string/main_address_hint"
                         android:textAppearance="@style/Subtitle3"
                         android:textColor="?android:attr/textColorPrimary"
 
+                        android:textSize="16sp"
                         app:layout_constraintBottom_toBottomOf="parent"
 
                         app:layout_constraintHorizontal_weight="2"
@@ -162,22 +106,23 @@
 
                     <EditText
                         android:id="@+id/main_address"
-
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
 
-                        android:inputType="textPersonName"
+                        android:layout_height="wrap_content"
+                        android:autofillHints="@string/default_main_address"
+
+                        android:fontFamily="@font/arial_bold"
+                        android:hint="@string/default_main_address"
+                        android:inputType="textUri"
+
                         android:minHeight="48dp"
 
                         android:text="@string/default_main_address"
                         android:textAppearance="@style/Subtitle2"
                         android:textColor="?android:attr/textColorPrimary"
-
                         app:layout_constraintBottom_toBottomOf="parent"
-
                         app:layout_constraintHorizontal_weight="5"
                         app:layout_constraintLeft_toRightOf="@+id/main_address_hint"
-
                         app:layout_constraintRight_toRightOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -196,11 +141,13 @@
 
                         android:buttonTint="?android:attr/panelColorForeground"
                         android:checked="true"
-                        android:minHeight="42dp"
+                        android:fontFamily="@font/futura_pt_demi"
 
+                        android:minHeight="48dp"
                         android:text="@string/balancer_mode"
                         android:textAppearance="@style/Subtitle3"
-                        android:textColor="?android:attr/textColorPrimary" />
+                        android:textColor="?android:attr/textColorPrimary"
+                        android:textSize="16sp" />
 
                     <RadioButton
                         android:id="@+id/direct_mode"
@@ -210,11 +157,13 @@
 
                         android:buttonTint="?android:attr/panelColorForeground"
                         android:checked="false"
-                        android:minHeight="42dp"
+                        android:fontFamily="@font/futura_pt_demi"
 
+                        android:minHeight="48dp"
                         android:text="@string/direct_iperf_mode"
                         android:textAppearance="@style/Subtitle3"
-                        android:textColor="?android:attr/textColorPrimary" />
+                        android:textColor="?android:attr/textColorPrimary"
+                        android:textSize="16sp" />
                 </RadioGroup>
 
             </LinearLayout>

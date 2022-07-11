@@ -52,7 +52,7 @@
 
     <style name="Mono">
         <item name="android:textSize">14sp</item>
-        <item name="android:fontFamily">@font/oxygen_mono_regular</item>
+        <item name="android:fontFamily">@font/arial_mono_bold</item>
     </style>
 
 </resources>

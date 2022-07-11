@@ -237,7 +237,7 @@ private constructor(
 
     companion object {
         private const val DEFAULT_COMMON_CLIENT_ARGS = "-f b -P 10 --sum-only -i 0.1 -b 120m"
-        private const val DEFAULT_DOWNLOAD_CLIENT_ARGS = "-u -R"
+        private const val DEFAULT_DOWNLOAD_CLIENT_ARGS = "-u -r"
         private const val DEFAULT_DOWNLOAD_SERVER_ARGS = "-u"
         private const val DEFAULT_UPLOAD_CLIENT_ARGS = ""
         private const val DEFAULT_UPLOAD_SERVER_ARGS = ""

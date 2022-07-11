@@ -1,32 +1,17 @@
 package ru.scoltech.openran.speedtest.activities;
 
 
-import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.util.Pair;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.TextView;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 
 import java.util.Locale;
-import java.util.Map;
-import java.util.Objects;
 
 import kotlin.Unit;
-import kotlin.collections.MapsKt;
 import kotlin.collections.SetsKt;
-import kotlin.text.StringsKt;
 import ru.scoltech.openran.speedtest.ApplicationConstants;
 import ru.scoltech.openran.speedtest.R;
 import ru.scoltech.openran.speedtest.SpeedManager;
@@ -41,23 +26,19 @@ import ru.scoltech.openran.speedtest.customViews.SubResultView;
 import ru.scoltech.openran.speedtest.manager.DownloadUploadSpeedTestManager;
 
 
-public class DemoActivity extends AppCompatActivity {
+public class SpeedActivity extends AppCompatActivity {
 
-    private String TAG = "DEMO_ACTIVITY";
+    private static final String TAG = SpeedActivity.class.getName();
     private Wave cWave;
     private CardView mCard;
     private SubResultView mSubResults; // in progress result
     private HeaderView mHeader;
     private ResultView mResults; // after finishing
 
-    //TODO global: reorganise view operating
-
     //action elem
     private ActionButton actionBtn;
-    private TextView actionTV;
     private ShareButton shareBtn;
     private SaveButton saveBtn;
-    private ConstraintLayout settings;
 
     private SpeedManager sm;
     private DownloadUploadSpeedTestManager speedTestManager;
@@ -66,37 +47,19 @@ public class DemoActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        // begin block for hand mode switcher
-        int currentNightMode = getResources().getConfiguration().uiMode
-                & Configuration.UI_MODE_NIGHT_MASK;
-
-        @SuppressWarnings("unchecked")
-        Map<Integer, String> themeLogMessage = MapsKt.mapOf(
-                new kotlin.Pair<>(Configuration.UI_MODE_NIGHT_NO, "onCreate: Light Theme"),
-                new kotlin.Pair<>(Configuration.UI_MODE_NIGHT_YES, "onCreate: Dark Theme"),
-                new kotlin.Pair<>(Configuration.UI_MODE_NIGHT_UNDEFINED, "onCreate: Undefined Theme")
-        );
-
-        Log.d(TAG, themeLogMessage.get(currentNightMode));
-        // end block
-
         super.onCreate(savedInstanceState);
 
-        if (getSupportActionBar() != null)
-            getSupportActionBar().hide();
-        setContentView(R.layout.activity_demo);
-
-        init();
+        setContentView(R.layout.activity_speed);
 
         sm = SpeedManager.getInstance();
+
+        init();
     }
 
     private void init() {
         mHeader = findViewById(R.id.header);
 
         actionBtn = findViewById(R.id.action_btn);
-        actionTV = findViewById(R.id.action_text);
 
         mCard = findViewById(R.id.card);
         cWave = mCard.getWave();
@@ -107,64 +70,8 @@ public class DemoActivity extends AppCompatActivity {
         shareBtn = findViewById(R.id.share_btn);
         saveBtn = findViewById(R.id.save_btn);
 
-        settings = findViewById(R.id.start_screen_settings);
-        final EditText mainAddress = findViewById(R.id.main_address);
-        mainAddress.setText(
-                getPreferences(MODE_PRIVATE).getString(
-                        ApplicationConstants.MAIN_ADDRESS_KEY,
-                        getString(R.string.default_main_address)
-                )
-        );
-        mainAddress.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // no operations
-            }
+//        onResultUI("~~","~~","~~");
 
-            @Override
-            public void afterTextChanged(Editable s) {
-                // no operations
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                final CharSequence newMainAddress = StringsKt.isBlank(s)
-                        ? getString(R.string.default_main_address) : s;
-                SharedPreferences.Editor preferences = getPreferences(MODE_PRIVATE).edit();
-                preferences.putString(
-                        ApplicationConstants.MAIN_ADDRESS_KEY,
-                        newMainAddress.toString()
-                );
-                preferences.apply();
-            }
-        });
-
-        final RadioGroup modeRadioGroup = findViewById(R.id.mode_radio_group);
-        modeRadioGroup.setOnCheckedChangeListener((group, checkedId) -> {
-            SharedPreferences.Editor preferences = getPreferences(MODE_PRIVATE).edit();
-            preferences.putBoolean(
-                    ApplicationConstants.USE_BALANCER_KEY,
-                    checkedId == R.id.balancer_mode
-            );
-            preferences.apply();
-        });
-
-        final boolean useBalancer = getPreferences(MODE_PRIVATE)
-                .getBoolean(ApplicationConstants.USE_BALANCER_KEY, true);
-        if (useBalancer) {
-            this.<RadioButton>findViewById(R.id.balancer_mode).setChecked(true);
-        } else {
-            this.<RadioButton>findViewById(R.id.direct_mode).setChecked(true);
-        }
-
-        if (!getPreferences(MODE_PRIVATE).getBoolean(ApplicationConstants.PRIVACY_SHOWN, false)) {
-            SharedPreferences.Editor preferencesEditor = getPreferences(MODE_PRIVATE).edit();
-            preferencesEditor.putBoolean(ApplicationConstants.PRIVACY_SHOWN, true);
-            preferencesEditor.apply();
-            findViewById(R.id.main_layout).post(this::showPrivacyPopUp);
-        }
-
-        // TODO split on methods
         speedTestManager = new DownloadUploadSpeedTestManager.Builder(this)
                 .onPingUpdate((ping) -> runOnUiThread(() -> mCard.setPing((int) ping)))
                 .onDownloadStart(() -> runOnUiThread(() -> {
@@ -216,51 +123,33 @@ public class DemoActivity extends AppCompatActivity {
                     mSubResults.setEmpty();
                 }))
                 .onFatalError((s, exception) -> runOnUiThread(() -> {
-                    Log.e("SpeedtestFatal", s, exception);
+                    // TODO bad tag
+                    Log.e("FATAL", s, exception);
 
                     onStopUI();
                     actionBtn.setPlay();
                     mSubResults.setEmpty();
                 }))
+                .onLog((tag, message, exception) -> {
+                    if (exception == null) {
+                        Log.v(tag, message);
+                    } else {
+                        Log.v(tag, message + "; " + exception.getClass() + ": " + exception.getMessage());
+                    }
+
+                    return Unit.INSTANCE;
+                })
                 .build();
-    }
 
-    private void showPrivacyPopUp() {
-        AlertDialog alert = new AlertDialog.Builder(this)
-                .setTitle(getString(R.string.policy_title))
-                .setMessage(R.string.policy_content)
-                .setPositiveButton(android.R.string.ok, null)
-                .create();
-        alert.show();
-
-        ((TextView) Objects.requireNonNull(alert.findViewById(android.R.id.message)))
-                .setMovementMethod(LinkMovementMethod.getInstance());
+        onPlayUI();
     }
 
     public void onClick(View v) {
         if (v.getId() == R.id.action_btn) {
-
-            if (SetsKt.setOf("start", "play").contains(actionBtn.getContentDescription().toString())) {
-
+            if (SetsKt.setOf("start", "play").contains(actionBtn.getContentDescription().toString()))
                 onPlayUI();
-                speedTestManager.start(
-                        getPreferences(MODE_PRIVATE).getBoolean(
-                                ApplicationConstants.USE_BALANCER_KEY,
-                                true
-                        ),
-                        getPreferences(MODE_PRIVATE).getString(
-                                ApplicationConstants.MAIN_ADDRESS_KEY,
-                                getString(R.string.default_main_address)
-                        ),
-                        TASK_DELAY
-                );
-
-            } else if (actionBtn.getContentDescription().toString().equals("stop")) {
-
+            else if (actionBtn.getContentDescription().toString().equals("stop"))
                 onStopUI();
-                speedTestManager.stop();
-
-            }
         }
     }
 
@@ -293,9 +182,6 @@ public class DemoActivity extends AppCompatActivity {
     }
 
     public void onPlayUI() {
-        settings.setVisibility(View.GONE);
-
-        mCard.setVisibility(View.VISIBLE);
         mCard.setDefaultCaptions();
 
         cWave.attachColor(getColor(R.color.mint));
@@ -308,11 +194,22 @@ public class DemoActivity extends AppCompatActivity {
         mHeader.disableButtonGroup();
         mHeader.hideReturnBtn();
 
-        actionTV.setVisibility(View.GONE);
         actionBtn.setStop();
 
         shareBtn.setVisibility(View.GONE);
         saveBtn.setVisibility(View.GONE);
+
+        speedTestManager.start(
+                getSharedPreferences( getString(R.string.globalSharedPreferences),MODE_PRIVATE).getBoolean(
+                        ApplicationConstants.USE_BALANCER_KEY,
+                        true
+                ),
+                getSharedPreferences(getString(R.string.globalSharedPreferences),MODE_PRIVATE).getString(
+                        ApplicationConstants.MAIN_ADDRESS_KEY,
+                        getString(R.string.default_main_address)
+                ),
+                TASK_DELAY
+        );
     }
 
     public void onStopUI() {
@@ -323,6 +220,8 @@ public class DemoActivity extends AppCompatActivity {
         actionBtn.setPlay();
 
         mSubResults.setEmpty();
+
+        speedTestManager.stop();
     }
 
 }

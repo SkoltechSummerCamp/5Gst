@@ -2,48 +2,57 @@
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:stretchColumns = "*"
+    android:paddingStart="8dp"
+    android:paddingEnd="8dp">
 
     <TableRow
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
+            android:layout_gravity="bottom|start"
 
+            android:fontFamily="@font/futura_pt_medium"
             android:text="@string/download_speed"
             android:textAppearance="@style/Subtitle1"
             android:textColor="?android:attr/textColorPrimary" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
 
         <TextView
             android:id="@+id/download_value_res"
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginStart="20dp"
+            android:layout_gravity="end|bottom"
             android:layout_marginEnd="20dp"
 
+            android:fontFamily="@font/futura_pt_medium"
             android:text="@string/_0"
             android:textAppearance="@style/Headline4"
             android:textColor="?android:attr/textColorPrimary" />
 
         <TextView
-
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
+            android:layout_gravity="start|bottom"
 
+            android:fontFamily="@font/futura_pt_medium"
             android:text="@string/mbps"
             android:textAppearance="@style/Subtitle1"
             android:textColor="?android:attr/textColorPrimary" />
     </TableRow>
 
     <TableRow
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
         android:orientation="horizontal">
@@ -51,37 +60,44 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:text="@string/upload_speed"
+            android:layout_gravity="bottom|start"
+            android:fontFamily="@font/futura_pt_medium"
 
+            android:text="@string/upload_speed"
             android:textAppearance="@style/Subtitle1"
             android:textColor="?android:attr/textColorPrimary" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
 
         <TextView
             android:id="@+id/upload_value_res"
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginStart="20dp"
+            android:layout_gravity="end|bottom"
             android:layout_marginEnd="20dp"
-            android:text="@string/_0"
+            android:fontFamily="@font/futura_pt_medium"
 
+            android:text="@string/_0"
             android:textAppearance="@style/Headline4"
             android:textColor="?android:attr/textColorPrimary" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:text="@string/mbps"
+            android:layout_gravity="start|bottom"
+            android:fontFamily="@font/futura_pt_medium"
 
+            android:text="@string/mbps"
             android:textAppearance="@style/Subtitle1"
             android:textColor="?android:attr/textColorPrimary" />
     </TableRow>
 
     <TableRow
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
         android:orientation="horizontal">
@@ -89,20 +105,26 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:text="@string/_ping"
+            android:layout_gravity="bottom|start"
+            android:fontFamily="@font/futura_pt_medium"
 
+            android:text="@string/_ping"
             android:textAppearance="@style/Subtitle1"
             android:textColor="?android:attr/textColorPrimary" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
 
         <TextView
             android:id="@+id/ping_value_res"
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginStart="20dp"
+            android:layout_gravity="end|bottom"
             android:layout_marginEnd="20dp"
+            android:fontFamily="@font/futura_pt_medium"
             android:text="@string/_0"
             android:textAppearance="@style/Headline4"
             android:textColor="?android:attr/textColorPrimary" />
@@ -110,9 +132,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:text="@string/ms"
+            android:layout_gravity="start|bottom"
+            android:fontFamily="@font/futura_pt_medium"
 
+            android:text="@string/ms"
             android:textAppearance="@style/Subtitle1"
             android:textColor="?android:attr/textColorPrimary" />
     </TableRow>

@@ -9,13 +9,13 @@ import androidx.core.view.isVisible
 import kotlinx.coroutines.*
 import ru.scoltech.openran.speedtest.*
 import ru.scoltech.openran.speedtest.backend.*
-import ru.scoltech.openran.speedtest.databinding.ActivityDevBinding
+import ru.scoltech.openran.speedtest.databinding.ActivityOptionsBinding
 import java.net.*
 
-class DevActivity : AppCompatActivity() {
+class OptionsActivity : AppCompatActivity() {
 
 
-    lateinit var binding: ActivityDevBinding
+    lateinit var binding: ActivityOptionsBinding
     lateinit var iperfRunner: IperfRunner
 
     @Volatile
@@ -31,7 +31,7 @@ class DevActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = ActivityDevBinding.inflate(layoutInflater)
+        binding = ActivityOptionsBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.refreshButton.setOnClickListener {
             refreshAddresses()
@@ -139,6 +139,7 @@ class DevActivity : AppCompatActivity() {
         }
         binding.pingLayout.isVisible = false
 
+        binding.optionHeader.disableButtonGroup();
 
         binding.expandButton2.setOnClickListener {
             if (binding.deviceInfoLayout.isVisible) {
@@ -256,6 +257,6 @@ class DevActivity : AppCompatActivity() {
     }
 
     companion object {
-        private const val LOG_TAG = "DevActivity"
+        private const val LOG_TAG = "OptionsActivity"
     }
 }
