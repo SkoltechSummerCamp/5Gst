@@ -16,8 +16,10 @@
     <string name="icmpPing">ICMP PING</string>
     <string name="pingByICMPLabel">ping by ICMP:</string>
     <string name="startUdpPingServer">start udp ping server</string>
-    <string name="simple_ping">Simple ping:</string>
-    <string name="device_information">Device information:</string>
+    <string name="pingText">PING</string>
+    <string name="downloadText">Download args</string>
+    <string name="uploadText">Upload args</string>
+    <string name="device_ip">Device ip:</string>
     <string name="iperf_mobile">iperf mobile args:</string>
     <string name="iperfServer">iperf server args:</string>
     <string name="server_ip">server ip:</string>
@@ -48,4 +50,9 @@
     <string name="policy_title">Terms and Conditions</string>
     <string name="policy_content">By using this app you agree to our <a href="https://5gst.ru/static/Privacy_Policy_for_5G_Speed_Test_App.html">Privacy Policy</a></string>
     <string name="globalSharedPreferences">globalPreferences</string>
+    <string name="google_public_DNS">8.8.8.8</string>
+    <string name="ip_address_mock">255.255.255.255</string>
+    <string name="iperf_args">iperf args</string>
+    <string name="this_device">this device</string>
+    <string name="server">server</string>
 </resources>
