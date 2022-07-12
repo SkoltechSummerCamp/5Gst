@@ -14,11 +14,14 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import kotlin.Unit;
+import ru.scoltech.openran.speedtest.ApplicationConstants;
 import ru.scoltech.openran.speedtest.PingCheckServer;
 import ru.scoltech.openran.speedtest.R;
 import ru.scoltech.openran.speedtest.SpeedManager;
+import ru.scoltech.openran.speedtest.backend.IcmpPinger;
 import ru.scoltech.openran.speedtest.customButtons.SaveButton;
 import ru.scoltech.openran.speedtest.manager.DownloadUploadSpeedTestManager;
+import ru.scoltech.openran.speedtest.util.Promise;
 
 public class OptionsActivity extends AppCompatActivity {
     private static final String TAG = OptionsActivity.class.getSimpleName();
@@ -29,6 +32,7 @@ public class OptionsActivity extends AppCompatActivity {
     private Button icmpPing;
 
     private PingCheckServer pcs;
+    IcmpPinger icmpPinger;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +56,10 @@ public class OptionsActivity extends AppCompatActivity {
         icmpPing = (Button) findViewById(R.id.icmpPingButton);
         icmpPing.setOnClickListener(this::startIcmpPing);
 
+        pcs = new PingCheckServer(ApplicationConstants.PING_SERVER_UDP_PORT);
+        pcs.start();
+
+        icmpPinger = new IcmpPinger();
     }
 
     private void startPingServer(){
@@ -81,6 +89,19 @@ public class OptionsActivity extends AppCompatActivity {
     private void startIcmpPing(View view) {
         stopUdpPing(view);
         icmpPing.setText(getString(R.string.bigStop));
+
+        icmpPinger.start(serverIP.getText().toString())
+            .onSuccess(
+                new Thread(){
+                    runOnUiThread {
+                        binding.pingValue.text = it.toString()
+                    }
+                }
+            )
+            .onError{
+                Log.e(TAG, "Ping failed");
+            }
+            .start();
 
         icmpPing.setOnClickListener(this::stopIcmpPing);
     }
