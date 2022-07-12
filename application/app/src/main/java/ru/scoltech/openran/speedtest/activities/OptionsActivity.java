@@ -5,7 +5,6 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.text.format.Formatter;
 import android.util.Log;
-import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,20 +12,16 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import kotlin.Unit;
 import ru.scoltech.openran.speedtest.ApplicationConstants;
 import ru.scoltech.openran.speedtest.PingCheckServer;
 import ru.scoltech.openran.speedtest.R;
-import ru.scoltech.openran.speedtest.SpeedManager;
 import ru.scoltech.openran.speedtest.backend.IcmpPinger;
-import ru.scoltech.openran.speedtest.customButtons.SaveButton;
-import ru.scoltech.openran.speedtest.manager.DownloadUploadSpeedTestManager;
-import ru.scoltech.openran.speedtest.util.Promise;
 
 public class OptionsActivity extends AppCompatActivity {
     private static final String TAG = OptionsActivity.class.getSimpleName();
 
     private TextView ipInfo;
+    private TextView pingValue;
     private EditText serverIP;
     private Button udpPing;
     private Button icmpPing;
@@ -47,6 +42,7 @@ public class OptionsActivity extends AppCompatActivity {
 
     private void init() {
         ipInfo = (TextView) findViewById(R.id.ipInfo);
+        pingValue = (TextView) findViewById(R.id.pingValue);
 
         serverIP = (EditText) findViewById(R.id.serverIP);
 
@@ -86,28 +82,35 @@ public class OptionsActivity extends AppCompatActivity {
         udpPing.setOnClickListener(this::startUdpPing);
     }
 
+    private void onPingError(Exception e){
+        icmpPinger.stop();
+        Log.d(TAG, "Ping failed" + e.toString());
+        runOnUiThread(() -> {
+            stopIcmpPing(icmpPing);
+            stopUdpPing (udpPing);
+        });
+    }
+
     private void startIcmpPing(View view) {
         stopUdpPing(view);
         icmpPing.setText(getString(R.string.bigStop));
 
-        icmpPinger.start(serverIP.getText().toString())
-            .onSuccess(
-                new Thread(){
-                    runOnUiThread {
-                        binding.pingValue.text = it.toString()
-                    }
-                }
-            )
-            .onError{
-                Log.e(TAG, "Ping failed");
-            }
-            .start();
+        icmpPinger.start(serverIP.getText().toString()) // TODO если указан ip на который нельзя подключиться, то приложение зависнет
+                .onSuccess( aLong -> {
+                    runOnUiThread(() -> pingValue.setText(String.valueOf(aLong)));
+                    return null;
+                })
+                .onError(e -> {
+                    onPingError(e);
+                    return null;
+                }).start();
 
+        pingValue.setText("Err");
         icmpPing.setOnClickListener(this::stopIcmpPing);
     }
     private void stopIcmpPing(View view) {
         icmpPing.setText(getString(R.string.icmpPing));
-
+        icmpPinger.stop();
         icmpPing.setOnClickListener(this::startIcmpPing);
     }
 
