@@ -3,12 +3,12 @@ import shlex
 import argparse
 import datetime
 import subprocess
+import sys
 from typing import IO
 from io import TextIOWrapper
 from threading import Thread
 
-from balancer_routine import balancer_routine
-from balancer_routine import env_data
+from balancer_communicator import balancer_communicator
 
 
 class Iperf_wrapper():
@@ -21,6 +21,10 @@ class Iperf_wrapper():
         self.verbose: bool = verbose
         self.is_started: bool = False
         self.iperf_parameters: str = parameters
+        cmd = shlex.split("./iperf.elf " + '--version')  # TODO write version to logs
+        iperf_version_process = subprocess.Popen(
+            cmd, stdout=sys.stdout, stderr=sys.stderr, universal_newlines=True)
+        iperf_version_process.wait()
 
     def __logger_thread(self, stream: IO, file: TextIOWrapper):
         def logger(stream: IO, file: TextIOWrapper):
@@ -59,7 +63,7 @@ class Iperf_wrapper():
             t.join()
 
         self.is_started = False
-        balancer_routine.post_to_server(port=int(balancer_routine.env_data['IPERF_PORT']))
+        balancer_communicator.post_to_server(port=int(balancer_communicator.env_data['IPERF_PORT']))
         print(f"iPerf stopped with status {return_code}")
 
     def start(self, port_iperf):
@@ -103,6 +107,7 @@ def read_env_data():
     env_data['SERVICE_IP_ADDRESS'] = os.environ.get('SERVICE_IP_ADDRESS')
     env_data['SERVICE_LOCATION'] = os.environ.get('SERVICE_LOCATION')
     env_data['BALANCER_ADDRESS'] = os.environ.get('BALANCER_ADDRESS')
+    env_data['BALANCER_BASE_URL'] = os.environ.get('BALANCER_BASE_URL')
     env_data['IPERF_PORT'] = os.getenv('IPERF_PORT', '5001')
     env_data['SERVICE_PORT'] = os.getenv('SERVICE_PORT', '5000')
     env_data['CONNECTING_TIMEOUT'] = os.getenv('CONNECTING_TIMEOUT', '30')
@@ -113,10 +118,12 @@ def create_arg_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument('-V', '--verbose', action='store_true')
     parser.add_argument('-p', '--parameters', help="parameters for iPerf", type=str,
-                        action="store", default='-s -u')
+                        action="store", default='')
 
     return parser
 
+
+iperf: Iperf_wrapper = Iperf_wrapper(verbose=True)
 
 if __name__ == "__main__":
     arg_parser = create_arg_parser()
@@ -125,8 +132,8 @@ if __name__ == "__main__":
     env_data = read_env_data()
     for key, value in env_data.items():
         print(f'{key}: {value}')
-
-    iperf_wrapper = Iperf_wrapper(namespace.parameters, True)
+    print('Params ' + namespace.parameters)
+    iperf_wrapper = Iperf_wrapper(namespace.params, True)
     iperf_wrapper.start(env_data['IPERF_PORT'])
     try:
         while True:
