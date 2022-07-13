@@ -99,6 +99,6 @@ jobs:
         with:
           context: service/gh-artifacts
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/speedtest-service:${{ env.version }}
+          tags: ${{ secrets.DOCKER_USERNAME }}/speedtest-service:${{ env.version }}.${{ github.run_number }}
 
  

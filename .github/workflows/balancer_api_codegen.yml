@@ -6,9 +6,14 @@ jobs:
   generate-swagger:
     runs-on: ubuntu-latest
     env:
-      SECRET_KEY: SECRET_KEY
+      SECRET_KEY: test
       DEBUG: False
       SUPPORT_EMAIL: ${{ secrets.SUPPORT_EMAIL }}
+      DB_NAME: test
+      DB_USER: test
+      DB_PASSWORD: test
+      DB_HOST: test
+      DB_PORT: test
     defaults:
       run:
         working-directory: ./balancer
