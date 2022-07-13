@@ -26,13 +26,26 @@ git clone --recursive --recurse-submodules $repo_link
 To start the server you need to run the command:
 
 1. Build Iperf
-2. Run python
+2. Setup environment variables
 
 ```
-cd swagger_client
-python3 setup.py install --user
-cd ..
-python3 server.py 
+ALLOWED_HOSTS=127.0.0.1; # Hosts on which you want to start service
+BALANCER_ADDRESS=127.0.0.1:5555;
+BALANCER_BASE_URL=127.0.0.1:5555;
+CONNECTING_TIMEOUT=30;
+DEBUG=True;
+DJANGO_SETTINGS_MODULE=service.settings;
+IPERF_PORT=5005;
+SECRET_KEY=123;
+SERVICE_IP_ADDRESS=127.0.0.1;
+SERVICE_PORT=5004
+```
+3. Change host in swagger_client/configuration.py to balancer's hostname
+4. Install everything from Pipfile
+5. Run python
+
+```
+python3 manage.py runserver HERE_IS_YOUR_HOSTNAME 
 ```
 
 The server listens port `5000` and can handle the following GET requests:
