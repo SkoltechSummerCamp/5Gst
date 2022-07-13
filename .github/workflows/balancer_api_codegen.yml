@@ -112,7 +112,7 @@ jobs:
       - name: Move generated code to projects
         run: |
           cp -r ../AUTOBUILD/javaBalancerClient/ ../application/balancerApi
-          cp -r ../AUTOBUILD/pythonBalancerClient/ ../service/swagger_client          
+          cp -r ../AUTOBUILD/pythonBalancerClient/swagger_client/ ../service/swagger_client
 
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
