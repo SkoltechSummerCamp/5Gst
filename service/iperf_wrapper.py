@@ -8,8 +8,6 @@ from typing import IO
 from io import TextIOWrapper
 from threading import Thread
 
-from balancer_communicator import balancer_communicator
-
 
 class IperfWrapper:
 
@@ -97,11 +95,6 @@ class IperfWrapper:
         return_code = self.iperf_process.poll()
 
         return return_code
-
-
-def read_env_data():
-    env_data = {}
-    return env_data
 
 
 def create_arg_parser():

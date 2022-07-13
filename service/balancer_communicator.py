@@ -1,6 +1,7 @@
 import swagger_client
 from swagger_client.rest import ApiException
 from django.conf import settings
+from swagger_client.configuration import Configuration
 
 
 class BalancerCommunicator:
@@ -14,6 +15,9 @@ class BalancerCommunicator:
             'SERVICE_PORT': settings.SERVICE_PORT,
             'CONNECTING_TIMEOUT': settings.CONNECTING_TIMEOUT
         }
+        configuration = Configuration()
+        configuration.host = 'http://' + self.env_data['BALANCER_ADDRESS'] + self.env_data['BALANCER_BASE_URL']
+        self.api_instance.api_client.configuration = configuration
 
     def post_to_server(self):
         body = swagger_client.ServerAddressRequest(ip=self.env_data['SERVICE_IP_ADDRESS'],
