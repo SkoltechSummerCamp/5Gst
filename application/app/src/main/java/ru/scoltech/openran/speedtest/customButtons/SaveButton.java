@@ -26,7 +26,7 @@ import ru.scoltech.openran.speedtest.util.ExternalStorageSaver;
 */
 public class SaveButton extends androidx.appcompat.widget.AppCompatButton {
 
-    private static final String TAG = SaveButton.class.getName();
+    private static final String TAG = SaveButton.class.getSimpleName();
 
     public SaveButton(Context context, AttributeSet attrs) {
         super(context, attrs);

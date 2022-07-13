@@ -28,7 +28,7 @@ import ru.scoltech.openran.speedtest.manager.DownloadUploadSpeedTestManager;
 
 public class SpeedActivity extends AppCompatActivity {
 
-    private static final String TAG = SpeedActivity.class.getName();
+    private static final String TAG = SpeedActivity.class.getSimpleName();
     private Wave cWave;
     private CardView mCard;
     private SubResultView mSubResults; // in progress result

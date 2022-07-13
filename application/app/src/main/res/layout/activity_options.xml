@@ -193,77 +193,90 @@
 
 
             <TextView
-                android:id="@+id/download_this_dev"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/this_device"
-
-                android:textAppearance="@style/Subtitle2"
-                android:textColor="?android:attr/textColorHint"
-                app:layout_constraintEnd_toEndOf="@+id/download_iperf_dev"
-                app:layout_constraintStart_toStartOf="@+id/download_iperf_dev"
-                app:layout_constraintTop_toBottomOf="@+id/download_iperf_dev" />
-
-            <TextView
                 android:id="@+id/download_iperf_dev"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
 
-                android:text="@string/iperf_args"
-                android:textAppearance="@style/Headline4"
+                android:text="@string/this_device"
+                android:textAppearance="@style/Headline2"
                 android:textColor="?android:attr/textColorPrimary"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/download_server"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/server"
-
-                android:textAppearance="@style/Subtitle2"
-                android:textColor="?android:attr/textColorHint"
-                app:layout_constraintEnd_toEndOf="@+id/download_iperf_server"
-                app:layout_constraintStart_toStartOf="@+id/download_iperf_server"
-                app:layout_constraintTop_toBottomOf="@+id/download_iperf_server" />
 
             <TextView
                 android:id="@+id/download_iperf_server"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:text="@string/iperf_args"
+                android:gravity="center"
+                android:text="@string/server"
 
-                android:textAppearance="@style/Headline4"
+                android:textAppearance="@style/Headline2"
                 android:textColor="?android:attr/textColorPrimary"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/download_this_dev" />
+                app:layout_constraintEnd_toEndOf="@+id/download_iperf_dev"
+                app:layout_constraintTop_toBottomOf="@+id/download_iperf_dev" />
+
+            <TextView
+                android:id="@+id/immutable_download_dev_args"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:gravity="center"
+                android:layout_marginStart="8dp"
+                android:text="@string/user_immutable_down_dev_args"
+                android:textSize="12sp"
+                android:textColor="?android:attr/textColorPrimary"
+
+                app:layout_constraintBottom_toTopOf="@+id/download_iperf_server"
+
+                app:layout_constraintStart_toEndOf="@+id/download_iperf_dev"
+                app:layout_constraintTop_toTopOf="@+id/download_iperf_dev"/>
 
             <EditText
                 android:id="@+id/download_device_args"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="4dp"
+                android:textSize="12sp"
+                android:hint="@string/default_download_device_iperf_args"
+                android:autofillHints=" "
+                android:inputType="text"
 
                 app:layout_constraintBottom_toTopOf="@+id/download_iperf_server"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/download_iperf_dev"
-                app:layout_constraintTop_toTopOf="@+id/download_iperf_dev" />
+                app:layout_constraintStart_toEndOf="@+id/immutable_download_dev_args"
+                app:layout_constraintTop_toTopOf="@+id/download_iperf_dev"/>
+
+            <TextView
+                android:id="@+id/immutable_download_serv_args"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:gravity="center"
+                android:layout_marginStart="8dp"
+                android:text="@string/user_immutable_down_serv_args"
+                android:textSize="12sp"
+                android:textColor="?android:attr/textColorPrimary"
+
+                app:layout_constraintTop_toTopOf="@+id/download_iperf_server"
+                app:layout_constraintBottom_toBottomOf="@+id/download_iperf_server"
+                app:layout_constraintStart_toEndOf="@+id/download_iperf_server"/>
 
             <EditText
                 android:id="@+id/download_server_args"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="4dp"
+
+                android:textSize="12sp"
+                android:hint="@string/default_download_server_iperf_args"
+                android:autofillHints=" "
+                android:inputType="text"
 
                 app:layout_constraintTop_toTopOf="@+id/download_iperf_server"
-                app:layout_constraintBottom_toBottomOf="@+id/download_server"
+                app:layout_constraintBottom_toBottomOf="@+id/download_iperf_server"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/download_iperf_server"/>
+                app:layout_constraintStart_toEndOf="@+id/immutable_download_serv_args"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -304,18 +317,6 @@
             android:orientation="vertical">
 
 
-            <TextView
-                android:id="@+id/upload_this_dev"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/this_device"
-
-                android:textAppearance="@style/Subtitle2"
-                android:textColor="?android:attr/textColorHint"
-                app:layout_constraintEnd_toEndOf="@+id/upload_iperf_dev"
-                app:layout_constraintStart_toStartOf="@+id/upload_iperf_dev"
-                app:layout_constraintTop_toBottomOf="@+id/upload_iperf_dev" />
 
             <TextView
                 android:id="@+id/upload_iperf_dev"
@@ -323,24 +324,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
 
-                android:text="@string/iperf_args"
-                android:textAppearance="@style/Headline4"
+                android:text="@string/this_device"
+                android:textAppearance="@style/Headline2"
                 android:textColor="?android:attr/textColorPrimary"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/upload_server"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/server"
-
-                android:textAppearance="@style/Subtitle2"
-                android:textColor="?android:attr/textColorHint"
-                app:layout_constraintEnd_toEndOf="@+id/upload_iperf_server"
-                app:layout_constraintStart_toStartOf="@+id/upload_iperf_server"
-                app:layout_constraintTop_toBottomOf="@+id/upload_iperf_server" />
 
             <TextView
                 android:id="@+id/upload_iperf_server"
@@ -348,34 +337,73 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:text="@string/iperf_args"
+                android:text="@string/server"
 
-                android:textAppearance="@style/Headline4"
+                android:textAppearance="@style/Headline2"
                 android:textColor="?android:attr/textColorPrimary"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/upload_this_dev" />
+                app:layout_constraintEnd_toEndOf="@+id/upload_iperf_dev"
+                app:layout_constraintTop_toBottomOf="@+id/upload_iperf_dev" />
+
+            <TextView
+                android:id="@+id/immutable_upload_dev_args"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:gravity="center"
+                android:layout_marginStart="8dp"
+                android:text="@string/user_immutable_up_dev_args"
+                android:textSize="12sp"
+                android:textColor="?android:attr/textColorPrimary"
+
+                app:layout_constraintBottom_toTopOf="@+id/upload_iperf_server"
+                app:layout_constraintStart_toEndOf="@+id/upload_iperf_dev"
+                app:layout_constraintTop_toTopOf="@+id/upload_iperf_dev"/>
+
 
             <EditText
                 android:id="@+id/upload_device_args"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="4dp"
+
+                android:textSize="12sp"
+                android:hint="@string/default_upload_device_iperf_args"
+                android:importantForAutofill="no"
+                android:inputType="text"
 
                 app:layout_constraintBottom_toTopOf="@+id/upload_iperf_server"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/upload_iperf_dev"
-                app:layout_constraintTop_toTopOf="@+id/upload_iperf_dev" />
+                app:layout_constraintStart_toEndOf="@+id/immutable_upload_dev_args"
+                app:layout_constraintTop_toTopOf="@+id/upload_iperf_dev"/>
+
+            <TextView
+                android:id="@+id/immutable_upload_serv_args"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:gravity="center"
+                android:layout_marginStart="8dp"
+                android:text="@string/user_immutable_up_serv_args"
+                android:textSize="12sp"
+                android:textColor="?android:attr/textColorPrimary"
+
+                app:layout_constraintTop_toTopOf="@+id/upload_iperf_server"
+                app:layout_constraintBottom_toBottomOf="@+id/upload_iperf_server"
+                app:layout_constraintStart_toEndOf="@+id/upload_iperf_server"/>
 
             <EditText
                 android:id="@+id/upload_server_args"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="4dp"
+
+                android:textSize="12sp"
+                android:hint="@string/default_upload_server_iperf_args"
+                android:autofillHints=" "
+                android:inputType="text"
 
                 app:layout_constraintTop_toTopOf="@+id/upload_iperf_server"
-                app:layout_constraintBottom_toBottomOf="@+id/upload_server"
+                app:layout_constraintBottom_toBottomOf="@+id/upload_iperf_server"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/upload_iperf_server"/>
+                app:layout_constraintStart_toEndOf="@+id/immutable_upload_serv_args"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

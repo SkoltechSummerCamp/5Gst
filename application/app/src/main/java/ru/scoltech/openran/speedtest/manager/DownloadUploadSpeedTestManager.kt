@@ -2,6 +2,7 @@ package ru.scoltech.openran.speedtest.manager
 
 import android.content.Context
 import io.swagger.client.model.ServerAddressResponse
+import ru.scoltech.openran.speedtest.R
 import ru.scoltech.openran.speedtest.parser.MultithreadedIperfOutputParser
 import ru.scoltech.openran.speedtest.task.TaskChain
 import ru.scoltech.openran.speedtest.task.TaskChainBuilder
@@ -53,14 +54,36 @@ private constructor(
             .setWriteTimeout(DEFAULT_TIMEOUT)
 
         val obtainServiceAddressesTask = ObtainServiceAddressesTask(balancerApiBuilder)
+
+        // get IPERF arguments
+        val iperfPref = context.getSharedPreferences(
+            context.getString(R.string.iperfSharedPreferences),Context.MODE_PRIVATE)
+        val DOWNLOAD_DEVICE_IPERF_ARGS = iperfPref.getString(
+            context.getString(R.string.download_device_args),
+            context.getString(R.string.default_download_device_iperf_args)
+        )
+        val DOWNLOAD_SERVER_IPERF_ARGS = iperfPref.getString(
+            context.getString(R.string.download_server_args),
+            context.getString(R.string.default_download_server_iperf_args)
+        )
+        val UPLOAD_DEVICE_IPERF_ARGS = iperfPref.getString(
+            context.getString(R.string.upload_device_args),
+            context.getString(R.string.default_upload_device_iperf_args)
+        )
+        val UPLOAD_SERVER_IPERF_ARGS = iperfPref.getString(
+            context.getString(R.string.upload_server_args),
+            context.getString(R.string.default_upload_server_iperf_args)
+        )
+
         val startServiceIperfTask = StartServiceIperfTask(
             balancerApiBuilder,
-            "-s $DEFAULT_DOWNLOAD_SERVER_ARGS"
+            "-s ${context.getString(R.string.immutable_download_server_args)} $DOWNLOAD_SERVER_IPERF_ARGS"
         )
         val stopServiceIperfTask = StopServiceIperfTask(balancerApiBuilder)
+
         val startIperfTask = StartIperfTask(
             context.filesDir.absolutePath,
-            "$DEFAULT_COMMON_CLIENT_ARGS $DEFAULT_DOWNLOAD_CLIENT_ARGS",
+            "${context.getString(R.string.immutable_download_device_args)} $DOWNLOAD_DEVICE_IPERF_ARGS",
             MultithreadedIperfOutputParser(),
             SkipThenAverageEqualizer(
                 DEFAULT_EQUALIZER_DOWNLOAD_VALUES_SKIP,
@@ -95,10 +118,10 @@ private constructor(
             .andThen(DelayTask(idleBetweenTasksMelees))
             .andThenUnstoppable { balancerAddress.get() }
             .andThen(obtainServiceAddressesTask)
-            .andThenTry(startServiceIperfTask.copy(args = "-s $DEFAULT_UPLOAD_SERVER_ARGS")) {
+            .andThenTry(startServiceIperfTask.copy(args = "-s ${context.getString(R.string.immutable_upload_server_args)} $UPLOAD_SERVER_IPERF_ARGS")) {
                 andThen(
                     startIperfTask.copy(
-                        args = "$DEFAULT_COMMON_CLIENT_ARGS $DEFAULT_UPLOAD_CLIENT_ARGS",
+                        args = "${context.getString(R.string.immutable_upload_device_args)} $UPLOAD_DEVICE_IPERF_ARGS",
                         speedEqualizer = SkipThenAverageEqualizer(
                             DEFAULT_EQUALIZER_UPLOAD_VALUES_SKIP,
                             DEFAULT_EQUALIZER_MAX_STORING
@@ -114,6 +137,13 @@ private constructor(
     }
 
     fun buildDirectIperfChain(): TaskChain<String> {
+        val iperfPref = context.getSharedPreferences(
+            context.getString(R.string.iperfSharedPreferences),Context.MODE_PRIVATE)
+        val DOWNLOAD_DEVICE_IPERF_ARGS = iperfPref.getString(
+            context.getString(R.string.download_device_args),
+            context.getString(R.string.default_download_device_iperf_args)
+        )
+
         val chainBuilder = TaskChainBuilder<String>().onFatalError(onFatalError).onStop(onStop)
         chainBuilder.initializeNewChain()
             .andThen(ParseAddressTask())
@@ -124,7 +154,7 @@ private constructor(
             .andThen(
                 StartIperfTask(
                     context.filesDir.absolutePath,
-                    "$DEFAULT_COMMON_CLIENT_ARGS $DEFAULT_DOWNLOAD_CLIENT_ARGS",
+                    "${context.getString(R.string.immutable_download_device_args)} $DOWNLOAD_DEVICE_IPERF_ARGS",
                     MultithreadedIperfOutputParser(),
                     SkipThenAverageEqualizer(
                         DEFAULT_EQUALIZER_DOWNLOAD_VALUES_SKIP,
@@ -236,11 +266,12 @@ private constructor(
     }
 
     companion object {
-        private const val DEFAULT_COMMON_CLIENT_ARGS = "-f b -P 10 --sum-only -i 0.1 -b 120m"
-        private const val DEFAULT_DOWNLOAD_CLIENT_ARGS = "-u -R"
-        private const val DEFAULT_DOWNLOAD_SERVER_ARGS = "-u"
-        private const val DEFAULT_UPLOAD_CLIENT_ARGS = ""
-        private const val DEFAULT_UPLOAD_SERVER_ARGS = ""
+//        private const val IMMUTABLE_COMMON_DEVICE_ARGS = "-f b -i 0.1 --sum-only"
+//        private const val IMMUTABLE_DOWNLOAD_DEVICE_ARGS = "-u -R" + IMMUTABLE_COMMON_DEVICE_ARGS
+//        private const val IMMUTABLE_DOWNLOAD_SERVER_ARGS = "-u"
+//        private const val IMMUTABLE_UPLOAD_DEVICE_ARGS   = "" + IMMUTABLE_COMMON_DEVICE_ARGS
+//        private const val IMMUTABLE_UPLOAD_SERVER_ARGS   = ""
+
         private const val DEFAULT_TIMEOUT = 1000
         private const val DEFAULT_EQUALIZER_MAX_STORING = 4
         private const val DEFAULT_EQUALIZER_DOWNLOAD_VALUES_SKIP = 0
