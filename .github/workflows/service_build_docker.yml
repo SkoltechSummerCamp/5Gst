@@ -43,10 +43,17 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      
+        with:
+          submodules: recursive
+
+      - name: Setup artifact name in env
+        run: |
+          IPERF_VERSION=$(cat ../iPerf/VERSION)
+          echo "iPerfArtifactName=iperf-$IPERF_VERSION.$GITHUB_RUN_NUMBER" > $GITHUB_ENV
+
       - uses: actions/download-artifact@v2
         with:
-          name: iperf-2.0.13.${{ github.run_number }}
+          name: iperf-${{ env.iPerfArtifactName }}.${{ github.run_number }}
           path: service
       
       - name: Setup artifact content
