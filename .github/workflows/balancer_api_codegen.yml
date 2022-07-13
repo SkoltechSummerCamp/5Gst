@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       SECRET_KEY: test
-      DEBUG: False
+      DEBUG: "False"
       SUPPORT_EMAIL: ${{ secrets.SUPPORT_EMAIL }}
       DB_NAME: test
       DB_USER: test
