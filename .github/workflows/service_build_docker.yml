@@ -60,7 +60,7 @@ jobs:
         run: |
           cd ..
           mkdir gh-artifacts/
-          cp -r service gh-artifacts/
+          cp -r service/* gh-artifacts/
           
           echo "artifactName=speedtest-service-$(cat service/VERSION).$GITHUB_RUN_NUMBER" > $GITHUB_ENV
       
