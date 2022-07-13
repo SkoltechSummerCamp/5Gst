@@ -97,7 +97,7 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v2
         with:
-          context: ./gh-artifacts
+          context: service/gh-artifacts
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/speedtest-service:${{ env.version }}
 
