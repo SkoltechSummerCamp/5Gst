@@ -64,16 +64,35 @@ WSGI_APPLICATION = 'balancer.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ['DB_NAME'],
-        'USER': os.environ['DB_USER'],
-        'PASSWORD': os.environ['DB_PASSWORD'],
-        'HOST': os.environ['DB_HOST'],
-        'PORT': os.environ['DB_PORT'],
+if os.getenv('TEST_MODE', 'False') == 'True':
+    if os.getenv('DEBUG', 'False') != 'True':
+        raise ValueError("Test mode must have DEBUG enabled")
+
+    import testing.postgresql
+
+    postgresql = testing.postgresql.Postgresql()
+    dsn = postgresql.dsn()
+
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': dsn['database'],
+            'USER': dsn['user'],
+            'HOST': dsn['host'],
+            'PORT': dsn['port'],
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ['DB_NAME'],
+            'USER': os.environ['DB_USER'],
+            'PASSWORD': os.environ['DB_PASSWORD'],
+            'HOST': os.environ['DB_HOST'],
+            'PORT': os.environ['DB_PORT'],
+        }
+    }
 
 
 # Password validation
