@@ -1,14 +1,6 @@
 name: "[Application] Build Android artifacts"
 
-on:
-  push:
-    paths:
-      - 'application/**'
-      - '.github/**'
-  pull_request:
-    paths:
-      - 'application/**'
-      - '.github/**'
+on: [push, pull_request]
 
 jobs:
   debug-build:

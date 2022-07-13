@@ -3,18 +3,12 @@ name: "[Service] Build docker image"
 on: 
   push:
     branches: [main, develop]
-    paths:
-      - 'service/**'
-      - '.github/**'
   pull_request:
     branches: [main, develop]
-    paths:
-      - 'service/**'
-      - '.github/**'
 
 jobs:
   build-iperf:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: ./service
@@ -31,7 +25,8 @@ jobs:
           mkdir gh-artifacts
           mv ../iPerf/src/iperf gh-artifacts/
           
-          echo "artifactName=iperf-2.0.13.$GITHUB_RUN_NUMBER" > $GITHUB_ENV
+          IPERF_VERSION=$(cat ../iPerf/VERSION)
+          echo "artifactName=iperf-$IPERF_VERSION.$GITHUB_RUN_NUMBER" > $GITHUB_ENV
       
       - name: Upload iperf binary to artifacts
         uses: actions/upload-artifact@v2
@@ -40,7 +35,7 @@ jobs:
           path: service/gh-artifacts/*
 
   speedtest-service:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     needs: build-iperf
     defaults:
       run:
@@ -56,23 +51,20 @@ jobs:
       
       - name: Setup artifact content
         run: |
+          cd ..
           mkdir gh-artifacts/
-          mv server.py gh-artifacts/
-          mv iperf_wrapper.py gh-artifacts/
-          mv iperf gh-artifacts/
-          mv Dockerfile gh-artifacts/
-          mv requirements.txt gh-artifacts/
+          cp -r service gh-artifacts/
           
-          echo "artifactName=speedtest-service-$(cat VERSION).$GITHUB_RUN_NUMBER" > $GITHUB_ENV
+          echo "artifactName=speedtest-service-$(cat service/VERSION).$GITHUB_RUN_NUMBER" > $GITHUB_ENV
       
       - name: Upload all server files to artifacts
         uses: actions/upload-artifact@v2
         with:
           name: ${{ env.artifactName }}
-          path: service/gh-artifacts/*
+          path: gh-artifacts/*
 
   publish-to-dockerhub:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     needs: speedtest-service
     defaults:
       run:
@@ -98,7 +90,7 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v2
         with:
-          context: ./service/gh-artifacts
+          context: ./gh-artifacts
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/speedtest-service:${{ env.version }}
 

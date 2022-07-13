@@ -1,14 +1,6 @@
 name: "[Balancer] Django tests"
 
-on:
-  push:
-    paths:
-      - 'balancer/**'
-      - '.github/**'
-  pull_request:
-    paths:
-      - 'balancer/**'
-      - '.github/**'
+on: [push, pull_request]
 
 jobs:
   test:
