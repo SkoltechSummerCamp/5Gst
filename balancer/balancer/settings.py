@@ -66,10 +66,15 @@ WSGI_APPLICATION = 'balancer.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ['DB_NAME'],
+        'USER': os.environ['ROLE'],
+        'PASSWORD': os.environ['PASS'],
+        'HOST': os.environ['DB_IP'],
+        'PORT': os.environ['DB_PORT'],
     }
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
