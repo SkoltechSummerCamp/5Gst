@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="ru.scoltech.openran.speedtest.activities.StartActivity">
+
+
+    <LinearLayout
+        android:id="@+id/main_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <ru.scoltech.openran.speedtest.customViews.HeaderView
+            android:id="@+id/header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:is_active_back="false"
+            app:is_active_button_group="true"
+            app:section_name="5G Speedtest" />
+
+        <ru.scoltech.openran.speedtest.customViews.CardView
+            android:id="@+id/card"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="30dp"
+
+            android:visibility="visible" />
+
+        <ru.scoltech.openran.speedtest.customViews.ResultView
+            android:id="@+id/result"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_gravity="center"
+
+            android:layout_marginStart="20dp"
+
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="20dp"
+            android:visibility="gone" />
+
+        <ru.scoltech.openran.speedtest.customViews.SubResultView
+            android:id="@+id/subresult"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="30dp"
+            android:gravity="center"
+
+            android:visibility="visible" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="30dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ru.scoltech.openran.speedtest.customButtons.SaveButton
+                android:id="@+id/save_btn"
+                style="?android:attr/buttonBarButtonStyle"
+
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+
+                android:foreground="@drawable/ic_save"
+                android:foregroundTint="?android:attr/panelColorForeground"
+
+                android:visibility="gone" />
+
+            <ru.scoltech.openran.speedtest.customButtons.ActionButton
+                android:id="@+id/action_btn"
+                style="?android:attr/buttonBarButtonStyle"
+
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="20dp"
+
+                android:contentDescription="@string/start"
+
+                android:foreground="@drawable/ic_play"
+                android:foregroundTint="?android:attr/panelColorForeground"
+
+                android:onClick="onClick" />
+
+            <ru.scoltech.openran.speedtest.customButtons.ShareButton
+                android:id="@+id/share_btn"
+                style="?android:attr/buttonBarButtonStyle"
+
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+
+                android:fontFamily="@font/futura_pt_heavy"
+                android:foreground="@drawable/ic_share"
+                android:foregroundTint="?android:attr/panelColorForeground"
+
+                android:visibility="gone" />
+
+
+        </LinearLayout>
+
+        <!--    Main menu iperf settings    -->
+
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

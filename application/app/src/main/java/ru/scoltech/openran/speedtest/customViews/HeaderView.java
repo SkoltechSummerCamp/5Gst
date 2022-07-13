@@ -10,14 +10,17 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import ru.scoltech.openran.speedtest.R;
-import ru.scoltech.openran.speedtest.activities.DemoActivity;
-import ru.scoltech.openran.speedtest.activities.DevActivity;
+import ru.scoltech.openran.speedtest.activities.OptionsActivity;
 
 
 public class HeaderView extends LinearLayout {
 
     private Button returnBtn;
+    private Button historyBtn;
+    private Button modeBtn;
 
     private TextView sectionNameTV;
 
@@ -31,12 +34,18 @@ public class HeaderView extends LinearLayout {
         parseAttrs(context, attrs);
 
         returnBtn.setOnClickListener(v -> goToStart(v.getContext()));
+
+        historyBtn.setOnClickListener(v -> goToHistory(v.getContext()));
+
+        modeBtn.setOnClickListener(v -> goToDev(v.getContext()));
     }
 
     private void init() {
         sectionNameTV = findViewById(R.id.section_name);
 
         returnBtn = findViewById(R.id.return_btn);
+        historyBtn = findViewById(R.id.history_go_btn);
+        modeBtn = findViewById(R.id.mode_switch_btn);
     }
 
     private void parseAttrs(Context context, AttributeSet attrs) {
@@ -72,7 +81,17 @@ public class HeaderView extends LinearLayout {
 
     //TODO global: check if it efficient way to go to main menu, especially from the same activity
     private void goToStart(Context context) {
-        Intent intent = new Intent(context, DemoActivity.class);
+        AppCompatActivity activity = (AppCompatActivity) context;
+        activity.finish();
+    }
+
+    private void goToHistory(Context context) {
+        Log.d("HEADER", "goToHistory: pressed btn");
+    }
+
+    private void goToDev(Context context) {
+        Log.d("HEADER", "goToDev: pressed btn");
+        Intent intent = new Intent(context, OptionsActivity.class);
         context.startActivity(intent);
     }
 
@@ -93,11 +112,19 @@ public class HeaderView extends LinearLayout {
     }
 
     public void disableButtonGroup() {
-        // no operations
+        historyBtn.setEnabled(false);
+        historyBtn.setAlpha(0.5f);
+
+        modeBtn.setEnabled(false);
+        modeBtn.setAlpha(0.5f);
     }
 
     public void enableButtonGroup() {
-        // no operations
+        historyBtn.setEnabled(true);
+        historyBtn.setAlpha(1f);
+
+        modeBtn.setEnabled(true);
+        modeBtn.setAlpha(1f);
     }
 
     public void setSectionName(String sectionName) {

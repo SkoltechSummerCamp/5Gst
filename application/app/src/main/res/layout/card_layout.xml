@@ -2,12 +2,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="300dp"
+    android:layout_height="wrap_content"
 
     android:layout_marginStart="20dp"
     android:layout_marginEnd="20dp"
     android:background="@drawable/card_background"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingBottom="10dp">
 
     <!--    Speed info-->
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -22,12 +23,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
+            android:fontFamily="@font/arial_mono_bold"
             android:gravity="top"
             android:lineSpacingExtra="0sp"
             android:text="@string/_0"
             android:textAppearance="@style/Headline1"
-            android:textColor="@color/neutral_10"
 
+            android:textColor="@color/neutral_10"
             app:layout_constraintRight_toLeftOf="@+id/dot_speed"
             tools:ignore="MissingConstraints" />
 
@@ -57,6 +59,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
 
+                android:fontFamily="@font/arial_mono_bold"
                 android:gravity="top"
                 android:lineSpacingExtra="0sp"
                 android:text="@string/_0"
@@ -70,6 +73,7 @@
 
                 android:layout_marginTop="-10dp"
 
+                android:fontFamily="@font/futura_pt_demi"
                 android:text="@string/mbps"
                 android:textAppearance="@style/Headline2"
                 android:textColor="@color/colorLightBackground"
@@ -99,6 +103,7 @@
 
             android:layout_marginEnd="40dp"
 
+            android:fontFamily="@font/futura_pt_medium"
             android:text="@string/ping"
             android:textAppearance="@style/Headline4"
             android:textColor="@color/colorLightBackground" />
@@ -111,6 +116,7 @@
 
             android:layout_marginEnd="40dp"
 
+            android:fontFamily="@font/futura_pt_medium"
             android:text="@string/empty"
             android:textAppearance="@style/Headline4"
             android:textColor="@color/colorLightBackground" />

@@ -14,7 +14,7 @@
         android:theme="@style/Theme.SpeedtestApplication"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".activities.DevActivity"
+            android:name=".activities.OptionsActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -23,7 +23,16 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.DemoActivity"
+            android:name=".activities.SpeedActivity"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activities.StartActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

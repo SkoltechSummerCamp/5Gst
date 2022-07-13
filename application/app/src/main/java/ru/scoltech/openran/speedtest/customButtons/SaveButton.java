@@ -20,9 +20,13 @@ import ru.scoltech.openran.speedtest.R;
 import ru.scoltech.openran.speedtest.SpeedManager;
 import ru.scoltech.openran.speedtest.util.ExternalStorageSaver;
 
+/*
+* A class that allows you to save an image of the speed test result to the gallery.
+* To create a picture it uses: result_layout.xml
+*/
 public class SaveButton extends androidx.appcompat.widget.AppCompatButton {
 
-    final private String TAG = "SAVE_BUTTON";
+    private static final String TAG = SaveButton.class.getName();
 
     public SaveButton(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -60,7 +64,7 @@ public class SaveButton extends androidx.appcompat.widget.AppCompatButton {
 
     private String createName() {
         String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmm", Locale.ROOT).format(new Date());
-        return "test_" + timeStamp + ".jpg";
+        return "Speedtest_" + timeStamp + ".jpg";
     }
 
     private boolean addToGallery(Context context, Bitmap bitmap, String title, String description) {
