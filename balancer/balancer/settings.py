@@ -15,6 +15,7 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 from drf_yasg import openapi
+from psycopg2 import *
 
 load_dotenv()
 
