@@ -1,367 +1,412 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?android:attr/colorBackground"
-    tools:context=".activities.OptionsActivity">
+    tools:context=".activities.OptionsActivity"
+    android:orientation="vertical">
 
-    <ScrollView
+    <ru.scoltech.openran.speedtest.customViews.HeaderView
+        android:id="@+id/option_header"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#2C2727">
+        android:layout_height="wrap_content"
+        app:section_name="Dev - iperf">
 
-        <LinearLayout
+    </ru.scoltech.openran.speedtest.customViews.HeaderView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/device_ip"
+            android:textAppearance="@style/Headline4" />
+
+        <TextView
+            android:id="@+id/ipInfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:fontFamily="@font/arial_regular"
+            android:text="@string/ip_address_mock"
+            android:textSize="20sp" />
 
-            android:background="?android:attr/colorBackground"
-            android:focusable="true"
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Space
+            android:layout_width="8dp"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_width="22dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+
+            android:text="@string/pingText"
+            android:textSize="22sp"
+            android:fontFamily="@font/arial_mono_bold"
+            android:textColor="?android:attr/textColorPrimary" />
+        <Space
+            android:layout_width="5dp"
+            android:layout_height="wrap_content" />
+
+        <View
+            android:layout_width="2dp"
+            android:layout_height="match_parent"
+            android:background="?android:attr/listDivider" />
+
+        <Space
+            android:layout_width="5dp"
+            android:layout_height="wrap_content" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="4">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center|end"
+                android:text="@string/ipLabel"
+
+                android:textAppearance="@style/Headline4"
+                android:textColor="?android:attr/textColorPrimary"
+                app:layout_constraintBottom_toBottomOf="@+id/serverIP"
+                app:layout_constraintEnd_toStartOf="@+id/serverIP"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/serverIP" />
+
+            <EditText
+                android:id="@+id/serverIP"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:text="@string/google_public_DNS"
+                android:hint="@string/google_public_DNS"
+                android:autofillHints="@string/google_public_DNS"
+                android:inputType="textPersonName"
+                android:textColor="?android:attr/textColorPrimary"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/PingText"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/PingText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/pingLabel"
+                android:textAlignment="textEnd"
+                android:textAppearance="@style/Headline4"
+                android:textColor="?android:attr/textColorPrimary"
+                app:layout_constraintBottom_toBottomOf="@+id/pingValue"
+                app:layout_constraintEnd_toStartOf="@+id/pingValue"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/pingValue" />
+
+            <TextView
+                android:id="@+id/pingValue"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/noneVal"
+                android:textAppearance="@style/Headline4"
+                android:textColor="?android:attr/textColorPrimary"
+                app:layout_constraintEnd_toStartOf="@+id/icmpPingButton"
+                app:layout_constraintStart_toEndOf="@+id/PingText"
+                app:layout_constraintTop_toBottomOf="@+id/serverIP" />
+
+            <Button
+                android:id="@+id/icmpPingButton"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#0f62fe"
+                android:text="@string/icmpPing"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/serverIP"
+                tools:ignore="TextContrastCheck" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <Space
+            android:layout_width="8dp"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="5dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+
+            android:text="@string/downloadText"
+            android:textSize="22sp"
+            android:fontFamily="@font/arial_mono_bold"
+            android:textColor="?android:attr/textColorPrimary" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="5dp" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="4"
             android:orientation="vertical">
 
-            <ru.scoltech.openran.speedtest.customViews.HeaderView
-                android:id="@+id/option_header"
-                android:layout_width="match_parent"
+
+            <TextView
+                android:id="@+id/download_iperf_dev"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:section_name="Dev - iperf" />
+                android:layout_marginStart="8dp"
 
-            <LinearLayout
-                android:layout_width="match_parent"
+                android:text="@string/this_device"
+                android:textAppearance="@style/Headline2"
+                android:textColor="?android:attr/textColorPrimary"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <TextView
+                android:id="@+id/download_iperf_server"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:text="@string/server"
 
-                <TextView
-                    android:id="@+id/textView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                android:textAppearance="@style/Headline2"
+                android:textColor="?android:attr/textColorPrimary"
+                app:layout_constraintEnd_toEndOf="@+id/download_iperf_dev"
+                app:layout_constraintTop_toBottomOf="@+id/download_iperf_dev" />
 
-                    android:text="@string/simple_ping"
-                    android:textAppearance="@style/Headline4"
-                    android:textColor="?android:attr/textColorPrimary" />
+            <TextView
+                android:id="@+id/immutable_download_dev_args"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:gravity="center"
+                android:layout_marginStart="8dp"
+                android:text="@string/user_immutable_down_dev_args"
+                android:textSize="12sp"
+                android:textColor="?android:attr/textColorPrimary"
 
-                <LinearLayout
-                    android:id="@+id/pingLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                app:layout_constraintBottom_toTopOf="@+id/download_iperf_server"
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal">
+                app:layout_constraintStart_toEndOf="@+id/download_iperf_dev"
+                app:layout_constraintTop_toTopOf="@+id/download_iperf_dev"/>
 
-                        <TextView
-                            android:id="@+id/ipLabel"
-                            android:layout_width="64dp"
-                            android:layout_height="45dp"
-                            android:layout_weight="1"
-                            android:text="@string/ipLabel"
+            <EditText
+                android:id="@+id/download_device_args"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:textSize="12sp"
+                android:hint="@string/default_download_device_iperf_args"
+                android:autofillHints=" "
+                android:inputType="text"
 
-                            android:textAlignment="viewEnd"
-                            android:textAppearance="@style/Headline4"
-                            android:textColor="?android:attr/textColorPrimary" />
+                app:layout_constraintBottom_toTopOf="@+id/download_iperf_server"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/immutable_download_dev_args"
+                app:layout_constraintTop_toTopOf="@+id/download_iperf_dev"/>
 
-                        <EditText
-                            android:id="@+id/serverIP"
-                            android:layout_width="342dp"
-                            android:layout_height="wrap_content"
-                            android:ems="10"
-                            android:inputType="textPersonName"
-                            android:textColor="?android:attr/textColorPrimary" />
-                    </LinearLayout>
+            <TextView
+                android:id="@+id/immutable_download_serv_args"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:gravity="center"
+                android:layout_marginStart="8dp"
+                android:text="@string/user_immutable_down_serv_args"
+                android:textSize="12sp"
+                android:textColor="?android:attr/textColorPrimary"
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="65dp"
-                        android:orientation="horizontal">
+                app:layout_constraintTop_toTopOf="@+id/download_iperf_server"
+                app:layout_constraintBottom_toBottomOf="@+id/download_iperf_server"
+                app:layout_constraintStart_toEndOf="@+id/download_iperf_server"/>
 
-                        <TextView
-                            android:id="@+id/Ping"
-                            android:layout_width="25dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:text="@string/pingLabel"
-                            android:textAlignment="textEnd"
-                            android:textAppearance="@style/Headline4"
-                            android:textColor="?android:attr/textColorPrimary" />
+            <EditText
+                android:id="@+id/download_server_args"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
 
-                        <TextView
-                            android:id="@+id/pingValue"
-                            android:layout_width="7dp"
-                            android:layout_height="41dp"
-                            android:layout_weight="1"
-                            android:text="@string/noneVal"
-                            android:textAppearance="@style/Headline4"
-                            android:textColor="?android:attr/textColorPrimary" />
+                android:textSize="12sp"
+                android:hint="@string/default_download_server_iperf_args"
+                android:autofillHints=" "
+                android:inputType="text"
 
-                        <Button
-                            android:id="@+id/pingUDPButton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:backgroundTint="#0f62fe"
-                            android:text="@string/udpPing" />
+                app:layout_constraintTop_toTopOf="@+id/download_iperf_server"
+                app:layout_constraintBottom_toBottomOf="@+id/download_iperf_server"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/immutable_download_serv_args"/>
 
-                        <Space
-                            android:layout_width="5dp"
-                            android:layout_height="wrap_content" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-                        <Button
-                            android:id="@+id/icmpPingButton"
-                            android:layout_width="132dp"
-                            android:layout_height="wrap_content"
-                            android:backgroundTint="#0f62fe"
-                            android:text="@string/icmpPing"
-                            tools:ignore="TextContrastCheck" />
+    </LinearLayout>
 
-                        <Space
-                            android:layout_width="10dp"
-                            android:layout_height="wrap_content" />
-                    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider" />
 
-                    <Button
-                        android:id="@+id/pingServerButton"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.85"
-                        android:backgroundTint="#0f62fe"
-                        android:text="@string/startUdpPingServer" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="5dp" />
 
-                </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
 
-                <ImageButton
-                    android:id="@+id/expandButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="#8d8d8d "
-                    app:srcCompat="@android:drawable/arrow_down_float"
-                    tools:ignore="TouchTargetSizeCheck" />
+            android:text="@string/uploadText"
+            android:textSize="22sp"
+            android:fontFamily="@font/arial_mono_bold"
+            android:textColor="?android:attr/textColorPrimary" />
 
-            </LinearLayout>
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="5dp" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/deviceInfoLabel"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/device_information"
-                    android:textAppearance="@style/Headline4"
-                    android:textColor="?android:attr/textColorPrimary" />
-
-                <LinearLayout
-                    android:id="@+id/deviceInfoLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <androidx.core.widget.NestedScrollView
-                        android:layout_width="match_parent"
-                        android:layout_height="102dp"
-                        android:fillViewport="true">
-
-                        <TextView
-                            android:id="@+id/ipInfo"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:padding="10dp"
-                            android:scrollbars="vertical"
-                            android:textColor="?android:attr/textColorPrimary" />
-                    </androidx.core.widget.NestedScrollView>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal">
-
-                        <Space
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1" />
-
-                        <Button
-                            android:id="@+id/refreshButton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:backgroundTint="#0f62fe"
-                            android:minHeight="48dp"
-                            android:text="@string/refreshIp" />
-
-                        <Space
-                            android:layout_width="10dp"
-                            android:layout_height="wrap_content" />
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-                <ImageButton
-                    android:id="@+id/expandButton2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="#8d8d8d "
-                    app:srcCompat="@android:drawable/arrow_down_float" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="75dp"
-                android:orientation="horizontal"
-                android:padding="10dp">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="4"
+            android:orientation="vertical">
 
 
-                <TextView
-                    android:id="@+id/iperfMobileLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="44dp"
-                    android:text="@string/iperf_mobile"
-                    android:textAlignment="center"
-                    android:textAppearance="@style/Headline4"
-                    android:textColor="?android:attr/textColorPrimary" />
 
-                <EditText
-                    android:id="@+id/iperfArgs"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight=".5"
-                    android:ems="10"
-                    android:importantForAutofill="no"
-                    android:inputType="textPersonName"
-                    android:textColor="?android:attr/textColorPrimary" />
+            <TextView
+                android:id="@+id/upload_iperf_dev"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
 
-            </LinearLayout>
-
-            <View
-                android:id="@+id/divider"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="?android:attr/listDivider" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="75dp"
-                android:orientation="horizontal"
-                android:padding="10dp">
+                android:text="@string/this_device"
+                android:textAppearance="@style/Headline2"
+                android:textColor="?android:attr/textColorPrimary"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
 
-                <TextView
-                    android:id="@+id/serverIPLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="44dp"
-                    android:text="@string/server_ip"
-                    android:textAlignment="center"
-                    android:textAppearance="@style/Headline4"
-                    android:textColor="?android:attr/textColorPrimary" />
+            <TextView
+                android:id="@+id/upload_iperf_server"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/server"
 
-                <EditText
-                    android:id="@+id/serverIpField"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight=".5"
-                    android:ems="10"
-                    android:importantForAutofill="no"
+                android:textAppearance="@style/Headline2"
+                android:textColor="?android:attr/textColorPrimary"
+                app:layout_constraintEnd_toEndOf="@+id/upload_iperf_dev"
+                app:layout_constraintTop_toBottomOf="@+id/upload_iperf_dev" />
 
-                    android:inputType="textPersonName"
-                    android:textColor="?android:attr/textColorPrimary" />
+            <TextView
+                android:id="@+id/immutable_upload_dev_args"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:gravity="center"
+                android:layout_marginStart="8dp"
+                android:text="@string/user_immutable_up_dev_args"
+                android:textSize="12sp"
+                android:textColor="?android:attr/textColorPrimary"
 
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight=".5"
-                android:orientation="horizontal"
-                android:padding="10dp">
+                app:layout_constraintBottom_toTopOf="@+id/upload_iperf_server"
+                app:layout_constraintStart_toEndOf="@+id/upload_iperf_dev"
+                app:layout_constraintTop_toTopOf="@+id/upload_iperf_dev"/>
 
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="44dp"
-                    android:text="@string/iperfServer"
-                    android:textAppearance="@style/Headline4"
-                    android:textColor="?android:attr/textColorPrimary" />
+            <EditText
+                android:id="@+id/upload_device_args"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
 
-                <EditText
-                    android:id="@+id/serverArgs"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight=".5"
-                    android:ems="10"
-                    android:importantForAutofill="no"
-                    android:inputType="textPersonName"
-                    android:textColor="?android:attr/textColorPrimary" />
+                android:textSize="12sp"
+                android:hint="@string/default_upload_device_iperf_args"
+                android:importantForAutofill="no"
+                android:inputType="text"
 
-            </LinearLayout>
+                app:layout_constraintBottom_toTopOf="@+id/upload_iperf_server"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/immutable_upload_dev_args"
+                app:layout_constraintTop_toTopOf="@+id/upload_iperf_dev"/>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="85dp"
-                android:orientation="horizontal"
-                android:padding="10dp">
+            <TextView
+                android:id="@+id/immutable_upload_serv_args"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:gravity="center"
+                android:layout_marginStart="8dp"
+                android:text="@string/user_immutable_up_serv_args"
+                android:textSize="12sp"
+                android:textColor="?android:attr/textColorPrimary"
 
-                <Space
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.85" />
+                app:layout_constraintTop_toTopOf="@+id/upload_iperf_server"
+                app:layout_constraintBottom_toBottomOf="@+id/upload_iperf_server"
+                app:layout_constraintStart_toEndOf="@+id/upload_iperf_server"/>
 
-                <Switch
-                    android:id="@+id/thisISserver"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.85"
-                    android:text="@string/thisIsServer"
-                    android:textAlignment="textEnd"
-                    android:textColor="?android:attr/textColorPrimary" />
+            <EditText
+                android:id="@+id/upload_server_args"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
 
-                <Button
-                    android:id="@+id/startStopButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.15"
-                    android:backgroundTint="#0f62fe"
-                    android:text="@string/startIperf" />
+                android:textSize="12sp"
+                android:hint="@string/default_upload_server_iperf_args"
+                android:autofillHints=" "
+                android:inputType="text"
 
-            </LinearLayout>
+                app:layout_constraintTop_toTopOf="@+id/upload_iperf_server"
+                app:layout_constraintBottom_toBottomOf="@+id/upload_iperf_server"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/immutable_upload_serv_args"/>
 
-            <androidx.core.widget.NestedScrollView
-                android:layout_width="match_parent"
-                android:layout_height="400dp"
-                android:background="#2C2727"
-                android:backgroundTint="#2C2727"
-                android:fillViewport="true">
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="#2C2727"
-                    android:orientation="vertical">
+    </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/iperfOutput"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="#2C2727"
-                        android:fadeScrollbars="false"
-                        android:foregroundGravity="bottom"
-                        android:gravity="bottom"
-                        android:isScrollContainer="false"
-                        android:maxLines="@android:integer/status_bar_notification_info_maxnum"
-                        android:nestedScrollingEnabled="false"
-                        android:overScrollMode="always"
-                        android:padding="10dp"
-                        android:scrollbarStyle="outsideInset"
-                        android:scrollbars="vertical"
-                        android:textAppearance="@style/Mono"
-                        android:textColor="?android:attr/textColorPrimary"
-                        android:verticalScrollbarPosition="right" />
-
-                </LinearLayout>
-            </androidx.core.widget.NestedScrollView>
-
-        </LinearLayout>
-    </ScrollView>
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

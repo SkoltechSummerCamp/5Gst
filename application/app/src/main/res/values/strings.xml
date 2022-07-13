@@ -16,8 +16,10 @@
     <string name="icmpPing">ICMP PING</string>
     <string name="pingByICMPLabel">ping by ICMP:</string>
     <string name="startUdpPingServer">start udp ping server</string>
-    <string name="simple_ping">Simple ping:</string>
-    <string name="device_information">Device information:</string>
+    <string name="pingText">PING</string>
+    <string name="downloadText">Download iperf args</string>
+    <string name="uploadText">Upload iperf args</string>
+    <string name="device_ip">Device ip:</string>
     <string name="iperf_mobile">iperf mobile args:</string>
     <string name="iperfServer">iperf server args:</string>
     <string name="server_ip">server ip:</string>
@@ -48,4 +50,28 @@
     <string name="policy_title">Terms and Conditions</string>
     <string name="policy_content">By using this app you agree to our <a href="https://5gst.ru/static/Privacy_Policy_for_5G_Speed_Test_App.html">Privacy Policy</a></string>
     <string name="globalSharedPreferences">globalPreferences</string>
+    <string name="google_public_DNS">8.8.8.8</string>
+    <string name="ip_address_mock">255.255.255.255</string>
+    <string name="iperf_args">iperf args</string>
+    <string name="this_device">device:</string>
+    <string name="server">server:</string>
+
+    <string name="iperfSharedPreferences">iperfPreferences</string>
+    <string name="download_device_args">download_device_args</string>
+    <string name="download_server_args">download_server_args</string>
+    <string name="upload_device_args">upload_device_args</string>
+    <string name="upload_server_args">upload_server_args</string>
+    <string name="default_download_device_iperf_args">-P 10 -b 120m</string>
+    <string name="default_upload_device_iperf_args">-P 10 -b 120m</string>
+    <string name="default_download_server_iperf_args"> </string>
+    <string name="default_upload_server_iperf_args"> </string>
+    <string name="immutable_download_device_args">-f b -i 0.1 --sum-only -u -R</string>
+    <string name="immutable_download_server_args">-u</string>
+    <string name="immutable_upload_device_args">-f b -i 0.1 --sum-only</string>
+    <string name="immutable_upload_server_args"> </string>
+
+    <string name="user_immutable_down_dev_args">-u -R</string>
+    <string name="user_immutable_down_serv_args">-u</string>
+    <string name="user_immutable_up_dev_args"> </string>
+    <string name="user_immutable_up_serv_args"> </string>
 </resources>

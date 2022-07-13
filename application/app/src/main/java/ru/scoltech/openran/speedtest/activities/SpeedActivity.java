@@ -28,7 +28,7 @@ import ru.scoltech.openran.speedtest.manager.DownloadUploadSpeedTestManager;
 
 public class SpeedActivity extends AppCompatActivity {
 
-    private static final String TAG = SpeedActivity.class.getName();
+    private static final String TAG = SpeedActivity.class.getSimpleName();
     private Wave cWave;
     private CardView mCard;
     private SubResultView mSubResults; // in progress result
@@ -192,7 +192,6 @@ public class SpeedActivity extends AppCompatActivity {
 
         mHeader.setSectionName("Measuring");
         mHeader.disableButtonGroup();
-        mHeader.hideReturnBtn();
 
         actionBtn.setStop();
 
@@ -214,7 +213,6 @@ public class SpeedActivity extends AppCompatActivity {
 
     public void onStopUI() {
         mHeader.enableButtonGroup();
-        mHeader.showReturnBtn();
 
         cWave.stop();
         actionBtn.setPlay();
