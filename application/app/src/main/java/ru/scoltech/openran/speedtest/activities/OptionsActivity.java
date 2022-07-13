@@ -15,11 +15,18 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.Enumeration;
+
 import ru.scoltech.openran.speedtest.ApplicationConstants;
 import ru.scoltech.openran.speedtest.PingCheckServer;
 import ru.scoltech.openran.speedtest.R;
 import ru.scoltech.openran.speedtest.backend.IcmpPinger;
 import ru.scoltech.openran.speedtest.backend.UdpPingCheckClient;
+import ru.scoltech.openran.speedtest.customViews.HeaderView;
 
 public class OptionsActivity extends AppCompatActivity {
     private static final String TAG = OptionsActivity.class.getSimpleName();
@@ -29,8 +36,9 @@ public class OptionsActivity extends AppCompatActivity {
     private EditText serverIP;
     private Button icmpPing;
 
-    IcmpPinger icmpPinger;
+    private IcmpPinger icmpPinger;
 
+    private Thread addressUpdater;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,9 +48,25 @@ public class OptionsActivity extends AppCompatActivity {
         init();
 
         refreshAddresses();
+
+        Runnable updater = () -> {
+            while(true) {
+                runOnUiThread(this::refreshAddresses);
+                try {
+                    Thread.sleep(1000);
+                } catch (Exception ignored) {
+                }
+            }
+        };
+
+        addressUpdater = new Thread(updater);
+        addressUpdater.start();
     }
 
     private void init() {
+        HeaderView header = findViewById(R.id.option_header);
+        header.hideOptionsButton();
+
         ipInfo = findViewById(R.id.ipInfo);
         pingValue = findViewById(R.id.pingValue);
 
@@ -157,10 +181,20 @@ public class OptionsActivity extends AppCompatActivity {
     }
 
 
-    private void refreshAddresses() { // TODO сделать обновление в паралельном потоке
-        WifiManager wm = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-        String ip = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
+    private void refreshAddresses() {
+        String ip = "no connection";
+        try {
+            for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
+                NetworkInterface intf = en.nextElement();
+                for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
+                    InetAddress inetAddress = enumIpAddr.nextElement();
+                    if(!inetAddress.isLoopbackAddress() && inetAddress instanceof Inet4Address)
+                        ip = inetAddress.toString().substring(1);
+                }
+            }
+        } catch (Exception ignored) {}
+
         ipInfo.setText(ip);
-        Log.d("device ip", ip);
+//        Log.d("device ip", ip);
     }
 }

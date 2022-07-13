@@ -68,10 +68,6 @@ public class HeaderView extends LinearLayout {
                 int attr = typedArray.getIndex(i);
 
                 if (attr == R.styleable.HeaderView_is_active_back) {
-                    boolean isActiveReturnBtn = typedArray.getBoolean(attr, false);
-
-                    changeVisibilityReturnBtn(isActiveReturnBtn);
-
                 } else if (attr == R.styleable.HeaderView_is_active_button_group) {
                     boolean isActiveButtonGroup = typedArray.getBoolean(attr, false);
 
@@ -153,20 +149,16 @@ public class HeaderView extends LinearLayout {
         }
     }
 
-    private void changeVisibilityReturnBtn(boolean flag) {
-        if (flag) {
-            showReturnBtn();
-        } else {
-            hideReturnBtn();
-        }
+    public void hideOptionsButton() {
+        modeBtn.setEnabled(false);
+        modeBtn.setAlpha(0.5f);
     }
 
     public void disableButtonGroup() {
         historyBtn.setEnabled(false);
         historyBtn.setAlpha(0.5f);
 
-        modeBtn.setEnabled(false);
-        modeBtn.setAlpha(0.5f);
+        hideOptionsButton();
     }
 
     public void enableButtonGroup() {
@@ -179,10 +171,6 @@ public class HeaderView extends LinearLayout {
 
     public void setSectionName(String sectionName) {
         sectionNameTV.setText(sectionName);
-    }
-
-    public void hideReturnBtn() {
-        returnBtn.setVisibility(View.GONE);
     }
 
     public void showReturnBtn() {

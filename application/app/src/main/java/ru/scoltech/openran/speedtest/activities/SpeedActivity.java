@@ -192,7 +192,6 @@ public class SpeedActivity extends AppCompatActivity {
 
         mHeader.setSectionName("Measuring");
         mHeader.disableButtonGroup();
-        mHeader.hideReturnBtn();
 
         actionBtn.setStop();
 
@@ -214,7 +213,6 @@ public class SpeedActivity extends AppCompatActivity {
 
     public void onStopUI() {
         mHeader.enableButtonGroup();
-        mHeader.showReturnBtn();
 
         cWave.stop();
         actionBtn.setPlay();
