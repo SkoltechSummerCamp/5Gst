@@ -1,15 +1,12 @@
-from __future__ import print_function
-
 from threading import Timer
 
 
 class Watchdog(Exception):
-    def __init__(self, timeout, userHandler=None):  # timeout in seconds
+    def __init__(self, timeout, user_handler=None):  # timeout in seconds
         self.timeout = timeout
-        self.handler = userHandler if userHandler is not None else self.defaultHandler
+        self.handler = user_handler if user_handler is not None else self.default_handler
         self.timer = Timer(self.timeout, self.handler)
         self.timer.start()
-
 
     def reset(self):
         self.timer.cancel()
@@ -22,5 +19,5 @@ class Watchdog(Exception):
     def __del__(self):
         self.timer.cancel()
 
-    def defaultHandler(self):
+    def default_handler(self):
         return

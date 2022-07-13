@@ -1,32 +1,37 @@
-from __future__ import print_function
 import swagger_client
 from swagger_client.rest import ApiException
-from pprint import pprint
+from django.conf import settings
 
 
 class BalancerCommunicator:
     def __init__(self):
-        # create an instance of the API class
         self.api_instance = swagger_client.ServiceApi()
-        self.env_data = {}
+        self.env_data = {
+            'SERVICE_IP_ADDRESS': settings.SERVICE_IP_ADDRESS,
+            'BALANCER_ADDRESS': settings.BALANCER_ADDRESS,
+            'BALANCER_BASE_URL': settings.BALANCER_BASE_URL,
+            'IPERF_PORT': settings.IPERF_PORT,
+            'SERVICE_PORT': settings.SERVICE_PORT,
+            'CONNECTING_TIMEOUT': settings.CONNECTING_TIMEOUT
+        }
 
-    def post_to_server(self, port=5000, port_iperf=5001):
-        body = swagger_client.ServerAddressRequest(ip=self.env_data['SERVICE_IP_ADDRESS'], port=port, port_iperf=port_iperf) # ServerAddr | port of iperf server. Ip and time could be emply (optional)
+    def post_to_server(self):
+        body = swagger_client.ServerAddressRequest(ip=self.env_data['SERVICE_IP_ADDRESS'],
+                                                   port=self.env_data['SERVICE_PORT'],
+                                                   port_iperf=self.env_data['IPERF_PORT'])
         try:
-            # post self ip to balancer
             self.api_instance.service_create(data=body)
         except ApiException as e:
             print("Exception when calling ServerApi->server_post_ip: %s\n" % e)
 
-    def delete_from_server(self, port=5000, port_iperf=5001):
-        body = swagger_client.ServerAddressRequest(ip=self.env_data['SERVICE_IP_ADDRESS'], port=port, port_iperf=port_iperf) # ServerAddr | port of iperf server. Ip and time could be emply (optional)
+    def delete_from_server(self):
+        body = swagger_client.ServerAddressRequest(ip=self.env_data['SERVICE_IP_ADDRESS'],
+                                                   port=self.env_data['SERVICE_PORT'],
+                                                   port_iperf=self.env_data['IPERF_PORT'])
         try:
-            # delete server IP
-            api_response = self.api_instance.service_delete(data=body)
-            pprint(api_response)
+            self.api_instance.service_delete(data=body)
         except ApiException as e:
             print("Exception when calling ServerApi->server_delete_ip: %s\n" % e)
 
 
-env_data = {}
 balancer_communicator = BalancerCommunicator()

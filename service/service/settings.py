@@ -64,12 +64,7 @@ WSGI_APPLICATION = 'service.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
+DATABASES = {}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -123,3 +118,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Environment variables
+
+SERVICE_IP_ADDRESS = os.getenv('SERVICE_IP_ADDRESS')
+BALANCER_ADDRESS = os.getenv('BALANCER_ADDRESS')
+BALANCER_BASE_URL = os.getenv('BALANCER_BASE_URL', '/Skoltech_OpenRAN_5G/iperf_load_balancer/0.1.0')
+IPERF_PORT = int(os.getenv('IPERF_PORT'))
+SERVICE_PORT = int(os.getenv('SERVICE_PORT'))
+CONNECTING_TIMEOUT = int(os.getenv('CONNECTING_TIMEOUT'))
+

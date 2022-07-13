@@ -2,9 +2,8 @@ from rest_framework.status import HTTP_200_OK
 from rest_framework.decorators import api_view
 from rest_framework.request import Request
 from rest_framework.response import Response
-from iperf_wrapper import *
-
-import time
+from iperf_wrapper import iperf
+from balancer_communicator import balancer_communicator
 from apps.apps import watchdog
 
 
@@ -34,8 +33,8 @@ def stop_iperf(request: Request):
 
     if iperf.is_started:
         status = iperf.stop()
-        balancer_communicator.post_to_server(port=int(balancer_communicator.env_data['SERVICE_PORT']), port_iperf=int(balancer_communicator.env_data['IPERF_PORT']))
+        balancer_communicator.post_to_server()
         watchdog.reset()
-        time.sleep(2)
         return Response(f"iPerf stopped with status {status}")
+
     return Response("iPerf already stopped")
