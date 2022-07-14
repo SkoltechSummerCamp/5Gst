@@ -57,7 +57,6 @@
 5. Run python
 
     ```bash
-    python3 manage.py migrate
     python3 manage.py runserver $SERVICE_IP_ADDRESS:5004
     ```
 
