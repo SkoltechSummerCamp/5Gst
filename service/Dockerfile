@@ -11,6 +11,5 @@ RUN apt-get update && \
     python3 -m pip install --upgrade pip  && \
     pip3 install pipenv && \
     pipenv install && \
-    mv iPerf ../ && \
     ./scripts/build-iperf.sh
-CMD ["pipenv", "run", "python3", "manage.py", "runserver", "127.0.0.1:5000"]
+CMD ["pipenv", "run", "python3", "manage.py", "runserver", "0.0.0.0:5000"]

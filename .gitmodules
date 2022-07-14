@@ -1,3 +1,6 @@
 [submodule "iPerf"]
 	path = iPerf
 	url = https://github.com/SkoltechSummerCamp/iPerf
+[submodule "service/iPerf"]
+	path = service/iPerf
+	url = https://github.com/SkoltechSummerCamp/iPerf
