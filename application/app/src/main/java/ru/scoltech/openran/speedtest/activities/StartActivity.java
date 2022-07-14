@@ -28,7 +28,7 @@ import ru.scoltech.openran.speedtest.R;
 
 
 public class StartActivity extends AppCompatActivity {
-    private static final String TAG = StartActivity.class.getName();
+    private static final String TAG = StartActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,7 +108,9 @@ public class StartActivity extends AppCompatActivity {
             this.<RadioButton>findViewById(R.id.direct_mode).setChecked(true);
         }
 
-        if (!getSharedPreferences("speedTest_options",MODE_PRIVATE).getBoolean(ApplicationConstants.PRIVACY_SHOWN, false)) {
+        boolean checkPrivacy = getSharedPreferences(getString(R.string.globalSharedPreferences),MODE_PRIVATE).getBoolean(ApplicationConstants.PRIVACY_SHOWN, false);
+        Log.d(TAG,"PRIVACY pref="+checkPrivacy);
+        if (!checkPrivacy) {
             SharedPreferences.Editor preferencesEditor = getSharedPreferences(getString(R.string.globalSharedPreferences),MODE_PRIVATE).edit();
             preferencesEditor.putBoolean(ApplicationConstants.PRIVACY_SHOWN, true);
             preferencesEditor.apply();

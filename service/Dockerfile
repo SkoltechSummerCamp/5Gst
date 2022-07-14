@@ -1,6 +1,6 @@
 FROM ubuntu:20.04
 
-WORKDIR /SpeedtestService
+WORKDIR /service
 EXPOSE 5000
 EXPOSE 5001
 EXPOSE 5001/udp
@@ -11,5 +11,8 @@ RUN apt-get update && \
     python3 -m pip install --upgrade pip  && \
     pip3 install pipenv && \
     pipenv install && \
-    chmod +x iperf
-CMD ["pipenv", "run", "gunicorn", "balancer.wsgi", "-b", ":5000"]
+    chmod +x ./scripts/build-iperf.sh && \
+    ./scripts/build-iperf.sh && \
+    chmod +x ./iperf.elf
+
+CMD ["pipenv", "run", "python3", "manage.py", "runserver", "0.0.0.0:5000"]

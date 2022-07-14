@@ -33,8 +33,6 @@ class ServiceRegistrationView(mixins.DestroyModelMixin,
         },
     )
     def post(self, request, *args, **kwargs):
-        if self.get_queryset().exists():
-            return Response(data=self.request.data, status=status.HTTP_201_CREATED)
         return self.create(request, *args, **kwargs)
 
     @swagger_auto_schema(

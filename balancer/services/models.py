@@ -17,3 +17,6 @@ class ServerAddress(models.Model):
         ]
     )
     time = models.DateTimeField()
+
+    class Meta:
+        unique_together = ('ip', 'port', 'port_iperf')

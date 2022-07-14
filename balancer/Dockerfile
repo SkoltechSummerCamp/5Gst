@@ -13,4 +13,5 @@ RUN ["python3.8", "-m", "pip", "install", "--upgrade", "pip"]
 RUN ["pip", "install", "pipenv"]
 RUN ["pipenv", "install"]
 
+CMD ["python", "manage.py", "migrate"]
 CMD ["pipenv", "run", "gunicorn", "balancer.wsgi", "-b", ":8080"]

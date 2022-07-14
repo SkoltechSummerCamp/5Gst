@@ -19,7 +19,7 @@ class IperfWrapper:
         self.verbose: bool = verbose
         self.is_started: bool = False
         self.iperf_parameters: str = parameters
-        cmd = ["./iperf.elf", '--version']  # TODO write version to logs
+        cmd = ["./iperf.elf", '-v']  # TODO write version to logs
         iperf_version_process = subprocess.Popen(
             cmd, stdout=sys.stdout, stderr=sys.stderr, universal_newlines=True)
         iperf_version_process.wait()
