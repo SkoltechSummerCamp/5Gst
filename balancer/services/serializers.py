@@ -2,6 +2,7 @@ import datetime
 
 from django.core import validators
 from rest_framework import serializers
+from django.utils.timezone import make_aware
 
 import services.models as models
 
@@ -29,7 +30,7 @@ class ServerAddressRequestSerializer(serializers.Serializer):
     )
 
     def validate(self, attrs):
-        return {'time': datetime.datetime.utcnow(), **attrs}
+        return {'time': make_aware(datetime.datetime.now()), **attrs}
 
     def create(self, validated_data):
         return models.ServerAddress.objects.update_or_create(
