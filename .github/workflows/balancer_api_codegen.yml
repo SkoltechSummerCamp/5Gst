@@ -1,22 +1,19 @@
 name: "[Balancer] API client generation using swagger"
 
-on:
-  push:
-    paths:
-      - 'balancer/**'
-      - '.github/**'
-  pull_request:
-    paths:
-      - 'balancer/**'
-      - '.github/**'
+on: [push, pull_request]
 
 jobs:
   generate-swagger:
     runs-on: ubuntu-latest
     env:
-      SECRET_KEY: SECRET_KEY
-      DEBUG: False
+      SECRET_KEY: test
+      DEBUG: "False"
       SUPPORT_EMAIL: ${{ secrets.SUPPORT_EMAIL }}
+      DB_NAME: test
+      DB_USER: test
+      DB_PASSWORD: test
+      DB_HOST: test
+      DB_PORT: test
     defaults:
       run:
         working-directory: ./balancer
@@ -115,7 +112,7 @@ jobs:
       - name: Move generated code to projects
         run: |
           cp -r ../AUTOBUILD/javaBalancerClient/ ../application/balancerApi
-          cp -r ../AUTOBUILD/pythonBalancerClient/ ../service/swagger_client          
+          cp -r ../AUTOBUILD/pythonBalancerClient/swagger_client/ ../service/swagger_client
 
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
