@@ -32,10 +32,12 @@ class ServerAddressRequestSerializer(serializers.Serializer):
         return {'time': datetime.datetime.utcnow(), **attrs}
 
     def create(self, validated_data):
-        return models.ServerAddress.objects.create(**validated_data)
+        return models.ServerAddress.objects.update_or_create(
+            ip=validated_data['ip'],
+            port=validated_data['port'],
+            port_iperf=validated_data['port_iperf'],
+            defaults=validated_data
+        )[0]
 
     def update(self, instance, validated_data):
-        pass
-
-    def save(self, **kwargs):
-        models.ServerAddress.objects.update_or_create(**self.data, defaults=self.validate(self.data))
+        raise NotImplementedError('`update()` must not be used.')
