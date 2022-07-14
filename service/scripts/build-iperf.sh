@@ -1,5 +1,6 @@
 #/bin/sh
-cd ../iPerf
+cd $(dirname "${BASH_SOURCE[0]}")
+cd ../../iPerf
 bash configure
 make
 cd ../service
