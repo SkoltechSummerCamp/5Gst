@@ -272,7 +272,7 @@ private constructor(
 //        private const val IMMUTABLE_UPLOAD_DEVICE_ARGS   = "" + IMMUTABLE_COMMON_DEVICE_ARGS
 //        private const val IMMUTABLE_UPLOAD_SERVER_ARGS   = ""
 
-        private const val DEFAULT_TIMEOUT = 10_000
+        private const val DEFAULT_TIMEOUT = 5_000
         private const val DEFAULT_EQUALIZER_MAX_STORING = 4
         private const val DEFAULT_EQUALIZER_DOWNLOAD_VALUES_SKIP = 0
         private const val DEFAULT_EQUALIZER_UPLOAD_VALUES_SKIP = 1
