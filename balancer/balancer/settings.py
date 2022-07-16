@@ -10,11 +10,15 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
+import atexit
+import logging
 import os
 from pathlib import Path
 
 from dotenv import load_dotenv
 from drf_yasg import openapi
+
+logger = logging.getLogger(__name__)
 
 load_dotenv()
 
@@ -60,17 +64,37 @@ ROOT_URLCONF = 'balancer.urls'
 
 WSGI_APPLICATION = 'balancer.wsgi.application'
 
+TEST_MODE = os.getenv('TEST_MODE', 'False') == 'True'
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-if os.getenv('TEST_MODE', 'False') == 'True':
-    if os.getenv('DEBUG', 'False') != 'True':
-        raise ValueError("Test mode must have DEBUG enabled")
-
+if TEST_MODE:
     import testing.postgresql
 
-    postgresql = testing.postgresql.Postgresql()
+    logger.warning("Test mode was enabled. Creating embedded postgresql database...")
+    postgresql = None
+    for i in range(10):
+        port = 5432 + i
+        logger.warning(f"Trying to start postgresql at port={port}")
+        try:
+            postgresql = testing.postgresql.Postgresql(port=port)
+            break
+        except RuntimeError as e:
+            logger.warning(msg=str(e))
+
+    if postgresql is None:
+        raise RuntimeError("Could not start embedded postgresql")
+    EMBEDDED_DB_URL = postgresql.url()
+
+
+    def stop_postgresql():
+        logger.info(f"Stopping postgresql at {EMBEDDED_DB_URL}...")
+        postgresql.stop()
+        logger.info(f"Successfully stopped postgresql at {EMBEDDED_DB_URL}!")
+
+
+    atexit.register(stop_postgresql)
     dsn = postgresql.dsn()
 
     DATABASES = {
