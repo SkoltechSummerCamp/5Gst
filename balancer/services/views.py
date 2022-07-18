@@ -68,8 +68,7 @@ class ServiceAcquirementView(APIView):
 
 
 
-class TestDB:
-    @api_view(['GET'])
+class PingView(APIView):
     def is_running(request):
         return Response(status=status.HTTP_200_OK)
 
