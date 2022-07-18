@@ -6,6 +6,9 @@ from rest_framework.generics import GenericAPIView, get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from django.db import connections
+from django.db.utils import OperationalError
+
 from services import serializers, models
 
 
@@ -65,3 +68,13 @@ class ServiceAcquirementView(APIView):
         instance.delete()
         serializer = serializers.ServerAddressResponseSerializer(instance=instance)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+def is_running():
+    db_conn = connections['default']
+    try:
+        c = db_conn.cursor()
+    except OperationalError:
+        return Response(status=status.HTTP_200_OK)
+    else:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
