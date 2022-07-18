@@ -2,15 +2,12 @@ from django.db import transaction
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import mixins, status
+from rest_framework.decorators import api_view
 from rest_framework.generics import GenericAPIView, get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from django.db import connections
-from django.db.utils import OperationalError
-
 from services import serializers, models
-
 
 class ServiceRegistrationView(mixins.DestroyModelMixin,
                               mixins.CreateModelMixin,
@@ -70,11 +67,9 @@ class ServiceAcquirementView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-def is_running():
-    db_conn = connections['default']
-    try:
-        c = db_conn.cursor()
-    except OperationalError:
+
+class TestDB:
+    @api_view(['GET'])
+    def is_running(request):
         return Response(status=status.HTTP_200_OK)
-    else:
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+
