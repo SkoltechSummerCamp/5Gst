@@ -6,15 +6,26 @@ services:
       POSTGRES_DB: "skoltech_db_name"
       POSTGRES_USER: "skoltech_db_user"
       POSTGRES_PASSWORD: "skoltech_db_pass"
-      # PGDATA: "/var/lib/postgresql/data/pgdata"                               #place where db data will stored
     ports:
       - "5432:5432"
+    healthcheck:
+        test: [ "CMD", "pg_isready", "-q", "-d", "skoltech_db_name", "-U", "skoltech_db_user" ]
+        interval: 5s
+        timeout: 5s
+        retries: 24
 
   balancer:
     image: skoltech/speedtest-balancer:0.3.0.30
     container_name: balancer
     depends_on:
-      - postgres
+        postgres:
+            condition: service_healthy
+            
+    healthcheck:
+        test: [ "CMD",  "curl", "-f", "curl http://10.16.160.104:8080/Skoltech_OpenRAN_5G/iperf_load_balancer/0.1.0/ping/"]
+        interval: 5s
+        timeout: 5s
+        retries: 24
     environment:
       - SECRET_KEY=${SECRET_KEY}
       - DEBUG= ${DEBUG}
@@ -27,24 +38,14 @@ services:
       - DB_PORT=5432
     ports:
       - "5555:8080"
-    command: >
-      /bin/bash -c "
-       sleep 60;
-        echo "start_working";
-        apt-get update
-        apt-get install gcc python3.8 python3-pip
-        python3.8 -m pip install --upgrade pip
-        pip install pipenv
-        pipenv install
-        pipenv run python3.8 manage.py makemigrations
-        pipenv run python3.8 manage.py migrate
-        pipenv run python3 manage.py runserver 0.0.0.0:8080
-        echo "end"
-      "
+
 
   service_1: 
     image: skoltech/speedtest-service:0.3.0.30
     container_name: serv1 
+    depends_on:
+        balancer:
+            condition: service_healthy
     environment:
       -  ALLOWED_HOSTS=127.0.0.1,${YOURE_IP}
       -  BALANCER_ADDRESS=${YOURE_IP}:5555
@@ -59,19 +60,3 @@ services:
       -  "5004:5000"
       -  "5005:5005"
       -  "5005:5005/udp"
-    command: >
-      /bin/bash -c "
-       sleep 100;
-       echo "start_rorking"
-       apt-get update && \
-       apt-get install -y python3 python3-pip && \
-       python3 -m pip install --upgrade pip  && \
-       pip3 install pipenv && \
-       pipenv install && \
-       chmod +x ./scripts/build-iperf.sh && \
-       ./scripts/build-iperf.sh && \
-       chmod +x ./iperf.elf 
-       echo "starting_server"
-       pipenv run python3 manage.py runserver 0.0.0.0:5000
-       echo "waiting_for_connection to balancer"
-      "
