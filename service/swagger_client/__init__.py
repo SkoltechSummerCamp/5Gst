@@ -16,7 +16,6 @@
 from __future__ import absolute_import
 
 # import apis into sdk package
-from swagger_client.api.ping_api import PingApi
 from swagger_client.api.service_api import ServiceApi
 
 # import ApiClient
