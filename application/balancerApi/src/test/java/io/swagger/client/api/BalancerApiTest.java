@@ -36,14 +36,14 @@ public class BalancerApiTest {
     /**
      * 
      *
-     * 
+     * Acquires service for further iperf tests
      *
      * @throws Exception
      *          if the Api call fails
      */
     @Test
-    public void skoltechOpenRAN5GIperfLoadBalancer010PingListTest() throws Exception {
-        api.skoltechOpenRAN5GIperfLoadBalancer010PingList();
+    public void acquireServiceTest() throws Exception {
+        ServerAddressResponse response = api.acquireService();
 
         // TODO: test validations
     }
@@ -51,14 +51,14 @@ public class BalancerApiTest {
     /**
      * 
      *
-     * Acquires service for further iperf tests
+     * Check that server is up
      *
      * @throws Exception
      *          if the Api call fails
      */
     @Test
-    public void skoltechOpenRAN5GIperfLoadBalancer010ServiceAcquireCreateTest() throws Exception {
-        ServerAddressResponse response = api.skoltechOpenRAN5GIperfLoadBalancer010ServiceAcquireCreate();
+    public void pingTest() throws Exception {
+        api.ping();
 
         // TODO: test validations
     }
@@ -72,9 +72,9 @@ public class BalancerApiTest {
      *          if the Api call fails
      */
     @Test
-    public void skoltechOpenRAN5GIperfLoadBalancer010ServiceCreateTest() throws Exception {
+    public void registerServiceTest() throws Exception {
         ServerAddressRequest data = null;
-        ServerAddressRequest response = api.skoltechOpenRAN5GIperfLoadBalancer010ServiceCreate(data);
+        ServerAddressRequest response = api.registerService(data);
 
         // TODO: test validations
     }
@@ -88,9 +88,9 @@ public class BalancerApiTest {
      *          if the Api call fails
      */
     @Test
-    public void skoltechOpenRAN5GIperfLoadBalancer010ServiceDeleteTest() throws Exception {
+    public void unregisterServiceTest() throws Exception {
         ServerAddressRequest data = null;
-        ServerAddressRequest response = api.skoltechOpenRAN5GIperfLoadBalancer010ServiceDelete(data);
+        ServerAddressRequest response = api.unregisterService(data);
 
         // TODO: test validations
     }

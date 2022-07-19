@@ -33,104 +33,13 @@ class BalancerApi(object):
             api_client = ApiClient()
         self.api_client = api_client
 
-    def skoltech_open_ran5_g_iperf_load_balancer0_1_0_ping_list(self, **kwargs):  # noqa: E501
-        """skoltech_open_ran5_g_iperf_load_balancer0_1_0_ping_list  # noqa: E501
-
-          # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.skoltech_open_ran5_g_iperf_load_balancer0_1_0_ping_list(async_req=True)
-        >>> result = thread.get()
-
-        :param async_req bool
-        :return: None
-                 If the method is called asynchronously,
-                 returns the request thread.
-        """
-        kwargs['_return_http_data_only'] = True
-        if kwargs.get('async_req'):
-            return self.skoltech_open_ran5_g_iperf_load_balancer0_1_0_ping_list_with_http_info(**kwargs)  # noqa: E501
-        else:
-            (data) = self.skoltech_open_ran5_g_iperf_load_balancer0_1_0_ping_list_with_http_info(**kwargs)  # noqa: E501
-            return data
-
-    def skoltech_open_ran5_g_iperf_load_balancer0_1_0_ping_list_with_http_info(self, **kwargs):  # noqa: E501
-        """skoltech_open_ran5_g_iperf_load_balancer0_1_0_ping_list  # noqa: E501
-
-          # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.skoltech_open_ran5_g_iperf_load_balancer0_1_0_ping_list_with_http_info(async_req=True)
-        >>> result = thread.get()
-
-        :param async_req bool
-        :return: None
-                 If the method is called asynchronously,
-                 returns the request thread.
-        """
-
-        all_params = []  # noqa: E501
-        all_params.append('async_req')
-        all_params.append('_return_http_data_only')
-        all_params.append('_preload_content')
-        all_params.append('_request_timeout')
-
-        params = locals()
-        for key, val in six.iteritems(params['kwargs']):
-            if key not in all_params:
-                raise TypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method skoltech_open_ran5_g_iperf_load_balancer0_1_0_ping_list" % key
-                )
-            params[key] = val
-        del params['kwargs']
-
-        collection_formats = {}
-
-        path_params = {}
-
-        query_params = []
-
-        header_params = {}
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        # HTTP header `Accept`
-        header_params['Accept'] = self.api_client.select_header_accept(
-            ['application/json'])  # noqa: E501
-
-        # HTTP header `Content-Type`
-        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
-            ['application/json'])  # noqa: E501
-
-        # Authentication setting
-        auth_settings = []  # noqa: E501
-
-        return self.api_client.call_api(
-            '/Skoltech_OpenRAN_5G/iperf_load_balancer/0.1.0/ping/', 'GET',
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_type=None,  # noqa: E501
-            auth_settings=auth_settings,
-            async_req=params.get('async_req'),
-            _return_http_data_only=params.get('_return_http_data_only'),
-            _preload_content=params.get('_preload_content', True),
-            _request_timeout=params.get('_request_timeout'),
-            collection_formats=collection_formats)
-
-    def skoltech_open_ran5_g_iperf_load_balancer0_1_0_service_acquire_create(self, **kwargs):  # noqa: E501
-        """skoltech_open_ran5_g_iperf_load_balancer0_1_0_service_acquire_create  # noqa: E501
+    def acquire_service(self, **kwargs):  # noqa: E501
+        """acquire_service  # noqa: E501
 
         Acquires service for further iperf tests  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.skoltech_open_ran5_g_iperf_load_balancer0_1_0_service_acquire_create(async_req=True)
+        >>> thread = api.acquire_service(async_req=True)
         >>> result = thread.get()
 
         :param async_req bool
@@ -140,18 +49,18 @@ class BalancerApi(object):
         """
         kwargs['_return_http_data_only'] = True
         if kwargs.get('async_req'):
-            return self.skoltech_open_ran5_g_iperf_load_balancer0_1_0_service_acquire_create_with_http_info(**kwargs)  # noqa: E501
+            return self.acquire_service_with_http_info(**kwargs)  # noqa: E501
         else:
-            (data) = self.skoltech_open_ran5_g_iperf_load_balancer0_1_0_service_acquire_create_with_http_info(**kwargs)  # noqa: E501
+            (data) = self.acquire_service_with_http_info(**kwargs)  # noqa: E501
             return data
 
-    def skoltech_open_ran5_g_iperf_load_balancer0_1_0_service_acquire_create_with_http_info(self, **kwargs):  # noqa: E501
-        """skoltech_open_ran5_g_iperf_load_balancer0_1_0_service_acquire_create  # noqa: E501
+    def acquire_service_with_http_info(self, **kwargs):  # noqa: E501
+        """acquire_service  # noqa: E501
 
         Acquires service for further iperf tests  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.skoltech_open_ran5_g_iperf_load_balancer0_1_0_service_acquire_create_with_http_info(async_req=True)
+        >>> thread = api.acquire_service_with_http_info(async_req=True)
         >>> result = thread.get()
 
         :param async_req bool
@@ -171,7 +80,7 @@ class BalancerApi(object):
             if key not in all_params:
                 raise TypeError(
                     "Got an unexpected keyword argument '%s'"
-                    " to method skoltech_open_ran5_g_iperf_load_balancer0_1_0_service_acquire_create" % key
+                    " to method acquire_service" % key
                 )
             params[key] = val
         del params['kwargs']
@@ -215,13 +124,104 @@ class BalancerApi(object):
             _request_timeout=params.get('_request_timeout'),
             collection_formats=collection_formats)
 
-    def skoltech_open_ran5_g_iperf_load_balancer0_1_0_service_create(self, data, **kwargs):  # noqa: E501
-        """skoltech_open_ran5_g_iperf_load_balancer0_1_0_service_create  # noqa: E501
+    def ping(self, **kwargs):  # noqa: E501
+        """ping  # noqa: E501
+
+        Check that server is up  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.ping(async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :return: None
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.ping_with_http_info(**kwargs)  # noqa: E501
+        else:
+            (data) = self.ping_with_http_info(**kwargs)  # noqa: E501
+            return data
+
+    def ping_with_http_info(self, **kwargs):  # noqa: E501
+        """ping  # noqa: E501
+
+        Check that server is up  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.ping_with_http_info(async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :return: None
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+
+        all_params = []  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
+
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method ping" % key
+                )
+            params[key] = val
+        del params['kwargs']
+
+        collection_formats = {}
+
+        path_params = {}
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = []  # noqa: E501
+
+        return self.api_client.call_api(
+            '/Skoltech_OpenRAN_5G/iperf_load_balancer/0.1.0/ping/', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type=None,  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
+    def register_service(self, data, **kwargs):  # noqa: E501
+        """register_service  # noqa: E501
 
         Register caller as service  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.skoltech_open_ran5_g_iperf_load_balancer0_1_0_service_create(data, async_req=True)
+        >>> thread = api.register_service(data, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool
@@ -232,18 +232,18 @@ class BalancerApi(object):
         """
         kwargs['_return_http_data_only'] = True
         if kwargs.get('async_req'):
-            return self.skoltech_open_ran5_g_iperf_load_balancer0_1_0_service_create_with_http_info(data, **kwargs)  # noqa: E501
+            return self.register_service_with_http_info(data, **kwargs)  # noqa: E501
         else:
-            (data) = self.skoltech_open_ran5_g_iperf_load_balancer0_1_0_service_create_with_http_info(data, **kwargs)  # noqa: E501
+            (data) = self.register_service_with_http_info(data, **kwargs)  # noqa: E501
             return data
 
-    def skoltech_open_ran5_g_iperf_load_balancer0_1_0_service_create_with_http_info(self, data, **kwargs):  # noqa: E501
-        """skoltech_open_ran5_g_iperf_load_balancer0_1_0_service_create  # noqa: E501
+    def register_service_with_http_info(self, data, **kwargs):  # noqa: E501
+        """register_service  # noqa: E501
 
         Register caller as service  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.skoltech_open_ran5_g_iperf_load_balancer0_1_0_service_create_with_http_info(data, async_req=True)
+        >>> thread = api.register_service_with_http_info(data, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool
@@ -264,14 +264,14 @@ class BalancerApi(object):
             if key not in all_params:
                 raise TypeError(
                     "Got an unexpected keyword argument '%s'"
-                    " to method skoltech_open_ran5_g_iperf_load_balancer0_1_0_service_create" % key
+                    " to method register_service" % key
                 )
             params[key] = val
         del params['kwargs']
         # verify the required parameter 'data' is set
         if self.api_client.client_side_validation and ('data' not in params or
                                                        params['data'] is None):  # noqa: E501
-            raise ValueError("Missing the required parameter `data` when calling `skoltech_open_ran5_g_iperf_load_balancer0_1_0_service_create`")  # noqa: E501
+            raise ValueError("Missing the required parameter `data` when calling `register_service`")  # noqa: E501
 
         collection_formats = {}
 
@@ -314,13 +314,13 @@ class BalancerApi(object):
             _request_timeout=params.get('_request_timeout'),
             collection_formats=collection_formats)
 
-    def skoltech_open_ran5_g_iperf_load_balancer0_1_0_service_delete(self, data, **kwargs):  # noqa: E501
-        """skoltech_open_ran5_g_iperf_load_balancer0_1_0_service_delete  # noqa: E501
+    def unregister_service(self, data, **kwargs):  # noqa: E501
+        """unregister_service  # noqa: E501
 
         Unregister caller as service  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.skoltech_open_ran5_g_iperf_load_balancer0_1_0_service_delete(data, async_req=True)
+        >>> thread = api.unregister_service(data, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool
@@ -331,18 +331,18 @@ class BalancerApi(object):
         """
         kwargs['_return_http_data_only'] = True
         if kwargs.get('async_req'):
-            return self.skoltech_open_ran5_g_iperf_load_balancer0_1_0_service_delete_with_http_info(data, **kwargs)  # noqa: E501
+            return self.unregister_service_with_http_info(data, **kwargs)  # noqa: E501
         else:
-            (data) = self.skoltech_open_ran5_g_iperf_load_balancer0_1_0_service_delete_with_http_info(data, **kwargs)  # noqa: E501
+            (data) = self.unregister_service_with_http_info(data, **kwargs)  # noqa: E501
             return data
 
-    def skoltech_open_ran5_g_iperf_load_balancer0_1_0_service_delete_with_http_info(self, data, **kwargs):  # noqa: E501
-        """skoltech_open_ran5_g_iperf_load_balancer0_1_0_service_delete  # noqa: E501
+    def unregister_service_with_http_info(self, data, **kwargs):  # noqa: E501
+        """unregister_service  # noqa: E501
 
         Unregister caller as service  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.skoltech_open_ran5_g_iperf_load_balancer0_1_0_service_delete_with_http_info(data, async_req=True)
+        >>> thread = api.unregister_service_with_http_info(data, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool
@@ -363,14 +363,14 @@ class BalancerApi(object):
             if key not in all_params:
                 raise TypeError(
                     "Got an unexpected keyword argument '%s'"
-                    " to method skoltech_open_ran5_g_iperf_load_balancer0_1_0_service_delete" % key
+                    " to method unregister_service" % key
                 )
             params[key] = val
         del params['kwargs']
         # verify the required parameter 'data' is set
         if self.api_client.client_side_validation and ('data' not in params or
                                                        params['data'] is None):  # noqa: E501
-            raise ValueError("Missing the required parameter `data` when calling `skoltech_open_ran5_g_iperf_load_balancer0_1_0_service_delete`")  # noqa: E501
+            raise ValueError("Missing the required parameter `data` when calling `unregister_service`")  # noqa: E501
 
         collection_formats = {}
 

@@ -4,55 +4,15 @@ All URIs are relative to *https://localhost*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**skoltechOpenRAN5GIperfLoadBalancer010PingList**](BalancerApi.md#skoltechOpenRAN5GIperfLoadBalancer010PingList) | **GET** /Skoltech_OpenRAN_5G/iperf_load_balancer/0.1.0/ping/ | 
-[**skoltechOpenRAN5GIperfLoadBalancer010ServiceAcquireCreate**](BalancerApi.md#skoltechOpenRAN5GIperfLoadBalancer010ServiceAcquireCreate) | **POST** /Skoltech_OpenRAN_5G/iperf_load_balancer/0.1.0/service/acquire/ | 
-[**skoltechOpenRAN5GIperfLoadBalancer010ServiceCreate**](BalancerApi.md#skoltechOpenRAN5GIperfLoadBalancer010ServiceCreate) | **POST** /Skoltech_OpenRAN_5G/iperf_load_balancer/0.1.0/service/ | 
-[**skoltechOpenRAN5GIperfLoadBalancer010ServiceDelete**](BalancerApi.md#skoltechOpenRAN5GIperfLoadBalancer010ServiceDelete) | **DELETE** /Skoltech_OpenRAN_5G/iperf_load_balancer/0.1.0/service/ | 
+[**acquireService**](BalancerApi.md#acquireService) | **POST** /Skoltech_OpenRAN_5G/iperf_load_balancer/0.1.0/service/acquire/ | 
+[**ping**](BalancerApi.md#ping) | **GET** /Skoltech_OpenRAN_5G/iperf_load_balancer/0.1.0/ping/ | 
+[**registerService**](BalancerApi.md#registerService) | **POST** /Skoltech_OpenRAN_5G/iperf_load_balancer/0.1.0/service/ | 
+[**unregisterService**](BalancerApi.md#unregisterService) | **DELETE** /Skoltech_OpenRAN_5G/iperf_load_balancer/0.1.0/service/ | 
 
 
-<a name="skoltechOpenRAN5GIperfLoadBalancer010PingList"></a>
-# **skoltechOpenRAN5GIperfLoadBalancer010PingList**
-> skoltechOpenRAN5GIperfLoadBalancer010PingList()
-
-
-
-
-
-### Example
-```java
-// Import classes:
-//import io.swagger.client.ApiException;
-//import io.swagger.client.api.BalancerApi;
-
-
-BalancerApi apiInstance = new BalancerApi();
-try {
-    apiInstance.skoltechOpenRAN5GIperfLoadBalancer010PingList();
-} catch (ApiException e) {
-    System.err.println("Exception when calling BalancerApi#skoltechOpenRAN5GIperfLoadBalancer010PingList");
-    e.printStackTrace();
-}
-```
-
-### Parameters
-This endpoint does not need any parameter.
-
-### Return type
-
-null (empty response body)
-
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
- - **Content-Type**: application/json
- - **Accept**: application/json
-
-<a name="skoltechOpenRAN5GIperfLoadBalancer010ServiceAcquireCreate"></a>
-# **skoltechOpenRAN5GIperfLoadBalancer010ServiceAcquireCreate**
-> ServerAddressResponse skoltechOpenRAN5GIperfLoadBalancer010ServiceAcquireCreate()
+<a name="acquireService"></a>
+# **acquireService**
+> ServerAddressResponse acquireService()
 
 
 
@@ -67,10 +27,10 @@ Acquires service for further iperf tests
 
 BalancerApi apiInstance = new BalancerApi();
 try {
-    ServerAddressResponse result = apiInstance.skoltechOpenRAN5GIperfLoadBalancer010ServiceAcquireCreate();
+    ServerAddressResponse result = apiInstance.acquireService();
     System.out.println(result);
 } catch (ApiException e) {
-    System.err.println("Exception when calling BalancerApi#skoltechOpenRAN5GIperfLoadBalancer010ServiceAcquireCreate");
+    System.err.println("Exception when calling BalancerApi#acquireService");
     e.printStackTrace();
 }
 ```
@@ -91,9 +51,49 @@ No authorization required
  - **Content-Type**: application/json
  - **Accept**: application/json
 
-<a name="skoltechOpenRAN5GIperfLoadBalancer010ServiceCreate"></a>
-# **skoltechOpenRAN5GIperfLoadBalancer010ServiceCreate**
-> ServerAddressRequest skoltechOpenRAN5GIperfLoadBalancer010ServiceCreate(data)
+<a name="ping"></a>
+# **ping**
+> ping()
+
+
+
+Check that server is up
+
+### Example
+```java
+// Import classes:
+//import io.swagger.client.ApiException;
+//import io.swagger.client.api.BalancerApi;
+
+
+BalancerApi apiInstance = new BalancerApi();
+try {
+    apiInstance.ping();
+} catch (ApiException e) {
+    System.err.println("Exception when calling BalancerApi#ping");
+    e.printStackTrace();
+}
+```
+
+### Parameters
+This endpoint does not need any parameter.
+
+### Return type
+
+null (empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+<a name="registerService"></a>
+# **registerService**
+> ServerAddressRequest registerService(data)
 
 
 
@@ -109,10 +109,10 @@ Register caller as service
 BalancerApi apiInstance = new BalancerApi();
 ServerAddressRequest data = new ServerAddressRequest(); // ServerAddressRequest | 
 try {
-    ServerAddressRequest result = apiInstance.skoltechOpenRAN5GIperfLoadBalancer010ServiceCreate(data);
+    ServerAddressRequest result = apiInstance.registerService(data);
     System.out.println(result);
 } catch (ApiException e) {
-    System.err.println("Exception when calling BalancerApi#skoltechOpenRAN5GIperfLoadBalancer010ServiceCreate");
+    System.err.println("Exception when calling BalancerApi#registerService");
     e.printStackTrace();
 }
 ```
@@ -136,9 +136,9 @@ No authorization required
  - **Content-Type**: application/json
  - **Accept**: application/json
 
-<a name="skoltechOpenRAN5GIperfLoadBalancer010ServiceDelete"></a>
-# **skoltechOpenRAN5GIperfLoadBalancer010ServiceDelete**
-> ServerAddressRequest skoltechOpenRAN5GIperfLoadBalancer010ServiceDelete(data)
+<a name="unregisterService"></a>
+# **unregisterService**
+> ServerAddressRequest unregisterService(data)
 
 
 
@@ -154,10 +154,10 @@ Unregister caller as service
 BalancerApi apiInstance = new BalancerApi();
 ServerAddressRequest data = new ServerAddressRequest(); // ServerAddressRequest | 
 try {
-    ServerAddressRequest result = apiInstance.skoltechOpenRAN5GIperfLoadBalancer010ServiceDelete(data);
+    ServerAddressRequest result = apiInstance.unregisterService(data);
     System.out.println(result);
 } catch (ApiException e) {
-    System.err.println("Exception when calling BalancerApi#skoltechOpenRAN5GIperfLoadBalancer010ServiceDelete");
+    System.err.println("Exception when calling BalancerApi#unregisterService");
     e.printStackTrace();
 }
 ```

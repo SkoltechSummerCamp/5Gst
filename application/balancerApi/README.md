@@ -85,9 +85,10 @@ public class BalancerApiExample {
         
         BalancerApi apiInstance = new BalancerApi();
         try {
-            apiInstance.skoltechOpenRAN5GIperfLoadBalancer010PingList();
+            ServerAddressResponse result = apiInstance.acquireService();
+            System.out.println(result);
         } catch (ApiException e) {
-            System.err.println("Exception when calling BalancerApi#skoltechOpenRAN5GIperfLoadBalancer010PingList");
+            System.err.println("Exception when calling BalancerApi#acquireService");
             e.printStackTrace();
         }
     }
@@ -101,10 +102,10 @@ All URIs are relative to *https://localhost*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
-*BalancerApi* | [**skoltechOpenRAN5GIperfLoadBalancer010PingList**](docs/BalancerApi.md#skoltechOpenRAN5GIperfLoadBalancer010PingList) | **GET** /Skoltech_OpenRAN_5G/iperf_load_balancer/0.1.0/ping/ | 
-*BalancerApi* | [**skoltechOpenRAN5GIperfLoadBalancer010ServiceAcquireCreate**](docs/BalancerApi.md#skoltechOpenRAN5GIperfLoadBalancer010ServiceAcquireCreate) | **POST** /Skoltech_OpenRAN_5G/iperf_load_balancer/0.1.0/service/acquire/ | 
-*BalancerApi* | [**skoltechOpenRAN5GIperfLoadBalancer010ServiceCreate**](docs/BalancerApi.md#skoltechOpenRAN5GIperfLoadBalancer010ServiceCreate) | **POST** /Skoltech_OpenRAN_5G/iperf_load_balancer/0.1.0/service/ | 
-*BalancerApi* | [**skoltechOpenRAN5GIperfLoadBalancer010ServiceDelete**](docs/BalancerApi.md#skoltechOpenRAN5GIperfLoadBalancer010ServiceDelete) | **DELETE** /Skoltech_OpenRAN_5G/iperf_load_balancer/0.1.0/service/ | 
+*BalancerApi* | [**acquireService**](docs/BalancerApi.md#acquireService) | **POST** /Skoltech_OpenRAN_5G/iperf_load_balancer/0.1.0/service/acquire/ | 
+*BalancerApi* | [**ping**](docs/BalancerApi.md#ping) | **GET** /Skoltech_OpenRAN_5G/iperf_load_balancer/0.1.0/ping/ | 
+*BalancerApi* | [**registerService**](docs/BalancerApi.md#registerService) | **POST** /Skoltech_OpenRAN_5G/iperf_load_balancer/0.1.0/service/ | 
+*BalancerApi* | [**unregisterService**](docs/BalancerApi.md#unregisterService) | **DELETE** /Skoltech_OpenRAN_5G/iperf_load_balancer/0.1.0/service/ | 
 
 
 ## Documentation for Models
