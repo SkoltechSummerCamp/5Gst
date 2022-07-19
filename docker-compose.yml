@@ -20,21 +20,20 @@ services:
     depends_on:
         postgres:
             condition: service_healthy
-            
     healthcheck:
-        test: [ "CMD",  "curl", "-f", "curl http://10.16.160.104:8080/Skoltech_OpenRAN_5G/iperf_load_balancer/0.1.0/ping/"]
+        test: [ "CMD",  "curl","http://${YOUR_IP}:8080/Skoltech_OpenRAN_5G/iperf_load_balancer/0.1.0/ping/"]
         interval: 5s
         timeout: 5s
         retries: 24
     environment:
       - SECRET_KEY=${SECRET_KEY}
       - DEBUG= ${DEBUG}
-      - ALLOWED_HOSTS=127.0.0.1,${YOURE_IP}
+      - ALLOWED_HOSTS=127.0.0.1,${YOUR_IP}
       - SUPPORT_EMAIL=${SUPPORT_EMAIL}
       - DB_NAME=skoltech_db_name
       - DB_USER=skoltech_db_user
       - DB_PASSWORD=skoltech_db_pass
-      - DB_HOST=${YOURE_IP}
+      - DB_HOST=${YOUR_IP}
       - DB_PORT=5432
     ports:
       - "5555:8080"
@@ -47,14 +46,14 @@ services:
         balancer:
             condition: service_healthy
     environment:
-      -  ALLOWED_HOSTS=127.0.0.1,${YOURE_IP}
-      -  BALANCER_ADDRESS=${YOURE_IP}:5555
+      -  ALLOWED_HOSTS=127.0.0.1,${YOUR_IP}
+      -  BALANCER_ADDRESS=${YOUR_IP}:5555
       -  BALANCER_BASE_URL=/Skoltech_OpenRAN_5G/iperf_load_balancer/0.1.0
       -  CONNECTING_TIMEOUT=30
       -  DEBUG=${DEBUG}
       -  IPERF_PORT=5005
       -  SECRET_KEY=${SECRET_KEY}
-      -  SERVICE_IP_ADDRESS=${YOURE_IP}
+      -  SERVICE_IP_ADDRESS=${YOUR_IP}
       -  SERVICE_PORT=5004
     ports:
       -  "5004:5000"
