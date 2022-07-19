@@ -6,7 +6,7 @@ from swagger_client.configuration import Configuration
 
 class BalancerCommunicator:
     def __init__(self):
-        self.api_instance = swagger_client.ServiceApi()
+        self.api_instance = swagger_client.BalancerApi()
         self.env_data = {
             'SERVICE_IP_ADDRESS': settings.SERVICE_IP_ADDRESS,
             'BALANCER_ADDRESS': settings.BALANCER_ADDRESS,
@@ -24,7 +24,7 @@ class BalancerCommunicator:
                                                    port=self.env_data['SERVICE_PORT'],
                                                    port_iperf=self.env_data['IPERF_PORT'])
         try:
-            self.api_instance.service_create(data=body)
+            self.api_instance.register_service(data=body)
         except ApiException as e:
             print("Exception when calling ServerApi->server_post_ip: %s\n" % e)
 
@@ -33,7 +33,7 @@ class BalancerCommunicator:
                                                    port=self.env_data['SERVICE_PORT'],
                                                    port_iperf=self.env_data['IPERF_PORT'])
         try:
-            self.api_instance.service_delete(data=body)
+            self.api_instance.unregister_service(data=body)
         except ApiException as e:
             print("Exception when calling ServerApi->server_delete_ip: %s\n" % e)
 
