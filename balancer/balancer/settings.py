@@ -33,7 +33,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = (os.environ['DEBUG'] == 'True')
+DEBUG = (os.getenv('DEBUG', 'False') == 'True')
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '127.0.0.1').split(',')
 
@@ -161,7 +161,7 @@ SWAGGER_SETTINGS = {
         title="Balancer API",
         default_version='0.1.0',
         description="Speedtest load balancer",
-        contact=openapi.Contact(email=os.environ["SUPPORT_EMAIL"]),
+        contact=openapi.Contact(email=os.getenv("SUPPORT_EMAIL", "dev@5gst.ru")),
         license=openapi.License(name="BSD 3-Clause",
                                 url='https://raw.githubusercontent.com/SkoltechSummerCamp/5Gst/main/LICENSE'),
     ),

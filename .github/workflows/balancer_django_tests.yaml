@@ -7,8 +7,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       SECRET_KEY: test
-      DEBUG: "True"
-      SUPPORT_EMAIL: ${{ secrets.SUPPORT_EMAIL }}
       TEST_MODE: "True"
     defaults:
       run:
