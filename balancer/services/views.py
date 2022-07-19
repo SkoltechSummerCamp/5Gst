@@ -8,7 +8,6 @@ from rest_framework.views import APIView
 
 from services import serializers, models
 
-
 class ServiceRegistrationView(mixins.DestroyModelMixin,
                               mixins.CreateModelMixin,
                               GenericAPIView):
@@ -65,3 +64,10 @@ class ServiceAcquirementView(APIView):
         instance.delete()
         serializer = serializers.ServerAddressResponseSerializer(instance=instance)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+
+class PingView(APIView):
+    def get(self, request):
+        return Response(status=status.HTTP_200_OK)
+
