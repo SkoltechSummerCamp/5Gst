@@ -15,8 +15,11 @@ import logging
 import os
 from pathlib import Path
 
+from django.urls import get_script_prefix
 from dotenv import load_dotenv
 from drf_yasg import openapi
+from drf_yasg.generators import OpenAPISchemaGenerator
+from drf_yasg.inspectors import SwaggerAutoSchema
 
 logger = logging.getLogger(__name__)
 
@@ -156,6 +159,24 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [],
 }
 
+DEFAULT_SWAGGER_TAG = os.getenv('DEFAULT_SWAGGER_TAG', 'balancer')
+
+
+class SpeedtestAPISchemeGenerator(OpenAPISchemaGenerator):
+    def determine_path_prefix(self, paths):
+        return ''
+
+
+class SpeedtestSwaggerAutoSchema(SwaggerAutoSchema):
+    def get_tags(self, operation_keys=None):
+        tags = self.overrides.get('tags')
+
+        if not tags:
+            tags = [DEFAULT_SWAGGER_TAG]
+
+        return tags
+
+
 SWAGGER_SETTINGS = {
     'DEFAULT_INFO': openapi.Info(
         title="Balancer API",
@@ -165,6 +186,8 @@ SWAGGER_SETTINGS = {
         license=openapi.License(name="BSD 3-Clause",
                                 url='https://raw.githubusercontent.com/SkoltechSummerCamp/5Gst/main/LICENSE'),
     ),
+    'DEFAULT_GENERATOR_CLASS': SpeedtestAPISchemeGenerator,
+    'DEFAULT_AUTO_SCHEMA_CLASS': SpeedtestSwaggerAutoSchema,
     'SECURITY_DEFINITIONS': {},
 }
 
