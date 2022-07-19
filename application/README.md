@@ -2,33 +2,14 @@
 
 ## Project setup
 
-### Patching submodules
-
-Firstly, you should make sure that all submodules are cloned.
-
-```
-git submodule init
-git submodule update
-```
-
-This project patches `swaggerApi` submodule, so to untrack changes there execute
-
-```
-echo "AUTOBUILD" >> ./.git/modules/swaggerApi/info/exclude
-cd swaggerApi
-find AUTOBUILD/javaBalancerClient/src/ -type f | xargs git update-index --skip-worktree
-```
-
-Finally, apply the patch
-
-```
-cd swaggerApi
-git apply ../swaggerApi.patch
-```
-
 ### Local configuration
 
 Make sure that `local.properties` contains `sdk.dir` property set to your Android SDK absolute path.
+
+## Generated code changes
+
+Any commits in [balancer api](./balancerApi) are overwritten by GitHub Actions swagger-codegen workflow.
+If you need to apply some changes in generated code, please update the [patch](./.swagger-codegen-config/balancerApi.patch) file.
 
 ## Build
 

@@ -3,8 +3,8 @@ IDEA additional info:
 Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
 <+>UTF-8
 ===================================================================
---- application/balancerApi/src/main/java/io/swagger/client/ApiClient.java	(revision 753f66a6aaa6426f7ddef405c5519693968f40be)
-+++ application/balancerApi/src/main/java/io/swagger/client/ApiClient.java	(date 1657485258710)
+--- application/balancerApi/src/main/java/io/swagger/client/ApiClient.java	(revision 9a9e4e05daedc18abcad94e603ff2c9af0b09158)
++++ application/balancerApi/src/main/java/io/swagger/client/ApiClient.java	(date 1658233299263)
 @@ -13,6 +13,7 @@
 
  package io.swagger.client;
@@ -13,7 +13,7 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
  import com.squareup.okhttp.*;
  import com.squareup.okhttp.internal.http.HttpMethod;
  import com.squareup.okhttp.logging.HttpLoggingInterceptor;
-@@ -884,6 +885,13 @@
+@@ -883,6 +884,13 @@
                  } catch (ApiException e) {
                      callback.onFailure(e, response.code(), response.headers().toMultimap());
                      return;
@@ -27,16 +27,3 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
                  }
                  callback.onSuccess(result, response.code(), response.headers().toMultimap());
              }
-Index: application/balancerApi/src/main/java/io/swagger/client/Version.java
-IDEA additional info:
-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
-<+>UTF-8
-===================================================================
---- application/balancerApi/src/main/java/io/swagger/client/Version.java	(date 1657485242846)
-+++ application/balancerApi/src/main/java/io/swagger/client/Version.java	(date 1657485242846)
-@@ -0,0 +1,5 @@
-+package io.swagger.client;
-+
-+public class Version {
-+    public static String VERSION = "0.1.0";
-+}
