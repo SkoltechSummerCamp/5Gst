@@ -7,8 +7,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       SECRET_KEY: test
-      DEBUG: "False"
-      SUPPORT_EMAIL: ${{ secrets.SUPPORT_EMAIL }}
       DB_NAME: test
       DB_USER: test
       DB_PASSWORD: test
@@ -57,7 +55,7 @@ jobs:
       - name: Clear AUTOBUILD directory
         run: rm -rf ../AUTOBUILD
 
-      - name: Generate python client
+      - name: Generate client for service
         run: >
           java
           -jar
@@ -65,10 +63,10 @@ jobs:
           generate
           -i swagger.yaml
           -l python
-          -o ../AUTOBUILD/pythonBalancerClient/
-          -c .swagger-codegen-config/pythonClientConfig.json
+          -o ../AUTOBUILD/service2BalancerClient/
+          -c ../service/.swagger-codegen-config/balancerApi.json
 
-      - name: Generate java client
+      - name: Generate client for application
         run: >
           java
           -jar
@@ -76,8 +74,8 @@ jobs:
           generate
           -i swagger.yaml
           -l java
-          -o ../AUTOBUILD/javaBalancerClient/
-          -c .swagger-codegen-config/javaClientConfig.json
+          -o ../AUTOBUILD/application2BalancerClient/
+          -c ../application/.swagger-codegen-config/balancerApi.json
 
       # Swagger codegen container has invalid git installed,
       # so we need another container to push changes
@@ -111,8 +109,10 @@ jobs:
 
       - name: Move generated code to projects
         run: |
-          cp -r ../AUTOBUILD/javaBalancerClient/ ../application/balancerApi
-          cp -r ../AUTOBUILD/pythonBalancerClient/swagger_client/ ../service/swagger_client
+          cp -r ../AUTOBUILD/application2BalancerClient/ ../application/balancerApi
+          cp -r ../AUTOBUILD/service2BalancerClient/swagger_client/ ../service/swagger_client
+          cd ../application
+          git apply ./.swagger-codegen-config/balancerApi.patch
 
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:

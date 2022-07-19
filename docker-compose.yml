@@ -29,7 +29,6 @@ services:
       - SECRET_KEY=${SECRET_KEY}
       - DEBUG= ${DEBUG}
       - ALLOWED_HOSTS=127.0.0.1,${YOUR_IP}
-      - SUPPORT_EMAIL=${SUPPORT_EMAIL}
       - DB_NAME=skoltech_db_name
       - DB_USER=skoltech_db_user
       - DB_PASSWORD=skoltech_db_pass
@@ -47,8 +46,7 @@ services:
             condition: service_healthy
     environment:
       -  ALLOWED_HOSTS=127.0.0.1,${YOUR_IP}
-      -  BALANCER_ADDRESS=${YOUR_IP}:5555
-      -  BALANCER_BASE_URL=/Skoltech_OpenRAN_5G/iperf_load_balancer/0.1.0
+      -  BALANCER_ADDRESS=http://${YOUR_IP}:5555
       -  CONNECTING_TIMEOUT=30
       -  DEBUG=${DEBUG}
       -  IPERF_PORT=5005

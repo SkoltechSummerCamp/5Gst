@@ -25,12 +25,12 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * API tests for ServiceApi
+ * API tests for BalancerApi
  */
 @Ignore
-public class ServiceApiTest {
+public class BalancerApiTest {
 
-    private final ServiceApi api = new ServiceApi();
+    private final BalancerApi api = new BalancerApi();
 
     
     /**
@@ -42,8 +42,23 @@ public class ServiceApiTest {
      *          if the Api call fails
      */
     @Test
-    public void serviceAcquireCreateTest() throws Exception {
-        ServerAddressResponse response = api.serviceAcquireCreate();
+    public void acquireServiceTest() throws Exception {
+        ServerAddressResponse response = api.acquireService();
+
+        // TODO: test validations
+    }
+    
+    /**
+     * 
+     *
+     * Check that server is up
+     *
+     * @throws Exception
+     *          if the Api call fails
+     */
+    @Test
+    public void pingTest() throws Exception {
+        api.ping();
 
         // TODO: test validations
     }
@@ -57,9 +72,9 @@ public class ServiceApiTest {
      *          if the Api call fails
      */
     @Test
-    public void serviceCreateTest() throws Exception {
+    public void registerServiceTest() throws Exception {
         ServerAddressRequest data = null;
-        ServerAddressRequest response = api.serviceCreate(data);
+        ServerAddressRequest response = api.registerService(data);
 
         // TODO: test validations
     }
@@ -73,9 +88,9 @@ public class ServiceApiTest {
      *          if the Api call fails
      */
     @Test
-    public void serviceDeleteTest() throws Exception {
+    public void unregisterServiceTest() throws Exception {
         ServerAddressRequest data = null;
-        ServerAddressRequest response = api.serviceDelete(data);
+        ServerAddressRequest response = api.unregisterService(data);
 
         // TODO: test validations
     }
