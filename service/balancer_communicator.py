@@ -10,13 +10,12 @@ class BalancerCommunicator:
         self.env_data = {
             'SERVICE_IP_ADDRESS': settings.SERVICE_IP_ADDRESS,
             'BALANCER_ADDRESS': settings.BALANCER_ADDRESS,
-            'BALANCER_BASE_URL': settings.BALANCER_BASE_URL,
             'IPERF_PORT': settings.IPERF_PORT,
             'SERVICE_PORT': settings.SERVICE_PORT,
             'CONNECTING_TIMEOUT': settings.CONNECTING_TIMEOUT
         }
         configuration = Configuration()
-        configuration.host = 'http://' + self.env_data['BALANCER_ADDRESS'] + self.env_data['BALANCER_BASE_URL']
+        configuration.host = self.env_data['BALANCER_ADDRESS']
         self.api_instance.api_client.configuration = configuration
 
     def post_to_server(self):

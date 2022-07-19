@@ -2,7 +2,6 @@ package ru.scoltech.openran.speedtest.task.impl
 
 import com.squareup.okhttp.HttpUrl
 import io.swagger.client.model.ServerAddressResponse
-import ru.scoltech.openran.speedtest.backend.addPathSegments
 import ru.scoltech.openran.speedtest.task.FatalException
 import ru.scoltech.openran.speedtest.task.Task
 import ru.scoltech.openran.speedtest.util.Promise
@@ -26,6 +25,7 @@ data class ObtainServiceAddressesTask(
                 .port(argument.port)
                 .build()
                 .toString()
+                .dropLast(1)  // drops trailing '/'
 
             try {
                 val call = BalancerApi(balancerApiBuilder.setBasePath(balancerAddress))

@@ -71,3 +71,5 @@ target/
 #iPerf build output
 *.elf
 
+# Environment variables
+.env
