@@ -8,6 +8,7 @@ from rest_framework.views import APIView
 
 from services import serializers, models
 
+
 class ServiceRegistrationView(mixins.DestroyModelMixin,
                               mixins.CreateModelMixin,
                               GenericAPIView):
@@ -26,6 +27,7 @@ class ServiceRegistrationView(mixins.DestroyModelMixin,
 
     @swagger_auto_schema(
         operation_description='Register caller as service',
+        operation_id='register_service',
         responses={
             201: openapi.Response('Service registered', serializers.ServerAddressRequestSerializer),
             400: openapi.Response('Invalid request body'),
@@ -37,6 +39,7 @@ class ServiceRegistrationView(mixins.DestroyModelMixin,
     @swagger_auto_schema(
         operation_description='Unregister caller as service',
         request_body=serializers.ServerAddressRequestSerializer,
+        operation_id='unregister_service',
         responses={
             204: openapi.Response('Service unregistered', serializers.ServerAddressRequestSerializer),
             400: openapi.Response('Invalid request body'),
@@ -50,6 +53,7 @@ class ServiceRegistrationView(mixins.DestroyModelMixin,
 class ServiceAcquirementView(APIView):
     @swagger_auto_schema(
         operation_description='Acquires service for further iperf tests',
+        operation_id='acquire_service',
         responses={
             200: openapi.Response('Service acquired', serializers.ServerAddressResponseSerializer),
             503: openapi.Response('No available services found'),
@@ -66,8 +70,10 @@ class ServiceAcquirementView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-
 class PingView(APIView):
+    @swagger_auto_schema(
+        operation_description='Check that server is up',
+        operation_id='ping',
+    )
     def get(self, request):
         return Response(status=status.HTTP_200_OK)
-
