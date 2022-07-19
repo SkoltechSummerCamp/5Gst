@@ -36,14 +36,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ServiceApi {
+public class BalancerApi {
     private ApiClient apiClient;
 
-    public ServiceApi() {
+    public BalancerApi() {
         this(Configuration.getDefaultApiClient());
     }
 
-    public ServiceApi(ApiClient apiClient) {
+    public BalancerApi(ApiClient apiClient) {
         this.apiClient = apiClient;
     }
 
@@ -56,17 +56,17 @@ public class ServiceApi {
     }
 
     /**
-     * Build call for serviceAcquireCreate
+     * Build call for skoltechOpenRAN5GIperfLoadBalancer010PingList
      * @param progressListener Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call serviceAcquireCreateCall(final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    public com.squareup.okhttp.Call skoltechOpenRAN5GIperfLoadBalancer010PingListCall(final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         Object localVarPostBody = null;
 
         // create path and map variables
-        String localVarPath = "/service/acquire/";
+        String localVarPath = "/Skoltech_OpenRAN_5G/iperf_load_balancer/0.1.0/ping/";
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -100,49 +100,46 @@ public class ServiceApi {
         }
 
         String[] localVarAuthNames = new String[] {  };
-        return apiClient.buildCall(localVarPath, "POST", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
+        return apiClient.buildCall(localVarPath, "GET", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
     }
 
     @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call serviceAcquireCreateValidateBeforeCall(final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private com.squareup.okhttp.Call skoltechOpenRAN5GIperfLoadBalancer010PingListValidateBeforeCall(final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         
 
-        com.squareup.okhttp.Call call = serviceAcquireCreateCall(progressListener, progressRequestListener);
+        com.squareup.okhttp.Call call = skoltechOpenRAN5GIperfLoadBalancer010PingListCall(progressListener, progressRequestListener);
         return call;
 
     }
 
     /**
      * 
-     * Acquires service for further iperf tests
-     * @return ServerAddressResponse
+     * 
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public ServerAddressResponse serviceAcquireCreate() throws ApiException {
-        ApiResponse<ServerAddressResponse> resp = serviceAcquireCreateWithHttpInfo();
-        return resp.getData();
+    public void skoltechOpenRAN5GIperfLoadBalancer010PingList() throws ApiException {
+        skoltechOpenRAN5GIperfLoadBalancer010PingListWithHttpInfo();
     }
 
     /**
      * 
-     * Acquires service for further iperf tests
-     * @return ApiResponse&lt;ServerAddressResponse&gt;
+     * 
+     * @return ApiResponse&lt;Void&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public ApiResponse<ServerAddressResponse> serviceAcquireCreateWithHttpInfo() throws ApiException {
-        com.squareup.okhttp.Call call = serviceAcquireCreateValidateBeforeCall(null, null);
-        Type localVarReturnType = new TypeToken<ServerAddressResponse>(){}.getType();
-        return apiClient.execute(call, localVarReturnType);
+    public ApiResponse<Void> skoltechOpenRAN5GIperfLoadBalancer010PingListWithHttpInfo() throws ApiException {
+        com.squareup.okhttp.Call call = skoltechOpenRAN5GIperfLoadBalancer010PingListValidateBeforeCall(null, null);
+        return apiClient.execute(call);
     }
 
     /**
      *  (asynchronously)
-     * Acquires service for further iperf tests
+     * 
      * @param callback The callback to be executed when the API call finishes
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
-    public com.squareup.okhttp.Call serviceAcquireCreateAsync(final ApiCallback<ServerAddressResponse> callback) throws ApiException {
+    public com.squareup.okhttp.Call skoltechOpenRAN5GIperfLoadBalancer010PingListAsync(final ApiCallback<Void> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -163,24 +160,22 @@ public class ServiceApi {
             };
         }
 
-        com.squareup.okhttp.Call call = serviceAcquireCreateValidateBeforeCall(progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<ServerAddressResponse>(){}.getType();
-        apiClient.executeAsync(call, localVarReturnType, callback);
+        com.squareup.okhttp.Call call = skoltechOpenRAN5GIperfLoadBalancer010PingListValidateBeforeCall(progressListener, progressRequestListener);
+        apiClient.executeAsync(call, callback);
         return call;
     }
     /**
-     * Build call for serviceCreate
-     * @param data  (required)
+     * Build call for skoltechOpenRAN5GIperfLoadBalancer010ServiceAcquireCreate
      * @param progressListener Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call serviceCreateCall(ServerAddressRequest data, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
-        Object localVarPostBody = data;
+    public com.squareup.okhttp.Call skoltechOpenRAN5GIperfLoadBalancer010ServiceAcquireCreateCall(final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+        Object localVarPostBody = null;
 
         // create path and map variables
-        String localVarPath = "/service/";
+        String localVarPath = "/Skoltech_OpenRAN_5G/iperf_load_balancer/0.1.0/service/acquire/";
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -218,15 +213,129 @@ public class ServiceApi {
     }
 
     @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call serviceCreateValidateBeforeCall(ServerAddressRequest data, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private com.squareup.okhttp.Call skoltechOpenRAN5GIperfLoadBalancer010ServiceAcquireCreateValidateBeforeCall(final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+        
+
+        com.squareup.okhttp.Call call = skoltechOpenRAN5GIperfLoadBalancer010ServiceAcquireCreateCall(progressListener, progressRequestListener);
+        return call;
+
+    }
+
+    /**
+     * 
+     * Acquires service for further iperf tests
+     * @return ServerAddressResponse
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     */
+    public ServerAddressResponse skoltechOpenRAN5GIperfLoadBalancer010ServiceAcquireCreate() throws ApiException {
+        ApiResponse<ServerAddressResponse> resp = skoltechOpenRAN5GIperfLoadBalancer010ServiceAcquireCreateWithHttpInfo();
+        return resp.getData();
+    }
+
+    /**
+     * 
+     * Acquires service for further iperf tests
+     * @return ApiResponse&lt;ServerAddressResponse&gt;
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     */
+    public ApiResponse<ServerAddressResponse> skoltechOpenRAN5GIperfLoadBalancer010ServiceAcquireCreateWithHttpInfo() throws ApiException {
+        com.squareup.okhttp.Call call = skoltechOpenRAN5GIperfLoadBalancer010ServiceAcquireCreateValidateBeforeCall(null, null);
+        Type localVarReturnType = new TypeToken<ServerAddressResponse>(){}.getType();
+        return apiClient.execute(call, localVarReturnType);
+    }
+
+    /**
+     *  (asynchronously)
+     * Acquires service for further iperf tests
+     * @param callback The callback to be executed when the API call finishes
+     * @return The request call
+     * @throws ApiException If fail to process the API call, e.g. serializing the request body object
+     */
+    public com.squareup.okhttp.Call skoltechOpenRAN5GIperfLoadBalancer010ServiceAcquireCreateAsync(final ApiCallback<ServerAddressResponse> callback) throws ApiException {
+
+        ProgressResponseBody.ProgressListener progressListener = null;
+        ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
+
+        if (callback != null) {
+            progressListener = new ProgressResponseBody.ProgressListener() {
+                @Override
+                public void update(long bytesRead, long contentLength, boolean done) {
+                    callback.onDownloadProgress(bytesRead, contentLength, done);
+                }
+            };
+
+            progressRequestListener = new ProgressRequestBody.ProgressRequestListener() {
+                @Override
+                public void onRequestProgress(long bytesWritten, long contentLength, boolean done) {
+                    callback.onUploadProgress(bytesWritten, contentLength, done);
+                }
+            };
+        }
+
+        com.squareup.okhttp.Call call = skoltechOpenRAN5GIperfLoadBalancer010ServiceAcquireCreateValidateBeforeCall(progressListener, progressRequestListener);
+        Type localVarReturnType = new TypeToken<ServerAddressResponse>(){}.getType();
+        apiClient.executeAsync(call, localVarReturnType, callback);
+        return call;
+    }
+    /**
+     * Build call for skoltechOpenRAN5GIperfLoadBalancer010ServiceCreate
+     * @param data  (required)
+     * @param progressListener Progress listener
+     * @param progressRequestListener Progress request listener
+     * @return Call to execute
+     * @throws ApiException If fail to serialize the request body object
+     */
+    public com.squareup.okhttp.Call skoltechOpenRAN5GIperfLoadBalancer010ServiceCreateCall(ServerAddressRequest data, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+        Object localVarPostBody = data;
+
+        // create path and map variables
+        String localVarPath = "/Skoltech_OpenRAN_5G/iperf_load_balancer/0.1.0/service/";
+
+        List<Pair> localVarQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+
+        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+
+        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+        final String[] localVarAccepts = {
+            "application/json"
+        };
+        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+        if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
+
+        final String[] localVarContentTypes = {
+            "application/json"
+        };
+        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+        localVarHeaderParams.put("Content-Type", localVarContentType);
+
+        if(progressListener != null) {
+            apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
+                @Override
+                public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
+                    com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                    return originalResponse.newBuilder()
+                    .body(new ProgressResponseBody(originalResponse.body(), progressListener))
+                    .build();
+                }
+            });
+        }
+
+        String[] localVarAuthNames = new String[] {  };
+        return apiClient.buildCall(localVarPath, "POST", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
+    }
+
+    @SuppressWarnings("rawtypes")
+    private com.squareup.okhttp.Call skoltechOpenRAN5GIperfLoadBalancer010ServiceCreateValidateBeforeCall(ServerAddressRequest data, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         
         // verify the required parameter 'data' is set
         if (data == null) {
-            throw new ApiException("Missing the required parameter 'data' when calling serviceCreate(Async)");
+            throw new ApiException("Missing the required parameter 'data' when calling skoltechOpenRAN5GIperfLoadBalancer010ServiceCreate(Async)");
         }
         
 
-        com.squareup.okhttp.Call call = serviceCreateCall(data, progressListener, progressRequestListener);
+        com.squareup.okhttp.Call call = skoltechOpenRAN5GIperfLoadBalancer010ServiceCreateCall(data, progressListener, progressRequestListener);
         return call;
 
     }
@@ -238,8 +347,8 @@ public class ServiceApi {
      * @return ServerAddressRequest
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public ServerAddressRequest serviceCreate(ServerAddressRequest data) throws ApiException {
-        ApiResponse<ServerAddressRequest> resp = serviceCreateWithHttpInfo(data);
+    public ServerAddressRequest skoltechOpenRAN5GIperfLoadBalancer010ServiceCreate(ServerAddressRequest data) throws ApiException {
+        ApiResponse<ServerAddressRequest> resp = skoltechOpenRAN5GIperfLoadBalancer010ServiceCreateWithHttpInfo(data);
         return resp.getData();
     }
 
@@ -250,8 +359,8 @@ public class ServiceApi {
      * @return ApiResponse&lt;ServerAddressRequest&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public ApiResponse<ServerAddressRequest> serviceCreateWithHttpInfo(ServerAddressRequest data) throws ApiException {
-        com.squareup.okhttp.Call call = serviceCreateValidateBeforeCall(data, null, null);
+    public ApiResponse<ServerAddressRequest> skoltechOpenRAN5GIperfLoadBalancer010ServiceCreateWithHttpInfo(ServerAddressRequest data) throws ApiException {
+        com.squareup.okhttp.Call call = skoltechOpenRAN5GIperfLoadBalancer010ServiceCreateValidateBeforeCall(data, null, null);
         Type localVarReturnType = new TypeToken<ServerAddressRequest>(){}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
@@ -264,7 +373,7 @@ public class ServiceApi {
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
-    public com.squareup.okhttp.Call serviceCreateAsync(ServerAddressRequest data, final ApiCallback<ServerAddressRequest> callback) throws ApiException {
+    public com.squareup.okhttp.Call skoltechOpenRAN5GIperfLoadBalancer010ServiceCreateAsync(ServerAddressRequest data, final ApiCallback<ServerAddressRequest> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -285,24 +394,24 @@ public class ServiceApi {
             };
         }
 
-        com.squareup.okhttp.Call call = serviceCreateValidateBeforeCall(data, progressListener, progressRequestListener);
+        com.squareup.okhttp.Call call = skoltechOpenRAN5GIperfLoadBalancer010ServiceCreateValidateBeforeCall(data, progressListener, progressRequestListener);
         Type localVarReturnType = new TypeToken<ServerAddressRequest>(){}.getType();
         apiClient.executeAsync(call, localVarReturnType, callback);
         return call;
     }
     /**
-     * Build call for serviceDelete
+     * Build call for skoltechOpenRAN5GIperfLoadBalancer010ServiceDelete
      * @param data  (required)
      * @param progressListener Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call serviceDeleteCall(ServerAddressRequest data, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    public com.squareup.okhttp.Call skoltechOpenRAN5GIperfLoadBalancer010ServiceDeleteCall(ServerAddressRequest data, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         Object localVarPostBody = data;
 
         // create path and map variables
-        String localVarPath = "/service/";
+        String localVarPath = "/Skoltech_OpenRAN_5G/iperf_load_balancer/0.1.0/service/";
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -340,15 +449,15 @@ public class ServiceApi {
     }
 
     @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call serviceDeleteValidateBeforeCall(ServerAddressRequest data, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private com.squareup.okhttp.Call skoltechOpenRAN5GIperfLoadBalancer010ServiceDeleteValidateBeforeCall(ServerAddressRequest data, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         
         // verify the required parameter 'data' is set
         if (data == null) {
-            throw new ApiException("Missing the required parameter 'data' when calling serviceDelete(Async)");
+            throw new ApiException("Missing the required parameter 'data' when calling skoltechOpenRAN5GIperfLoadBalancer010ServiceDelete(Async)");
         }
         
 
-        com.squareup.okhttp.Call call = serviceDeleteCall(data, progressListener, progressRequestListener);
+        com.squareup.okhttp.Call call = skoltechOpenRAN5GIperfLoadBalancer010ServiceDeleteCall(data, progressListener, progressRequestListener);
         return call;
 
     }
@@ -360,8 +469,8 @@ public class ServiceApi {
      * @return ServerAddressRequest
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public ServerAddressRequest serviceDelete(ServerAddressRequest data) throws ApiException {
-        ApiResponse<ServerAddressRequest> resp = serviceDeleteWithHttpInfo(data);
+    public ServerAddressRequest skoltechOpenRAN5GIperfLoadBalancer010ServiceDelete(ServerAddressRequest data) throws ApiException {
+        ApiResponse<ServerAddressRequest> resp = skoltechOpenRAN5GIperfLoadBalancer010ServiceDeleteWithHttpInfo(data);
         return resp.getData();
     }
 
@@ -372,8 +481,8 @@ public class ServiceApi {
      * @return ApiResponse&lt;ServerAddressRequest&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public ApiResponse<ServerAddressRequest> serviceDeleteWithHttpInfo(ServerAddressRequest data) throws ApiException {
-        com.squareup.okhttp.Call call = serviceDeleteValidateBeforeCall(data, null, null);
+    public ApiResponse<ServerAddressRequest> skoltechOpenRAN5GIperfLoadBalancer010ServiceDeleteWithHttpInfo(ServerAddressRequest data) throws ApiException {
+        com.squareup.okhttp.Call call = skoltechOpenRAN5GIperfLoadBalancer010ServiceDeleteValidateBeforeCall(data, null, null);
         Type localVarReturnType = new TypeToken<ServerAddressRequest>(){}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
@@ -386,7 +495,7 @@ public class ServiceApi {
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
-    public com.squareup.okhttp.Call serviceDeleteAsync(ServerAddressRequest data, final ApiCallback<ServerAddressRequest> callback) throws ApiException {
+    public com.squareup.okhttp.Call skoltechOpenRAN5GIperfLoadBalancer010ServiceDeleteAsync(ServerAddressRequest data, final ApiCallback<ServerAddressRequest> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -407,7 +516,7 @@ public class ServiceApi {
             };
         }
 
-        com.squareup.okhttp.Call call = serviceDeleteValidateBeforeCall(data, progressListener, progressRequestListener);
+        com.squareup.okhttp.Call call = skoltechOpenRAN5GIperfLoadBalancer010ServiceDeleteValidateBeforeCall(data, progressListener, progressRequestListener);
         Type localVarReturnType = new TypeToken<ServerAddressRequest>(){}.getType();
         apiClient.executeAsync(call, localVarReturnType, callback);
         return call;

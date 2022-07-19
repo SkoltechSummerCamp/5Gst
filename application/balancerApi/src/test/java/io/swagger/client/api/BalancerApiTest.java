@@ -25,13 +25,28 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * API tests for ServiceApi
+ * API tests for BalancerApi
  */
 @Ignore
-public class ServiceApiTest {
+public class BalancerApiTest {
 
-    private final ServiceApi api = new ServiceApi();
+    private final BalancerApi api = new BalancerApi();
 
+    
+    /**
+     * 
+     *
+     * 
+     *
+     * @throws Exception
+     *          if the Api call fails
+     */
+    @Test
+    public void skoltechOpenRAN5GIperfLoadBalancer010PingListTest() throws Exception {
+        api.skoltechOpenRAN5GIperfLoadBalancer010PingList();
+
+        // TODO: test validations
+    }
     
     /**
      * 
@@ -42,8 +57,8 @@ public class ServiceApiTest {
      *          if the Api call fails
      */
     @Test
-    public void serviceAcquireCreateTest() throws Exception {
-        ServerAddressResponse response = api.serviceAcquireCreate();
+    public void skoltechOpenRAN5GIperfLoadBalancer010ServiceAcquireCreateTest() throws Exception {
+        ServerAddressResponse response = api.skoltechOpenRAN5GIperfLoadBalancer010ServiceAcquireCreate();
 
         // TODO: test validations
     }
@@ -57,9 +72,9 @@ public class ServiceApiTest {
      *          if the Api call fails
      */
     @Test
-    public void serviceCreateTest() throws Exception {
+    public void skoltechOpenRAN5GIperfLoadBalancer010ServiceCreateTest() throws Exception {
         ServerAddressRequest data = null;
-        ServerAddressRequest response = api.serviceCreate(data);
+        ServerAddressRequest response = api.skoltechOpenRAN5GIperfLoadBalancer010ServiceCreate(data);
 
         // TODO: test validations
     }
@@ -73,9 +88,9 @@ public class ServiceApiTest {
      *          if the Api call fails
      */
     @Test
-    public void serviceDeleteTest() throws Exception {
+    public void skoltechOpenRAN5GIperfLoadBalancer010ServiceDeleteTest() throws Exception {
         ServerAddressRequest data = null;
-        ServerAddressRequest response = api.serviceDelete(data);
+        ServerAddressRequest response = api.skoltechOpenRAN5GIperfLoadBalancer010ServiceDelete(data);
 
         // TODO: test validations
     }
