@@ -74,21 +74,20 @@ Please follow the [installation](#installation) instruction and execute the foll
 import io.swagger.client.*;
 import io.swagger.client.auth.*;
 import io.swagger.client.model.*;
-import io.swagger.client.api.ServiceApi;
+import io.swagger.client.api.PingApi;
 
 import java.io.File;
 import java.util.*;
 
-public class ServiceApiExample {
+public class PingApiExample {
 
     public static void main(String[] args) {
         
-        ServiceApi apiInstance = new ServiceApi();
+        PingApi apiInstance = new PingApi();
         try {
-            ServerAddressResponse result = apiInstance.serviceAcquireCreate();
-            System.out.println(result);
+            apiInstance.pingList();
         } catch (ApiException e) {
-            System.err.println("Exception when calling ServiceApi#serviceAcquireCreate");
+            System.err.println("Exception when calling PingApi#pingList");
             e.printStackTrace();
         }
     }
@@ -102,6 +101,7 @@ All URIs are relative to *https://localhost/Skoltech_OpenRAN_5G/iperf_load_balan
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
+*PingApi* | [**pingList**](docs/PingApi.md#pingList) | **GET** /ping/ | 
 *ServiceApi* | [**serviceAcquireCreate**](docs/ServiceApi.md#serviceAcquireCreate) | **POST** /service/acquire/ | 
 *ServiceApi* | [**serviceCreate**](docs/ServiceApi.md#serviceCreate) | **POST** /service/ | 
 *ServiceApi* | [**serviceDelete**](docs/ServiceApi.md#serviceDelete) | **DELETE** /service/ | 
