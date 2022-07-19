@@ -26,11 +26,6 @@ jobs:
       - name: Setup Android NDK
         run: yes | "$ANDROID_HOME/tools/bin/sdkmanager" "ndk;19.2.5345600"
 
-      - name: Patch balancer API
-        run: |
-          cd balancerApi
-          git apply ../balancerApi.patch
-
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
