@@ -12,6 +12,7 @@ RUN sh -c 'yes | apt-get install gcc python3.8 python3-pip'
 RUN ["python3.8", "-m", "pip", "install", "--upgrade", "pip"]
 RUN ["pip", "install", "pipenv"]
 RUN ["pipenv", "install"]
+RUN ["apt-get", "install", "curl", "-y"]
 
-CMD ["python", "manage.py", "migrate"]
-CMD ["pipenv", "run", "gunicorn", "balancer.wsgi", "-b", ":8080"]
+
+CMD /bin/bash -c "sleep 15 | pipenv run python manage.py migrate | pipenv run gunicorn balancer.wsgi -b :8080"
