@@ -6,14 +6,12 @@ jobs:
   make-migrations:
     runs-on: ubuntu-latest
     env:
-      SECRET_KEY: 123
-      DEBUG: "True"
-      SUPPORT_EMAIL: "a@mail.com"
-      DB_NAME: ${{secrets.DB_NAME}}
-      DB_USER: ${{secrets.DB_USER}}
-      DB_PASSWORD: ${{secrets.DB_PASSWORD}}
-      DB_HOST: ${{secrets.DB_HOST}}
-      DB_PORT: ${{secrets.DB_PORT}}
+      SECRET_KEY: test
+      DB_NAME: test
+      DB_USER: test
+      DB_PASSWORD: test
+      DB_HOST: test
+      DB_PORT: test
     defaults:
       run:
         working-directory: ./balancer
@@ -29,3 +27,6 @@ jobs:
        
     - name: push changes to git
       uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        commit_message: "generated migration scripts"
+        file_pattern: balancer/services/migrations 
