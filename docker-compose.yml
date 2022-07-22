@@ -7,7 +7,7 @@ services:
       POSTGRES_USER: ${DB_USER-skoltech_db_user}
       POSTGRES_PASSWORD: ${DB_PASS-skoltech_db_pass}
     ports:
-      - "5432:5432"
+      - "${DB_PORT-5432}:5432"
     healthcheck: 
         test: [ "CMD","pg_isready", "-q", "-d", "${DB_NAME-skoltech_db_name}", "-U", "${DB_USER-skoltech_db_user}" ]
         interval: 5s
@@ -23,20 +23,19 @@ services:
         postgres:
             condition: service_healthy
     healthcheck:
-        test: ["CMD", "curl","-f", "http://${YOUR_IP-185.246.154.48}:5555/Skoltech_OpenRAN_5G/iperf_load_balancer/0.1.0/ping/"]
+        test: ["CMD", "curl","-f", "http://${YOUR_IP}:5555/Skoltech_OpenRAN_5G/iperf_load_balancer/0.1.0/ping/"]
         interval: 5s
         timeout: 5s
         retries: 100
     environment:
       - SECRET_KEY=${SECRET_KEY-123}
-      - DEBUG=${DEBUG-True}
-      - ALLOWED_HOSTS=127.0.0.1,${YOUR_IP-185.246.154.48}
-      - SUPPORT_EMAIL=${SUPPORT_EMAIL-dev@5gst.ru}
+      - DEBUG=${DEBUG-False}
+      - ALLOWED_HOSTS=127.0.0.1,${YOUR_IP}
       - DB_NAME=${DB_NAME-skoltech_db_name}
       - DB_USER=${DB_USER-skoltech_db_user}
       - DB_PASSWORD=${DB_PASS-skoltech_db_pass}
-      - DB_HOST=${YOUR_IP-185.246.154.48}
-      - DB_PORT=5432
+      - DB_HOST=${YOUR_IP}
+      - DB_PORT=${DB_PORT-5432}
     ports:
       - "${BALANCER_PORT-5555}:8080"
       
@@ -49,14 +48,14 @@ services:
         balancer:
             condition: service_healthy
     environment:
-      -  ALLOWED_HOSTS=127.0.0.1,${YOUR_IP-185.246.154.48}
-      -  BALANCER_ADDRESS=${YOUR_IP-185.246.154.48}:${BALANCER_PORT-5555}
+      -  ALLOWED_HOSTS=127.0.0.1,${YOUR_IP}
+      -  BALANCER_ADDRESS=${YOUR_IP}:${BALANCER_PORT-5555}
       -  BALANCER_BASE_URL=/Skoltech_OpenRAN_5G/iperf_load_balancer/0.1.0
-      -  CONNECTING_TIMEOUT=30
-      -  DEBUG=${DEBUG-True}
+      -  CONNECTING_TIMEOUT=${CONNECTION_TIMEOUT-30}
+      -  DEBUG=${DEBUG-False}
       -  IPERF_PORT=${IPERF_PORT-5005}
       -  SECRET_KEY=${SECRET_KEY-123}
-      -  SERVICE_IP_ADDRESS=${YOUR_IP-185.246.154.48}
+      -  SERVICE_IP_ADDRESS=${YOUR_IP}
       -  SERVICE_PORT=${SERVICE_PORT-5004}
     ports:
       -  "${SERVICE_PORT-5004}:5000"
