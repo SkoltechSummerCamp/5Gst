@@ -1,12 +1,12 @@
-import os
-import shlex
 import argparse
 import datetime
+import os
+import shlex
 import subprocess
 import sys
-from typing import IO
 from io import TextIOWrapper
 from threading import Thread
+from typing import IO
 
 
 class IperfWrapper:
