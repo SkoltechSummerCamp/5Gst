@@ -1,3 +1,4 @@
+import logging
 import signal
 import sys
 from threading import Thread, Event, RLock
@@ -7,6 +8,8 @@ from django.conf import settings
 
 from apps.logic.balancer_communicator import balancer_communicator
 from apps.logic.iperf_wrapper import iperf
+
+logger = logging.getLogger(__name__)
 
 
 class Watchdog(Thread):
@@ -46,22 +49,22 @@ class BalancerCommunicationWatchdogService:
     def start(self, stop_timeout_seconds: float = settings.WATCHDOG_STOP_TIMEOUT_SECONDS):
         with self._lock:
             self.stop(stop_timeout_seconds)
-            print("Starting watchdog...")
+            logger.info("Starting watchdog...")
             self._watchdog = Watchdog(self._interval_seconds, self._on_watchdog_timeout)
             self._watchdog.start()
-            print("Successfully started watchdog ")
+            logger.info("Successfully started watchdog ")
 
     def stop(self, timeout_seconds: float = settings.WATCHDOG_STOP_TIMEOUT_SECONDS):
         with self._lock:
             if self._watchdog is not None:
-                print("Stopping watchdog...")
+                logger.info("Stopping watchdog...")
                 self._watchdog.stop()
 
                 self._watchdog.join(timeout=timeout_seconds)
                 if self._watchdog.is_alive():
-                    print(f"WARN: watchdog was not stopped after {timeout_seconds} seconds")
+                    logger.error(f"Watchdog was not stopped after {timeout_seconds} seconds")
                 else:
-                    print("Successfully stopped watchdog")
+                    logger.info("Successfully stopped watchdog")
 
                 self._watchdog = None
 
@@ -72,18 +75,18 @@ class BalancerCommunicationWatchdogService:
 
     def _on_watchdog_timeout(self):
         with self._lock:
-            print("Handling watchdog timeout...")
+            logger.debug("Handling watchdog timeout...")
             if iperf.is_started:
                 iperf.stop()
             balancer_communicator.register_service()
-            print("Watchdog timeout was handled")
+            logger.debug("Watchdog timeout was handled")
 
     def _on_interruption(self, sig, frame):
         with self._lock:
-            print(f"Stopping watchdog due to signal #{sig}...")
+            logger.info(f"Stopping watchdog due to signal #{sig}...")
             self.stop()
             balancer_communicator.unregister_service()
-            print(f"Successfully handled signal #{sig}")
+            logger.info(f"Successfully handled signal #{sig}")
             sys.exit(0)
 
 

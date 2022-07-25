@@ -1,3 +1,5 @@
+import logging
+
 from django.conf import settings
 from rest_framework.decorators import api_view
 from rest_framework.request import Request
@@ -7,6 +9,8 @@ from rest_framework.status import HTTP_200_OK
 from apps.logic.balancer_communicator import balancer_communicator
 from apps.logic.iperf_wrapper import iperf
 from apps.logic.watchdog import watchdog_service
+
+logger = logging.getLogger(__name__)
 
 
 @api_view(['GET'])
@@ -18,7 +22,7 @@ def start_iperf(request: Request):
 
     status = iperf.start(port_iperf=settings.IPERF_PORT)
     if status:
-        print(f"iPerf started with parameters {iperf.iperf_parameters}")
+        logger.info(f"iPerf started with parameters {iperf.iperf_parameters}")
         return Response(data=f"iPerf started with parameters {iperf.iperf_parameters}",
                         status=HTTP_200_OK,
                         content_type="text/html")
@@ -33,7 +37,6 @@ def start_iperf(request: Request):
 
 @api_view(['GET'])
 def stop_iperf(request: Request):
-
     if iperf.is_started:
         status = iperf.stop()
         balancer_communicator.register_service()

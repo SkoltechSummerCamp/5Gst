@@ -1,3 +1,4 @@
+import logging
 import os
 
 from django.apps import AppConfig
@@ -5,6 +6,8 @@ from django.core.management.commands import diffsettings
 from django.utils.autoreload import DJANGO_AUTORELOAD_ENV
 
 from apps.logic.watchdog import watchdog_service
+
+logger = logging.getLogger(__name__)
 
 
 class MyAppConfig(AppConfig):
@@ -16,9 +19,15 @@ class MyAppConfig(AppConfig):
             watchdog_service.start()
 
     def print_env(self):
-        print("Django settings:")
-        print(diffsettings.Command().handle(output='unified', all=True, default=None))
-        print()
-        print("Environment variables:")
-        for key, value in sorted(os.environ.items()):
-            print(f"{key}: {value}")
+        django_settings = diffsettings.Command().handle(output='unified', all=True, default=None)
+        environment_variables = [f"{key}: {value}" for key, value in sorted(os.environ.items())]
+        environment_variables = os.linesep.join(environment_variables)
+
+        message = f'''
+Django settings:
+{django_settings}
+
+Environment variables:
+{environment_variables}
+'''
+        logger.debug(message)

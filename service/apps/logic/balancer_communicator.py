@@ -1,8 +1,12 @@
+import logging
+
 from django.conf import settings
 
 import swagger_client
 from swagger_client.configuration import Configuration
 from swagger_client.rest import ApiException
+
+logger = logging.getLogger(__name__)
 
 
 class BalancerCommunicator:
@@ -19,7 +23,7 @@ class BalancerCommunicator:
         try:
             self.api_instance.register_service(data=body)
         except ApiException as e:
-            print("Exception when calling BalancerApi->register_service: %s\n" % e)
+            logger.error("Exception when calling BalancerApi->register_service", exc_info=e)
 
     def unregister_service(self):
         body = swagger_client.ServerAddressRequest(ip=settings.SERVICE_IP_ADDRESS,
@@ -28,7 +32,7 @@ class BalancerCommunicator:
         try:
             self.api_instance.unregister_service(data=body)
         except ApiException as e:
-            print("Exception when calling BalancerApi->unregister_service: %s\n" % e)
+            logger.error("Exception when calling BalancerApi->unregister_service", exc_info=e)
 
 
 balancer_communicator = BalancerCommunicator()
