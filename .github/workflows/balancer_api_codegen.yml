@@ -94,6 +94,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          token: ${{secrets.PERSONAL_ACCESS_TOKEN_GITHUB }}
 
       - name: Clear previously generated code
         run: |

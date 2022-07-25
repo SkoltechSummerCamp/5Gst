@@ -17,6 +17,8 @@ jobs:
         working-directory: ./balancer
     steps:
     - uses: actions/checkout@v2
+      with:
+        token: ${{secrets.PERSONAL_ACCESS_TOKEN_GITHUB }}
     - name: make migrations
       run: |
        python -m pip install --upgrade pip
