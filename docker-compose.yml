@@ -1,59 +1,63 @@
 services:
   postgres:
-    image: postgres:latest
+    image: postgres:${POSTGRES_VERSION-14.4}
     container_name: postgres
     environment:
-      POSTGRES_DB: "skoltech_db_name"
-      POSTGRES_USER: "skoltech_db_user"
-      POSTGRES_PASSWORD: "skoltech_db_pass"
+      POSTGRES_DB: ${DB_NAME-skoltech_db_name}
+      POSTGRES_USER: ${DB_USER-skoltech_db_user}
+      POSTGRES_PASSWORD: ${DB_PASS-skoltech_db_pass}
     ports:
-      - "5432:5432"
-    healthcheck:
-        test: [ "CMD", "pg_isready", "-q", "-d", "skoltech_db_name", "-U", "skoltech_db_user" ]
+      - "${DB_PORT-5432}:5432"
+    healthcheck: 
+        test: [ "CMD","pg_isready", "-q", "-d", "${DB_NAME-skoltech_db_name}", "-U", "${DB_USER-skoltech_db_user}" ]
         interval: 5s
         timeout: 5s
-        retries: 24
+        retries: 100
 
+
+      
   balancer:
-    image: skoltech/speedtest-balancer:0.3.0.30
+    image: skoltech/speedtest-balancer:${BALANCER_VERSION-0.3.0.59}
     container_name: balancer
     depends_on:
         postgres:
             condition: service_healthy
     healthcheck:
-        test: [ "CMD",  "curl","http://${YOUR_IP}:8080/Skoltech_OpenRAN_5G/iperf_load_balancer/0.1.0/ping/"]
+        test: ["CMD", "curl","-f", "http://${YOUR_IP}:5555/Skoltech_OpenRAN_5G/iperf_load_balancer/0.1.0/ping/"]
         interval: 5s
         timeout: 5s
-        retries: 24
+        retries: 100
     environment:
-      - SECRET_KEY=${SECRET_KEY}
-      - DEBUG= ${DEBUG}
+      - SECRET_KEY=${SECRET_KEY-123}
+      - DEBUG=${DEBUG-False}
       - ALLOWED_HOSTS=127.0.0.1,${YOUR_IP}
-      - DB_NAME=skoltech_db_name
-      - DB_USER=skoltech_db_user
-      - DB_PASSWORD=skoltech_db_pass
+      - DB_NAME=${DB_NAME-skoltech_db_name}
+      - DB_USER=${DB_USER-skoltech_db_user}
+      - DB_PASSWORD=${DB_PASS-skoltech_db_pass}
       - DB_HOST=${YOUR_IP}
-      - DB_PORT=5432
+      - DB_PORT=${DB_PORT-5432}
     ports:
-      - "5555:8080"
+      - "${BALANCER_PORT-5555}:8080"
+      
 
 
-  service_1: 
-    image: skoltech/speedtest-service:0.3.0.30
+  service: 
+    image: skoltech/speedtest-service:${SERVICE_VERSION-0.3.0.59}
     container_name: serv1 
     depends_on:
         balancer:
             condition: service_healthy
     environment:
       -  ALLOWED_HOSTS=127.0.0.1,${YOUR_IP}
-      -  BALANCER_ADDRESS=http://${YOUR_IP}:5555
-      -  CONNECTING_TIMEOUT=30
-      -  DEBUG=${DEBUG}
-      -  IPERF_PORT=5005
-      -  SECRET_KEY=${SECRET_KEY}
+      -  BALANCER_ADDRESS=${YOUR_IP}:${BALANCER_PORT-5555}
+      -  BALANCER_BASE_URL=/Skoltech_OpenRAN_5G/iperf_load_balancer/0.1.0
+      -  CONNECTING_TIMEOUT=${CONNECTION_TIMEOUT-30}
+      -  DEBUG=${DEBUG-False}
+      -  IPERF_PORT=${IPERF_PORT-5005}
+      -  SECRET_KEY=${SECRET_KEY-123}
       -  SERVICE_IP_ADDRESS=${YOUR_IP}
-      -  SERVICE_PORT=5004
+      -  SERVICE_PORT=${SERVICE_PORT-5004}
     ports:
-      -  "5004:5000"
-      -  "5005:5005"
-      -  "5005:5005/udp"
+      -  "${SERVICE_PORT-5004}:5000"
+      -  "${IPERF_PORT-5005}:${IPERF_PORT-5005}"
+      -  "${IPERF_PORT-5005}:${IPERF_PORT-5005}/udp"

@@ -1,0 +1,31 @@
+name: "[Balancer] make and push migrations"
+
+on: [push, pull_request]
+
+jobs:
+  make-migrations:
+    runs-on: ubuntu-latest
+    env:
+      SECRET_KEY: test
+      DB_NAME: test
+      DB_USER: test
+      DB_PASSWORD: test
+      DB_HOST: test
+      DB_PORT: test
+    defaults:
+      run:
+        working-directory: ./balancer
+    steps:
+    - uses: actions/checkout@v2
+    - name: make migrations
+      run: |
+       python -m pip install --upgrade pip
+       pip install pipenv
+       pipenv install
+       pipenv run python manage.py makemigrations
+       
+    - name: push changes to git
+      uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        commit_message: "generated migration scripts"
+        file_pattern: balancer/services/migrations 
