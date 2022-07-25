@@ -16,24 +16,6 @@ jobs:
       run:
         working-directory: ./balancer
     steps:
-    - uses: actions/checkout@v2name: "[Balancer] make and push migrations"
-
-on: [push, pull_request]
-
-jobs:
-  make-migrations:
-    runs-on: ubuntu-latest
-    env:
-      SECRET_KEY: test
-      DB_NAME: test
-      DB_USER: test
-      DB_PASSWORD: test
-      DB_HOST: test
-      DB_PORT: test
-    defaults:
-      run:
-        working-directory: ./balancer
-    steps:
     - uses: actions/checkout@v2
       with:
         token: ${{secrets.PERSONAL_ACCESS_TOKEN }}
