@@ -86,4 +86,7 @@ jobs:
           name: speedtest-service-${{ env.version }}.${{ github.run_number }}
           path: service/gh-artifacts
       - name: build image
-        run: docker build --tag new_service_image .
+        run: |
+          git submodule init
+          git submodule update
+          docker build . --tag new_service_image
