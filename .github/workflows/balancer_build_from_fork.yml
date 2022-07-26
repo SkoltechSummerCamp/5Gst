@@ -1,11 +1,11 @@
-ame: "[Balancer] build image from fork"
+name: "[Balancer] build docker image"
 
 on: 
   pull_request:
     branches: [main, develop]
 
 jobs:
-  build_from_fork:
+  build:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -14,6 +14,6 @@ jobs:
       - uses: actions/checkout@v2
         with:
           token: ${{secrets.PERSONAL_ACCESS_TOKEN_GITHUB }}
-      - name: build from fork
-        run: docker build --tag new_balancer_image .
+      - name: build docker from
+        run: docker build . --tag new_balancer_image
       
