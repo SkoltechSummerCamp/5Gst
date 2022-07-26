@@ -3,7 +3,7 @@
   "java8": true,
   "checkDuplicatedModelName": true,
   "dateLibrary": "java8",
-  "apiPackage": "ru.scoltech.openran.speedtest.api.balancer",
-  "modelPackage": "ru.scoltech.openran.speedtest.api.balancer",
-  "invokerPackage": "ru.scoltech.openran.speedtest.api.balancer"
+  "apiPackage": "ru.scoltech.openran.speedtest.client.balancer.api",
+  "modelPackage": "ru.scoltech.openran.speedtest.client.balancer.model",
+  "invokerPackage": "ru.scoltech.openran.speedtest.client.balancer"
 }

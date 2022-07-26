@@ -17,6 +17,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      # TODO fix service so it can generate swagger schema without iperf built
+      - name: Iperf compilation
+        run: ./scripts/build-iperf.sh
 
       - name: Install pip, pipenv and packages from Pipfile
         run: |

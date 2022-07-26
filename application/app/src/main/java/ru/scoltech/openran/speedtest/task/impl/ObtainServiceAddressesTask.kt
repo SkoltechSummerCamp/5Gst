@@ -1,7 +1,7 @@
 package ru.scoltech.openran.speedtest.task.impl
 
 import com.squareup.okhttp.HttpUrl
-import io.swagger.client.model.ServerAddressResponse
+import ru.scoltech.openran.speedtest.client.balancer.model.ServerAddressResponse
 import ru.scoltech.openran.speedtest.task.FatalException
 import ru.scoltech.openran.speedtest.task.Task
 import ru.scoltech.openran.speedtest.util.Promise
