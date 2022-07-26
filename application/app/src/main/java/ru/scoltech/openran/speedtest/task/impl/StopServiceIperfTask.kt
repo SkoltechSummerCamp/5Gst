@@ -1,7 +1,7 @@
 package ru.scoltech.openran.speedtest.task.impl
 
-import io.swagger.client.model.ServerAddressResponse
 import ru.scoltech.openran.speedtest.backend.ServiceApi
+import ru.scoltech.openran.speedtest.client.balancer.model.ServerAddressResponse
 
 data class StopServiceIperfTask(
     private val balancerApiBuilder: BalancerApiBuilder
