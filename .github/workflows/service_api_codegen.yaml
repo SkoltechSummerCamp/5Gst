@@ -1,4 +1,4 @@
-name: "[Balancer] API client generation using swagger"
+name: "[Service] API client generation using swagger"
 
 on: [push, pull_request]
 
@@ -6,15 +6,14 @@ jobs:
   generate-swagger:
     runs-on: ubuntu-latest
     env:
+      SERVICE_IP_ADDRESS: localhost
+      BALANCER_ADDRESS: localhost:5555
+      IPERF_PORT: 5001
+      SERVICE_PORT: 5000
       SECRET_KEY: test
-      DB_NAME: test
-      DB_USER: test
-      DB_PASSWORD: test
-      DB_HOST: test
-      DB_PORT: test
     defaults:
       run:
-        working-directory: ./balancer
+        working-directory: ./service
 
     steps:
       - uses: actions/checkout@v3
@@ -33,7 +32,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: swagger-schema
-          path: balancer/swagger.yaml
+          path: service/swagger.yaml
 
   generate-code:
     runs-on: ubuntu-latest
@@ -41,7 +40,7 @@ jobs:
     container: swaggerapi/swagger-codegen-cli:2.4.27
     defaults:
       run:
-        working-directory: ./balancer
+        working-directory: ./service
 
     steps:
       - uses: actions/checkout@v3
@@ -50,7 +49,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: swagger-schema
-          path: balancer
+          path: service
 
       - name: Clear AUTOBUILD directory
         run: rm -rf ../AUTOBUILD
@@ -63,8 +62,8 @@ jobs:
           generate
           -i swagger.yaml
           -l python
-          -o ../AUTOBUILD/service2BalancerClient/
-          -c ../service/.swagger-codegen-config/balancerApi.json
+          -o ../AUTOBUILD/balancer2ServiceClient/
+          -c ../balancer/.swagger-codegen-config/serviceApi.json
 
       - name: Generate client for application
         run: >
@@ -74,8 +73,8 @@ jobs:
           generate
           -i swagger.yaml
           -l java
-          -o ../AUTOBUILD/application2BalancerClient/
-          -c ../application/.swagger-codegen-config/balancerApi.json
+          -o ../AUTOBUILD/application2ServiceClient/
+          -c ../application/.swagger-codegen-config/serviceApi.json
 
       # Swagger codegen container has invalid git installed,
       # so we need another container to push changes
@@ -90,7 +89,7 @@ jobs:
     needs: generate-code
     defaults:
       run:
-        working-directory: ./balancer
+        working-directory: ./service
 
     steps:
       - uses: actions/checkout@v3
@@ -100,8 +99,8 @@ jobs:
       - name: Clear previously generated code
         run: |
           rm -rf ../AUTOBUILD
-          rm -rf ../application/balancerApi
-          rm -rf ../service/balancer_api
+          rm -rf ../application/serviceApi
+          rm -rf ../balancer/service_api
 
       - name: Download generated code
         uses: actions/download-artifact@v2
@@ -111,12 +110,13 @@ jobs:
 
       - name: Move generated code to projects
         run: |
-          cp -r ../AUTOBUILD/application2BalancerClient/ ../application/balancerApi
-          cp -r ../AUTOBUILD/service2BalancerClient/balancer_api/ ../service/balancer_api
-          cd ../application
-          git apply ./.swagger-codegen-config/balancerApi.patch
+          cp -r ../AUTOBUILD/application2ServiceClient/ ../application/serviceApi
+          cp -r ../AUTOBUILD/balancer2ServiceClient/service_api/ ../balancer/service_api
+#          TODO
+#          cd ../application
+#          git apply ./.swagger-codegen-config/serviceApi.patch
 
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
-            commit_message: 'Generate balancer client using swagger-codegen'
-            file_pattern: application/balancerApi service/balancer_api
+            commit_message: 'Generate service client using swagger-codegen'
+            file_pattern: application/serviceApi balancer/service_api

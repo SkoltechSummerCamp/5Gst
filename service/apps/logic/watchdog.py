@@ -15,8 +15,8 @@ logger = logging.getLogger(__name__)
 
 
 class Watchdog(Thread):
-    def __init__(self, interval, function, args=None, kwargs=None):
-        super(Watchdog, self).__init__()
+    def __init__(self, interval, function, args=None, kwargs=None, *thread_args, **thread_kwargs):
+        super(Watchdog, self).__init__(*thread_args, **thread_kwargs)
         self._interval = interval
         self._function = function
         self._args = args if args is not None else []
@@ -52,7 +52,7 @@ class BalancerCommunicationWatchdogService:
         with self._lock:
             self.stop(stop_timeout_seconds)
             logger.info("Starting watchdog...")
-            self._watchdog = Watchdog(self._interval_seconds, self._on_watchdog_timeout)
+            self._watchdog = Watchdog(self._interval_seconds, self._on_watchdog_timeout, daemon=True)
             self._watchdog.start()
             logger.info("Successfully started watchdog ")
 
