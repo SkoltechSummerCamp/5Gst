@@ -1,6 +1,6 @@
 name: "[Balancer] API client generation using swagger"
 
-on: [push, pull_request]
+on: push
 
 jobs:
   generate-swagger:
