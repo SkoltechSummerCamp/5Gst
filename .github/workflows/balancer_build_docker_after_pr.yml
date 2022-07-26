@@ -12,8 +12,7 @@ jobs:
         working-directory: ./balancer
     steps:
       - uses: actions/checkout@v2
-        with:
-          token: ${{secrets.PERSONAL_ACCESS_TOKEN_GITHUB }}
+
       - name: build docker image
         run: docker build . --tag new_balancer_image
       
