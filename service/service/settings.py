@@ -29,9 +29,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = (os.environ['DEBUG'] == 'True')
+DEBUG = (os.getenv('DEBUG', 'False') == 'True')
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '127.0.0.1').split(',')
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
 
 # Application definition
 
@@ -90,6 +90,13 @@ LOGGING = {
     'handlers': {
         'console': {
             'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+    },
+    'formatters': {
+        'verbose': {
+            'format': '{name} [{levelname}] [{asctime}] [process {process:d}] [thread {thread:d}] {message}',
+            'style': '{',
         },
     },
     'root': {
@@ -126,4 +133,5 @@ BALANCER_ADDRESS = os.getenv('BALANCER_ADDRESS')
 IPERF_PORT = int(os.getenv('IPERF_PORT'))
 SERVICE_PORT = int(os.getenv('SERVICE_PORT'))
 CONNECTING_TIMEOUT = int(os.getenv('CONNECTING_TIMEOUT'))
+WATCHDOG_STOP_TIMEOUT_SECONDS = float(os.getenv('WATCHDOG_STOP_TIMEOUT_SECONDS', '1.0'))
 

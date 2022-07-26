@@ -1,12 +1,15 @@
-import os
-import shlex
 import argparse
 import datetime
+import logging
+import os
+import shlex
 import subprocess
 import sys
-from typing import IO
 from io import TextIOWrapper
 from threading import Thread
+from typing import IO
+
+logger = logging.getLogger(__name__)
 
 
 class IperfWrapper:
@@ -25,16 +28,16 @@ class IperfWrapper:
         iperf_version_process.wait()
 
     def __logger_thread(self, stream: IO, file: TextIOWrapper):
-        def logger(stream: IO, file: TextIOWrapper):
+        def handle_logs(stream: IO, file: TextIOWrapper):
             for stdout_line in iter(stream.readline, ""):
                 file.writelines(stdout_line)
                 file.flush()
                 if self.verbose:
-                    print(stdout_line.replace('\n', ""))
+                    logger.debug(stdout_line.replace('\n', ""))
             stream.close()
             file.close()
 
-        t = Thread(target=logger, args=(stream, file))
+        t = Thread(target=handle_logs, args=(stream, file))
         t.daemon = True
         t.start()
         return t
@@ -44,8 +47,8 @@ class IperfWrapper:
         if not os.path.exists(logs_dir):
             try:
                 os.mkdir(logs_dir)
-            except OSError:
-                print(f"Creation of the directory {logs_dir} failed")
+            except OSError as e:
+                logger.error(f"Creation of the directory {logs_dir} failed", exc_info=e)
 
         curr_datetime = datetime.datetime.now().strftime("%Y-%m-%d_%I-%M-%S")
 
@@ -61,7 +64,7 @@ class IperfWrapper:
             t.join()
 
         self.is_started = False
-        print(f"iPerf stopped with status {return_code}")
+        logger.info(f"iPerf stopped with status {return_code}")
 
     def start(self, port_iperf):
         if not self.is_started:
@@ -70,7 +73,7 @@ class IperfWrapper:
             cmd = shlex.split("./iperf.elf " + '-p ' + str(port_iperf) + ' ' + self.iperf_parameters)
             self.iperf_process = subprocess.Popen(
                 cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
-            print("iPerf is started")
+            logger.info("iPerf is started")
             self.is_started = True
 
             self.iperf_waiting_thread = Thread(target=self.__waiting_thread)
@@ -113,7 +116,7 @@ if __name__ == "__main__":
     arg_parser = create_arg_parser()
     namespace = arg_parser.parse_args()
 
-    print('Params ' + namespace.parameters)
+    logger.debug('Params ' + namespace.parameters)
     iperf_wrapper = IperfWrapper(namespace.parameters, True)
     iperf_wrapper.start(namespace.port)
     try:
