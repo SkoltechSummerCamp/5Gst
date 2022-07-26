@@ -118,9 +118,8 @@ jobs:
         run: |
           cp -r ../AUTOBUILD/application2ServiceClient/ ../application/serviceApi
           cp -r ../AUTOBUILD/balancer2ServiceClient/service_api/ ../balancer/service_api
-#          TODO
-#          cd ../application
-#          git apply ./.swagger-codegen-config/serviceApi.patch
+          cd ../application
+          git apply ./.swagger-codegen-config/serviceApi.patch
 
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
