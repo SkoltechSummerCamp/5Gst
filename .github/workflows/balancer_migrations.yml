@@ -1,6 +1,6 @@
 name: "[Balancer] make and push migrations"
 
-on: [push, pull_request]
+on: push
 
 jobs:
   make-migrations:
