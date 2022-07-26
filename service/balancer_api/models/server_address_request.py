@@ -16,7 +16,7 @@ import re  # noqa: F401
 
 import six
 
-from swagger_client.configuration import Configuration
+from balancer_api.configuration import Configuration
 
 
 class ServerAddressRequest(object):

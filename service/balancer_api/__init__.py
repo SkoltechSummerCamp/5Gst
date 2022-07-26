@@ -16,11 +16,11 @@
 from __future__ import absolute_import
 
 # import apis into sdk package
-from swagger_client.api.balancer_api import BalancerApi
+from balancer_api.api.balancer_api import BalancerApi
 
 # import ApiClient
-from swagger_client.api_client import ApiClient
-from swagger_client.configuration import Configuration
+from balancer_api.api_client import ApiClient
+from balancer_api.configuration import Configuration
 # import models into sdk package
-from swagger_client.models.server_address_request import ServerAddressRequest
-from swagger_client.models.server_address_response import ServerAddressResponse
+from balancer_api.models.server_address_request import ServerAddressRequest
+from balancer_api.models.server_address_response import ServerAddressResponse
