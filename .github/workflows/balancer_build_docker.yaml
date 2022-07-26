@@ -3,8 +3,6 @@ name: "[Balancer] Publish docker image to Docker Hub"
 on: 
   push:
     branches: [main, develop]
-  pull_request:
-    branches: [main, develop]
 
 jobs:
   publish-to-dockerhub:
