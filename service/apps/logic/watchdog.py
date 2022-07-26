@@ -1,3 +1,4 @@
+import atexit
 import logging
 import signal
 import sys
@@ -5,6 +6,7 @@ from threading import Thread, Event, RLock
 from typing import Optional
 
 from django.conf import settings
+from urllib3.exceptions import MaxRetryError
 
 from apps.logic.balancer_communicator import balancer_communicator
 from apps.logic.iperf_wrapper import iperf
@@ -44,7 +46,7 @@ class BalancerCommunicationWatchdogService:
         self._watchdog: Optional[Watchdog] = None
         self._lock: RLock = RLock()
         self._interval_seconds = interval_seconds
-        signal.signal(signal.SIGINT, self._on_interruption)
+        atexit.register(self._stop_at_exit)
 
     def start(self, stop_timeout_seconds: float = settings.WATCHDOG_STOP_TIMEOUT_SECONDS):
         with self._lock:
@@ -81,12 +83,16 @@ class BalancerCommunicationWatchdogService:
             balancer_communicator.register_service()
             logger.debug("Watchdog timeout was handled")
 
-    def _on_interruption(self, sig, frame):
+    def _stop_at_exit(self):
         with self._lock:
-            logger.info(f"Stopping watchdog due to signal #{sig}...")
+            logger.info(f"Unregistering service due to application tear down...")
             self.stop()
-            balancer_communicator.unregister_service()
-            logger.info(f"Successfully handled signal #{sig}")
+            try:
+                balancer_communicator.unregister_service()
+            except MaxRetryError as e:
+                logger.error("Could not unregister service due to error", exc_info=e)
+            else:
+                logger.info(f"Successfully unregistered service")
             sys.exit(0)
 
 

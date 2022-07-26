@@ -15,6 +15,9 @@ import os
 from pathlib import Path
 
 from dotenv import load_dotenv
+from drf_yasg import openapi
+from drf_yasg.generators import OpenAPISchemaGenerator
+from drf_yasg.inspectors import SwaggerAutoSchema
 
 load_dotenv()
 
@@ -108,6 +111,38 @@ LOGGING = {
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [],
     'DEFAULT_PERMISSION_CLASSES': [],
+}
+
+DEFAULT_SWAGGER_TAG = os.getenv('DEFAULT_SWAGGER_TAG', 'service')
+
+
+class SpeedtestAPISchemeGenerator(OpenAPISchemaGenerator):
+    def determine_path_prefix(self, paths):
+        return ''
+
+
+class SpeedtestSwaggerAutoSchema(SwaggerAutoSchema):
+    def get_tags(self, operation_keys=None):
+        tags = self.overrides.get('tags')
+
+        if not tags:
+            tags = [DEFAULT_SWAGGER_TAG]
+
+        return tags
+
+
+SWAGGER_SETTINGS = {
+    'DEFAULT_INFO': openapi.Info(
+        title="Service API",
+        default_version='0.1.0',
+        description="Speedtest iperf service",
+        contact=openapi.Contact(email=os.getenv("SUPPORT_EMAIL", "dev@5gst.ru")),
+        license=openapi.License(name="BSD 3-Clause",
+                                url='https://raw.githubusercontent.com/SkoltechSummerCamp/5Gst/main/LICENSE'),
+    ),
+    'DEFAULT_GENERATOR_CLASS': SpeedtestAPISchemeGenerator,
+    'DEFAULT_AUTO_SCHEMA_CLASS': SpeedtestSwaggerAutoSchema,
+    'SECURITY_DEFINITIONS': {},
 }
 
 # Internationalization
