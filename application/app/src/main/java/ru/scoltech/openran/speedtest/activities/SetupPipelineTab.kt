@@ -4,32 +4,17 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.EditText
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.viewpager2.widget.ViewPager2
-import com.google.android.material.tabs.TabLayout
-import com.google.android.material.tabs.TabLayoutMediator
+import androidx.fragment.app.Fragment
 import ru.scoltech.openran.speedtest.R
-import ru.scoltech.openran.speedtest.adapter.ParentFragmentPagerAdapter
-import ru.scoltech.openran.speedtest.backend.IcmpPinger
-import ru.scoltech.openran.speedtest.customViews.HeaderView
-import java.lang.Exception
-import java.net.Inet4Address
-import java.net.NetworkInterface
 
 class SetupPipelineTab : Fragment() {
     companion object {
         private val TAG = SetupPipelineTab::class.java.simpleName
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
     }
 
     override fun onCreateView(
@@ -44,7 +29,6 @@ class SetupPipelineTab : Fragment() {
 
         val activity = requireActivity()
 
-        // get IPERF arguments
         val iperfPref = activity.getSharedPreferences(
             getString(R.string.iperfSharedPreferences), AppCompatActivity.MODE_PRIVATE
         )

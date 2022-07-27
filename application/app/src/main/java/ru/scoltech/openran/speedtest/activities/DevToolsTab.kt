@@ -1,10 +1,6 @@
 package ru.scoltech.openran.speedtest.activities
 
-import android.app.Activity
-import android.content.ContentValues.TAG
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -12,13 +8,9 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import ru.scoltech.openran.speedtest.R
-import ru.scoltech.openran.speedtest.activities.DevToolsTab.Companion.TAG
 import ru.scoltech.openran.speedtest.backend.IcmpPinger
-import ru.scoltech.openran.speedtest.customViews.HeaderView
 import java.net.Inet4Address
 import java.net.NetworkInterface
 
@@ -61,12 +53,11 @@ class DevToolsTab : Fragment() {
     }
 
     private fun init(view: View) {
-        val header = view.findViewById<HeaderView>(R.id.option_header)
-        ipInfo = view.findViewById<TextView>(R.id.ipInfo)
-        pingValue = view.findViewById<TextView>(R.id.pingValue)
-        serverIP = view.findViewById<EditText>(R.id.serverIP)
-        icmpPing = view.findViewById<Button>(R.id.icmpPingButton)
-        icmpPing!!.setOnClickListener(View.OnClickListener { view: View -> startIcmpPing() })
+        ipInfo = view.findViewById(R.id.ipInfo)
+        pingValue = view.findViewById(R.id.pingValue)
+        serverIP = view.findViewById(R.id.serverIP)
+        icmpPing = view.findViewById(R.id.icmpPingButton)
+        icmpPing!!.setOnClickListener { startIcmpPing() }
         icmpPinger = IcmpPinger()
 
 
@@ -83,14 +74,12 @@ class DevToolsTab : Fragment() {
             icmpPinger!!.start(serverIP!!.text.toString()) // TODO если указан ip на который нельзя подключиться, то приложение зависнет
                 .onSuccess { aLong: Long ->
                     requireActivity().runOnUiThread { pingValue!!.text = aLong.toString() }
-                    null
                 }
                 .onError { e: Exception ->
                     onPingError(e)
-                    null
                 }.start()
             pingValue!!.text = "Err"
-            icmpPing!!.setOnClickListener { view: View? -> stopIcmpPing() }
+            icmpPing!!.setOnClickListener { stopIcmpPing() }
         }
 
         private fun stopIcmpPing() {
@@ -115,7 +104,6 @@ class DevToolsTab : Fragment() {
             } catch (ignored: Exception) {
             }
             ipInfo!!.text = ip
-            //        Log.d("device ip", ip);
         }
 
 
