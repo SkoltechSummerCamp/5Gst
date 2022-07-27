@@ -6,7 +6,6 @@ on:
     
 jobs:
 
-
   balancer-generate-swagger:
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
