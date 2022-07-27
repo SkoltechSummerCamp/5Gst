@@ -21,8 +21,8 @@ Acquires service for further iperf tests
 ### Example
 ```java
 // Import classes:
-//import ru.scoltech.openran.speedtest.client.balancer.ApiException;
-//import ru.scoltech.openran.speedtest.client.balancer.api.BalancerApi;
+//import ru.scoltech.openran.speedtest.client.service.ApiException;
+//import ru.scoltech.openran.speedtest.client.service.api.BalancerApi;
 
 
 BalancerApi apiInstance = new BalancerApi();
@@ -62,8 +62,8 @@ Check that server is up
 ### Example
 ```java
 // Import classes:
-//import ru.scoltech.openran.speedtest.client.balancer.ApiException;
-//import ru.scoltech.openran.speedtest.client.balancer.api.BalancerApi;
+//import ru.scoltech.openran.speedtest.client.service.ApiException;
+//import ru.scoltech.openran.speedtest.client.service.api.BalancerApi;
 
 
 BalancerApi apiInstance = new BalancerApi();
@@ -102,8 +102,8 @@ Register caller as service
 ### Example
 ```java
 // Import classes:
-//import ru.scoltech.openran.speedtest.client.balancer.ApiException;
-//import ru.scoltech.openran.speedtest.client.balancer.api.BalancerApi;
+//import ru.scoltech.openran.speedtest.client.service.ApiException;
+//import ru.scoltech.openran.speedtest.client.service.api.BalancerApi;
 
 
 BalancerApi apiInstance = new BalancerApi();
@@ -147,8 +147,8 @@ Unregister caller as service
 ### Example
 ```java
 // Import classes:
-//import ru.scoltech.openran.speedtest.client.balancer.ApiException;
-//import ru.scoltech.openran.speedtest.client.balancer.api.BalancerApi;
+//import ru.scoltech.openran.speedtest.client.service.ApiException;
+//import ru.scoltech.openran.speedtest.client.service.api.BalancerApi;
 
 
 BalancerApi apiInstance = new BalancerApi();

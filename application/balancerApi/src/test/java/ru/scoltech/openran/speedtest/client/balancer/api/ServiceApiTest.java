@@ -11,7 +11,7 @@
  */
 
 
-package ru.scoltech.openran.speedtest.client.service.api;
+package ru.scoltech.openran.speedtest.client.balancer.api;
 
 import org.junit.Test;
 import org.junit.Ignore;

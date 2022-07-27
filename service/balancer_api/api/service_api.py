@@ -18,7 +18,7 @@ import re  # noqa: F401
 # python 2 and python 3 compatibility library
 import six
 
-from service_api.api_client import ApiClient
+from balancer_api.api_client import ApiClient
 
 
 class ServiceApi(object):

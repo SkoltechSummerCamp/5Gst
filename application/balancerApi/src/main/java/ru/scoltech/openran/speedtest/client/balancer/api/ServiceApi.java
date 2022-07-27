@@ -11,16 +11,16 @@
  */
 
 
-package ru.scoltech.openran.speedtest.client.service.api;
+package ru.scoltech.openran.speedtest.client.balancer.api;
 
-import ru.scoltech.openran.speedtest.client.service.ApiCallback;
-import ru.scoltech.openran.speedtest.client.service.ApiClient;
-import ru.scoltech.openran.speedtest.client.service.ApiException;
-import ru.scoltech.openran.speedtest.client.service.ApiResponse;
-import ru.scoltech.openran.speedtest.client.service.Configuration;
-import ru.scoltech.openran.speedtest.client.service.Pair;
-import ru.scoltech.openran.speedtest.client.service.ProgressRequestBody;
-import ru.scoltech.openran.speedtest.client.service.ProgressResponseBody;
+import ru.scoltech.openran.speedtest.client.balancer.ApiCallback;
+import ru.scoltech.openran.speedtest.client.balancer.ApiClient;
+import ru.scoltech.openran.speedtest.client.balancer.ApiException;
+import ru.scoltech.openran.speedtest.client.balancer.ApiResponse;
+import ru.scoltech.openran.speedtest.client.balancer.Configuration;
+import ru.scoltech.openran.speedtest.client.balancer.Pair;
+import ru.scoltech.openran.speedtest.client.balancer.ProgressRequestBody;
+import ru.scoltech.openran.speedtest.client.balancer.ProgressResponseBody;
 
 import com.google.gson.reflect.TypeToken;
 

@@ -11,10 +11,10 @@
  */
 
 
-package ru.scoltech.openran.speedtest.client.balancer.api;
+package ru.scoltech.openran.speedtest.client.service.api;
 
-import ru.scoltech.openran.speedtest.client.balancer.model.ServerAddressRequest;
-import ru.scoltech.openran.speedtest.client.balancer.model.ServerAddressResponse;
+import ru.scoltech.openran.speedtest.client.service.model.ServerAddressRequest;
+import ru.scoltech.openran.speedtest.client.service.model.ServerAddressResponse;
 import org.junit.Test;
 import org.junit.Ignore;
 

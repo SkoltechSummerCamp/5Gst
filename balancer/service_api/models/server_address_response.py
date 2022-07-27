@@ -16,7 +16,7 @@ import re  # noqa: F401
 
 import six
 
-from balancer_api.configuration import Configuration
+from service_api.configuration import Configuration
 
 
 class ServerAddressResponse(object):

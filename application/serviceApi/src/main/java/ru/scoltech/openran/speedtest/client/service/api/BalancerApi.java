@@ -11,24 +11,24 @@
  */
 
 
-package ru.scoltech.openran.speedtest.client.balancer.api;
+package ru.scoltech.openran.speedtest.client.service.api;
 
-import ru.scoltech.openran.speedtest.client.balancer.ApiCallback;
-import ru.scoltech.openran.speedtest.client.balancer.ApiClient;
-import ru.scoltech.openran.speedtest.client.balancer.ApiException;
-import ru.scoltech.openran.speedtest.client.balancer.ApiResponse;
-import ru.scoltech.openran.speedtest.client.balancer.Configuration;
-import ru.scoltech.openran.speedtest.client.balancer.Pair;
-import ru.scoltech.openran.speedtest.client.balancer.ProgressRequestBody;
-import ru.scoltech.openran.speedtest.client.balancer.ProgressResponseBody;
+import ru.scoltech.openran.speedtest.client.service.ApiCallback;
+import ru.scoltech.openran.speedtest.client.service.ApiClient;
+import ru.scoltech.openran.speedtest.client.service.ApiException;
+import ru.scoltech.openran.speedtest.client.service.ApiResponse;
+import ru.scoltech.openran.speedtest.client.service.Configuration;
+import ru.scoltech.openran.speedtest.client.service.Pair;
+import ru.scoltech.openran.speedtest.client.service.ProgressRequestBody;
+import ru.scoltech.openran.speedtest.client.service.ProgressResponseBody;
 
 import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
 
 
-import ru.scoltech.openran.speedtest.client.balancer.model.ServerAddressRequest;
-import ru.scoltech.openran.speedtest.client.balancer.model.ServerAddressResponse;
+import ru.scoltech.openran.speedtest.client.service.model.ServerAddressRequest;
+import ru.scoltech.openran.speedtest.client.service.model.ServerAddressResponse;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;

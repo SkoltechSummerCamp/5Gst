@@ -1,6 +1,6 @@
 /*
- * Service API
- * Speedtest iperf service
+ * Balancer API
+ * Speedtest load balancer
  *
  * OpenAPI spec version: 0.1.0
  * Contact: dev@5gst.ru

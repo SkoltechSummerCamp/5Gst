@@ -11,7 +11,7 @@
  */
 
 
-package ru.scoltech.openran.speedtest.client.balancer.model;
+package ru.scoltech.openran.speedtest.client.service.model;
 
 import java.util.Objects;
 import java.util.Arrays;

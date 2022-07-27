@@ -19,8 +19,8 @@ Method | HTTP request | Description
 ### Example
 ```java
 // Import classes:
-//import ru.scoltech.openran.speedtest.client.service.ApiException;
-//import ru.scoltech.openran.speedtest.client.service.api.ServiceApi;
+//import ru.scoltech.openran.speedtest.client.balancer.ApiException;
+//import ru.scoltech.openran.speedtest.client.balancer.api.ServiceApi;
 
 
 ServiceApi apiInstance = new ServiceApi();
@@ -63,8 +63,8 @@ No authorization required
 ### Example
 ```java
 // Import classes:
-//import ru.scoltech.openran.speedtest.client.service.ApiException;
-//import ru.scoltech.openran.speedtest.client.service.api.ServiceApi;
+//import ru.scoltech.openran.speedtest.client.balancer.ApiException;
+//import ru.scoltech.openran.speedtest.client.balancer.api.ServiceApi;
 
 
 ServiceApi apiInstance = new ServiceApi();
