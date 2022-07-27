@@ -98,8 +98,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-        with:
-          token: ${{secrets.PERSONAL_ACCESS_TOKEN_GITHUB }}
 
       - name: Clear previously generated code
         run: |
@@ -139,8 +137,6 @@ jobs:
         working-directory: ./balancer
     steps:
     - uses: actions/checkout@v2
-      with:
-        token: ${{secrets.PERSONAL_ACCESS_TOKEN_GITHUB }}
     - name: make migrations
       run: |
        python -m pip install --upgrade pip
@@ -327,7 +323,6 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: ${{ secrets.RELEASE_KEYSTORE_GIT_REPOSITORY }}
-          token: ${{ secrets.PERSONAL_ACCESS_TOKEN_GITHUB }}
           path: application/release-keystore
 
       - name: Move signing key
@@ -457,8 +452,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-        with:
-          token: ${{secrets.PERSONAL_ACCESS_TOKEN_GITHUB }}
 
       - name: Clear previously generated code
         run: |
