@@ -74,4 +74,6 @@
     <string name="user_immutable_down_serv_args">-u</string>
     <string name="user_immutable_up_dev_args"> </string>
     <string name="user_immutable_up_serv_args"> </string>
+    <string name="dev_tools">Dev tools</string>
+    <string name="setup_pipeline">Setup pipeline</string>
 </resources>

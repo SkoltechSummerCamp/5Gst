@@ -28,7 +28,6 @@ import ru.scoltech.openran.speedtest.manager.DownloadUploadSpeedTestManager;
 
 public class SpeedActivity extends AppCompatActivity {
 
-    private static final String TAG = SpeedActivity.class.getSimpleName();
     private Wave cWave;
     private CardView mCard;
     private SubResultView mSubResults; // in progress result
@@ -70,7 +69,6 @@ public class SpeedActivity extends AppCompatActivity {
         shareBtn = findViewById(R.id.share_btn);
         saveBtn = findViewById(R.id.save_btn);
 
-//        onResultUI("~~","~~","~~");
 
         speedTestManager = new DownloadUploadSpeedTestManager.Builder(this)
                 .onPingUpdate((ping) -> runOnUiThread(() -> mCard.setPing((int) ping)))

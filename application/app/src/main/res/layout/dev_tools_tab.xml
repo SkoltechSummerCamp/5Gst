@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/device_ip"
+            android:textAppearance="@style/Headline4" />
+
+
+        <TextView
+            android:id="@+id/ipInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:fontFamily="@font/arial_regular"
+            android:text="@string/ip_address_mock"
+            android:textSize="20sp" />
+
+    </LinearLayout>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="?android:attr/listDivider" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <Space
+            android:layout_width="8dp"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_width="22dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/arial_mono_bold"
+
+            android:gravity="center"
+            android:text="@string/pingText"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="22sp" />
+
+        <Space
+            android:layout_width="5dp"
+            android:layout_height="wrap_content" />
+
+        <View
+            android:layout_width="2dp"
+            android:layout_height="match_parent"
+            android:background="?android:attr/listDivider" />
+
+        <Space
+            android:layout_width="5dp"
+            android:layout_height="wrap_content" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center|end"
+                android:text="@string/ipLabel"
+
+                android:textAppearance="@style/Headline4"
+                android:textColor="?android:attr/textColorPrimary"
+                app:layout_constraintBottom_toBottomOf="@+id/serverIP"
+                app:layout_constraintEnd_toStartOf="@+id/serverIP"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/serverIP" />
+
+            <EditText
+                android:id="@+id/serverIP"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:autofillHints="@string/google_public_DNS"
+                android:ems="10"
+                android:hint="@string/google_public_DNS"
+                android:inputType="textPersonName"
+                android:text="@string/google_public_DNS"
+                android:textColor="?android:attr/textColorPrimary"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/PingText"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/PingText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/pingLabel"
+                android:textAlignment="textEnd"
+                android:textAppearance="@style/Headline4"
+                android:textColor="?android:attr/textColorPrimary"
+                app:layout_constraintBottom_toBottomOf="@+id/pingValue"
+                app:layout_constraintEnd_toStartOf="@+id/pingValue"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/pingValue" />
+
+            <TextView
+                android:id="@+id/pingValue"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/noneVal"
+                android:textAppearance="@style/Headline4"
+                android:textColor="?android:attr/textColorPrimary"
+                app:layout_constraintEnd_toStartOf="@+id/icmpPingButton"
+                app:layout_constraintStart_toEndOf="@+id/PingText"
+                app:layout_constraintTop_toBottomOf="@+id/serverIP" />
+
+            <Button
+                android:id="@+id/icmpPingButton"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#0f62fe"
+                android:text="@string/icmpPing"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/serverIP"
+                />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <Space
+            android:layout_width="8dp"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+</LinearLayout>

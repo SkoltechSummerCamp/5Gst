@@ -11,7 +11,8 @@
         android:id="@+id/main_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent">
 
 
         <ru.scoltech.openran.speedtest.customViews.HeaderView
@@ -28,43 +29,16 @@
             android:layout_height="wrap_content"
 
             android:layout_gravity="center"
-            android:layout_marginTop="130dp"
+            android:layout_marginTop="200dp"
 
             android:fontFamily="@font/futura_pt_heavy"
             android:text="@string/tap_to_start_session"
             android:textAppearance="@style/Subtitle2"
             android:textColor="?android:attr/textColorPrimary"
-            android:textSize="16sp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-
-            android:layout_marginTop="30dp"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <ru.scoltech.openran.speedtest.customButtons.ActionButton
-                android:id="@+id/action_btn"
-                style="?android:attr/buttonBarButtonStyle"
-
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-
-                android:layout_gravity="center"
-                android:layout_marginHorizontal="20dp"
-
-                android:contentDescription="@string/start"
-
-                android:foreground="@drawable/ic_play"
-                android:foregroundTint="?android:attr/panelColorForeground"
-
-                android:onClick="onClick" />
-
-
-        </LinearLayout>
+            android:textSize="24sp" />
 
         <!--    Main menu iperf settings    -->
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/start_screen_settings"
             android:layout_width="match_parent"
@@ -165,6 +139,36 @@
                         android:textColor="?android:attr/textColorPrimary"
                         android:textSize="16sp" />
                 </RadioGroup>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:gravity="center"
+                android:orientation="horizontal"
+                tools:layout_editor_absoluteX="0dp"
+                tools:layout_editor_absoluteY="7dp"
+                >
+
+                <ru.scoltech.openran.speedtest.customButtons.ActionButton
+                    android:id="@+id/action_btn"
+                    style="?android:attr/buttonBarButtonStyle"
+
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+
+                    android:layout_gravity="center"
+                    android:layout_marginHorizontal="20dp"
+
+                    android:contentDescription="@string/start"
+
+                    android:foreground="@drawable/ic_play"
+                    android:foregroundTint="?android:attr/panelColorForeground"
+
+                    android:onClick="onClick" />
+
 
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
