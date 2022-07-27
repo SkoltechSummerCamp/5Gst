@@ -1,3 +1,4 @@
+
 name: "[Balancer] API client generation using swagger"
 
 on: push
@@ -24,11 +25,9 @@ jobs:
           python -m pip install --upgrade pip
           pip install pipenv
           pipenv install
-
       - name: Generate swagger schema
         run: |
           pipenv run python manage.py generate_swagger swagger.yaml
-
       - name: Upload swagger schema to artifacts
         uses: actions/upload-artifact@v2
         with:
@@ -65,7 +64,6 @@ jobs:
           -l python
           -o ../AUTOBUILD/service2BalancerClient/
           -c ../service/.swagger-codegen-config/balancerApi.json
-
       - name: Generate client for application
         run: >
           java
@@ -76,7 +74,6 @@ jobs:
           -l java
           -o ../AUTOBUILD/application2BalancerClient/
           -c ../application/.swagger-codegen-config/balancerApi.json
-
       # Swagger codegen container has invalid git installed,
       # so we need another container to push changes
       - name: Upload generated code to artifacts
@@ -102,7 +99,6 @@ jobs:
           rm -rf ../AUTOBUILD
           rm -rf ../application/balancerApi
           rm -rf ../service/balancer_api
-
       - name: Download generated code
         uses: actions/download-artifact@v2
         with:
@@ -115,7 +111,6 @@ jobs:
           cp -r ../AUTOBUILD/service2BalancerClient/balancer_api/ ../service/balancer_api
           cd ../application
           git apply ./.swagger-codegen-config/balancerApi.patch
-
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
             commit_message: 'Generate balancer client using swagger-codegen'
