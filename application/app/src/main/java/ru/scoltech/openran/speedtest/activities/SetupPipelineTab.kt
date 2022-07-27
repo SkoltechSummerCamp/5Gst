@@ -36,7 +36,6 @@ class SetupPipelineTab : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_setup_pipeline, container, true)
     }
 
@@ -102,7 +101,6 @@ class SetupPipelineTab : Fragment() {
             override fun afterTextChanged(s: Editable) {}
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                Log.e(TAG, "update now DownloadDeviceArgs = $s")
                 val editor = activity.getSharedPreferences(
                     getString(R.string.iperfSharedPreferences),
                     AppCompatActivity.MODE_PRIVATE

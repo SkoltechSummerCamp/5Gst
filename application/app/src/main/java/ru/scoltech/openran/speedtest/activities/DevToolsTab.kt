@@ -38,9 +38,6 @@ class DevToolsTab : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.dev_tools_tab, container, false)
-            .also {
-                Log.e("aaa", it.findViewById<Button>(R.id.icmpPingButton).toString())
-            }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -48,7 +45,7 @@ class DevToolsTab : Fragment() {
 
         val activity = requireActivity()
 
-        init(view, activity)
+        init(view)
         refreshAddresses()
         val updater = Runnable {
             while (true) {
@@ -63,14 +60,13 @@ class DevToolsTab : Fragment() {
         addressUpdater!!.start()
     }
 
-    private fun init(view: View, activity: Activity) {
+    private fun init(view: View) {
         val header = view.findViewById<HeaderView>(R.id.option_header)
-//        header.hideOptionsButton()
         ipInfo = view.findViewById<TextView>(R.id.ipInfo)
         pingValue = view.findViewById<TextView>(R.id.pingValue)
         serverIP = view.findViewById<EditText>(R.id.serverIP)
         icmpPing = view.findViewById<Button>(R.id.icmpPingButton)
-        icmpPing!!.setOnClickListener(View.OnClickListener { view: View -> startIcmpPing(view) })
+        icmpPing!!.setOnClickListener(View.OnClickListener { view: View -> startIcmpPing() })
         icmpPinger = IcmpPinger()
 
 
@@ -79,10 +75,10 @@ class DevToolsTab : Fragment() {
         private fun onPingError(e: Exception) {
             icmpPinger!!.stop()
             Log.d(TAG, "Ping failed$e")
-            requireActivity().runOnUiThread { stopIcmpPing(icmpPing) }
+            requireActivity().runOnUiThread { stopIcmpPing() }
         }
 
-        private fun startIcmpPing(view: View) {
+        private fun startIcmpPing() {
             icmpPing!!.text = getString(R.string.bigStop)
             icmpPinger!!.start(serverIP!!.text.toString()) // TODO если указан ip на который нельзя подключиться, то приложение зависнет
                 .onSuccess { aLong: Long ->
@@ -94,13 +90,13 @@ class DevToolsTab : Fragment() {
                     null
                 }.start()
             pingValue!!.text = "Err"
-            icmpPing!!.setOnClickListener { view: View? -> stopIcmpPing(view) }
+            icmpPing!!.setOnClickListener { view: View? -> stopIcmpPing() }
         }
 
-        private fun stopIcmpPing(view: View?) {
+        private fun stopIcmpPing() {
             icmpPing!!.text = getString(R.string.icmpPing)
             icmpPinger!!.stop()
-            icmpPing!!.setOnClickListener { view: View -> startIcmpPing(view) }
+            icmpPing!!.setOnClickListener { startIcmpPing() }
         }
 
         private fun refreshAddresses() {

@@ -150,7 +150,7 @@
                 android:orientation="horizontal"
                 tools:layout_editor_absoluteX="0dp"
                 tools:layout_editor_absoluteY="7dp"
-                tools:ignore="MissingConstraints">
+                >
 
                 <ru.scoltech.openran.speedtest.customButtons.ActionButton
                     android:id="@+id/action_btn"
