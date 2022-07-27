@@ -1,9 +1,6 @@
-#/bin/bash
-cd "$(dirname -- "$(readlink -f "${BASH_SOURCE}")")"
-case $PWD in
-  */scripts) cd ..;;
-esac
-cd ./iPerf
+#/bin/sh
+cd  "$(realpath "${0}" | xargs dirname)"
+cd ../iPerf
 bash configure
 make
 cd ..
