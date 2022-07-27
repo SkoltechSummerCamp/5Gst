@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:background="?android:attr/colorBackground"
     tools:context=".activities.OptionsActivity"
     android:orientation="vertical">
@@ -21,392 +21,48 @@
         android:layout_height="1dp"
         android:background="?android:attr/listDivider" />
 
-    <LinearLayout
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tab_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:backgroundTint="@color/black"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tabContentStart="32dp"
+        app:tabIndicatorAnimationMode="elastic"
+        app:tabIndicatorColor="@color/white"
+        app:tabIndicatorFullWidth="false"
+        app:tabMode="scrollable"
+        app:tabPaddingEnd="16dp"
+        app:tabPaddingStart="16dp"
+        app:tabRippleColor="@android:color/transparent"
+        app:tabTextAppearance="?attr/textAppearanceSubtitle1"
+        app:tabTextColor="#ffffff" >
 
-        <TextView
+        <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/device_ip"
-            android:textAppearance="@style/Headline4" />
+            android:text="@string/dev_tools" />
 
-        <TextView
-            android:id="@+id/ipInfo"
-            android:layout_width="match_parent"
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:fontFamily="@font/arial_regular"
-            android:text="@string/ip_address_mock"
-            android:textSize="20sp" />
+            android:text="@string/setup_pipeline" />
 
-    </LinearLayout>
+    </com.google.android.material.tabs.TabLayout>
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tab_layout" />
+
+
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="?android:attr/listDivider" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <Space
-            android:layout_width="8dp"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:layout_width="22dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-
-            android:text="@string/pingText"
-            android:textSize="22sp"
-            android:fontFamily="@font/arial_mono_bold"
-            android:textColor="?android:attr/textColorPrimary" />
-        <Space
-            android:layout_width="5dp"
-            android:layout_height="wrap_content" />
-
-        <View
-            android:layout_width="2dp"
-            android:layout_height="match_parent"
-            android:background="?android:attr/listDivider" />
-
-        <Space
-            android:layout_width="5dp"
-            android:layout_height="wrap_content" />
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_weight="4">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:gravity="center|end"
-                android:text="@string/ipLabel"
-
-                android:textAppearance="@style/Headline4"
-                android:textColor="?android:attr/textColorPrimary"
-                app:layout_constraintBottom_toBottomOf="@+id/serverIP"
-                app:layout_constraintEnd_toStartOf="@+id/serverIP"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/serverIP" />
-
-            <EditText
-                android:id="@+id/serverIP"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:text="@string/google_public_DNS"
-                android:hint="@string/google_public_DNS"
-                android:autofillHints="@string/google_public_DNS"
-                android:inputType="textPersonName"
-                android:textColor="?android:attr/textColorPrimary"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/PingText"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/PingText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/pingLabel"
-                android:textAlignment="textEnd"
-                android:textAppearance="@style/Headline4"
-                android:textColor="?android:attr/textColorPrimary"
-                app:layout_constraintBottom_toBottomOf="@+id/pingValue"
-                app:layout_constraintEnd_toStartOf="@+id/pingValue"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/pingValue" />
-
-            <TextView
-                android:id="@+id/pingValue"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/noneVal"
-                android:textAppearance="@style/Headline4"
-                android:textColor="?android:attr/textColorPrimary"
-                app:layout_constraintEnd_toStartOf="@+id/icmpPingButton"
-                app:layout_constraintStart_toEndOf="@+id/PingText"
-                app:layout_constraintTop_toBottomOf="@+id/serverIP" />
-
-            <Button
-                android:id="@+id/icmpPingButton"
-                android:layout_width="120dp"
-                android:layout_height="wrap_content"
-                android:backgroundTint="#0f62fe"
-                android:text="@string/icmpPing"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/serverIP"
-                tools:ignore="TextContrastCheck" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <Space
-            android:layout_width="8dp"
-            android:layout_height="wrap_content" />
-
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="?android:attr/listDivider" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="5dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-
-            android:text="@string/downloadText"
-            android:textSize="22sp"
-            android:fontFamily="@font/arial_mono_bold"
-            android:textColor="?android:attr/textColorPrimary" />
-
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="5dp" />
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="4"
-            android:orientation="vertical">
-
-
-            <TextView
-                android:id="@+id/download_iperf_dev"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-
-                android:text="@string/this_device"
-                android:textAppearance="@style/Headline2"
-                android:textColor="?android:attr/textColorPrimary"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-
-            <TextView
-                android:id="@+id/download_iperf_server"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:gravity="center"
-                android:text="@string/server"
-
-                android:textAppearance="@style/Headline2"
-                android:textColor="?android:attr/textColorPrimary"
-                app:layout_constraintEnd_toEndOf="@+id/download_iperf_dev"
-                app:layout_constraintTop_toBottomOf="@+id/download_iperf_dev" />
-
-            <TextView
-                android:id="@+id/immutable_download_dev_args"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:gravity="center"
-                android:layout_marginStart="8dp"
-                android:text="@string/user_immutable_down_dev_args"
-                android:textSize="12sp"
-                android:textColor="?android:attr/textColorPrimary"
-
-                app:layout_constraintBottom_toTopOf="@+id/download_iperf_server"
-
-                app:layout_constraintStart_toEndOf="@+id/download_iperf_dev"
-                app:layout_constraintTop_toTopOf="@+id/download_iperf_dev"/>
-
-            <EditText
-                android:id="@+id/download_device_args"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:textSize="12sp"
-                android:hint="@string/default_download_device_iperf_args"
-                android:autofillHints=" "
-                android:inputType="text"
-
-                app:layout_constraintBottom_toTopOf="@+id/download_iperf_server"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/immutable_download_dev_args"
-                app:layout_constraintTop_toTopOf="@+id/download_iperf_dev"/>
-
-            <TextView
-                android:id="@+id/immutable_download_serv_args"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:gravity="center"
-                android:layout_marginStart="8dp"
-                android:text="@string/user_immutable_down_serv_args"
-                android:textSize="12sp"
-                android:textColor="?android:attr/textColorPrimary"
-
-                app:layout_constraintTop_toTopOf="@+id/download_iperf_server"
-                app:layout_constraintBottom_toBottomOf="@+id/download_iperf_server"
-                app:layout_constraintStart_toEndOf="@+id/download_iperf_server"/>
-
-            <EditText
-                android:id="@+id/download_server_args"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-
-                android:textSize="12sp"
-                android:hint="@string/default_download_server_iperf_args"
-                android:autofillHints=" "
-                android:inputType="text"
-
-                app:layout_constraintTop_toTopOf="@+id/download_iperf_server"
-                app:layout_constraintBottom_toBottomOf="@+id/download_iperf_server"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/immutable_download_serv_args"/>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="?android:attr/listDivider" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="5dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-
-            android:text="@string/uploadText"
-            android:textSize="22sp"
-            android:fontFamily="@font/arial_mono_bold"
-            android:textColor="?android:attr/textColorPrimary" />
-
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="5dp" />
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="4"
-            android:orientation="vertical">
-
-
-
-            <TextView
-                android:id="@+id/upload_iperf_dev"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-
-                android:text="@string/this_device"
-                android:textAppearance="@style/Headline2"
-                android:textColor="?android:attr/textColorPrimary"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-
-            <TextView
-                android:id="@+id/upload_iperf_server"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/server"
-
-                android:textAppearance="@style/Headline2"
-                android:textColor="?android:attr/textColorPrimary"
-                app:layout_constraintEnd_toEndOf="@+id/upload_iperf_dev"
-                app:layout_constraintTop_toBottomOf="@+id/upload_iperf_dev" />
-
-            <TextView
-                android:id="@+id/immutable_upload_dev_args"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:gravity="center"
-                android:layout_marginStart="8dp"
-                android:text="@string/user_immutable_up_dev_args"
-                android:textSize="12sp"
-                android:textColor="?android:attr/textColorPrimary"
-
-                app:layout_constraintBottom_toTopOf="@+id/upload_iperf_server"
-                app:layout_constraintStart_toEndOf="@+id/upload_iperf_dev"
-                app:layout_constraintTop_toTopOf="@+id/upload_iperf_dev"/>
-
-
-            <EditText
-                android:id="@+id/upload_device_args"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-
-                android:textSize="12sp"
-                android:hint="@string/default_upload_device_iperf_args"
-                android:importantForAutofill="no"
-                android:inputType="text"
-
-                app:layout_constraintBottom_toTopOf="@+id/upload_iperf_server"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/immutable_upload_dev_args"
-                app:layout_constraintTop_toTopOf="@+id/upload_iperf_dev"/>
-
-            <TextView
-                android:id="@+id/immutable_upload_serv_args"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:gravity="center"
-                android:layout_marginStart="8dp"
-                android:text="@string/user_immutable_up_serv_args"
-                android:textSize="12sp"
-                android:textColor="?android:attr/textColorPrimary"
-
-                app:layout_constraintTop_toTopOf="@+id/upload_iperf_server"
-                app:layout_constraintBottom_toBottomOf="@+id/upload_iperf_server"
-                app:layout_constraintStart_toEndOf="@+id/upload_iperf_server"/>
-
-            <EditText
-                android:id="@+id/upload_server_args"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-
-                android:textSize="12sp"
-                android:hint="@string/default_upload_server_iperf_args"
-                android:autofillHints=" "
-                android:inputType="text"
-
-                app:layout_constraintTop_toTopOf="@+id/upload_iperf_server"
-                app:layout_constraintBottom_toBottomOf="@+id/upload_iperf_server"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/immutable_upload_serv_args"/>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </LinearLayout>
 
 </LinearLayout>

@@ -33,7 +33,7 @@ android {
 
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
-    ndkVersion "19.2.5345600"
+    ndkVersion '25.0.8775105'
 
     defaultConfig {
         applicationId "ru.scoltech.openran.speedtest"

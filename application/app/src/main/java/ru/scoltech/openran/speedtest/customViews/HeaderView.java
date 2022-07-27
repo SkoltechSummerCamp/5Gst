@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 import ru.scoltech.openran.speedtest.R;
+import ru.scoltech.openran.speedtest.activities.DevToolsTab;
+import ru.scoltech.openran.speedtest.activities.OptionsActivity;
 import ru.scoltech.openran.speedtest.activities.OptionsActivity;
 
 

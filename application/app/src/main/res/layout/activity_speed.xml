@@ -75,7 +75,7 @@
                 android:foreground="@drawable/ic_save"
                 android:foregroundTint="?android:attr/panelColorForeground"
 
-                android:visibility="gone" />
+                android:visibility="visible" />
 
             <ru.scoltech.openran.speedtest.customButtons.ActionButton
                 android:id="@+id/action_btn"
@@ -105,7 +105,7 @@
                 android:foreground="@drawable/ic_share"
                 android:foregroundTint="?android:attr/panelColorForeground"
 
-                android:visibility="gone" />
+                android:visibility="visible" />
 
 
         </LinearLayout>

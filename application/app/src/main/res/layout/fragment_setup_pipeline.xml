@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activities.SetupPipelineTab">
+
+    <!-- TODO: Update blank fragment layout -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:text="@string/hello_setup_pipeline_fragment" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/arial_mono_bold"
+
+            android:gravity="center"
+            android:text="@string/downloadText"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="22sp" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:orientation="vertical">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/download_iperf_dev"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+
+                    android:text="@string/this_device"
+                    android:textAppearance="@style/Headline2"
+                    android:textColor="?android:attr/textColorPrimary"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/immutable_download_dev_args"
+                    android:layout_width="54dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:gravity="center"
+                    android:text="@string/user_immutable_down_dev_args"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textSize="12sp"
+                    />
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/download_device_args"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_gravity="center"
+                    android:baselineAligned="false"
+                    android:focusable="true"
+                    android:hint="@string/default_download_device_iperf_args"
+                    android:focusableInTouchMode="true"
+                    app:hintEnabled="false" />
+
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/download_iperf_server"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center"
+                    android:text="@string/server"
+
+                    android:textAppearance="@style/Headline2"
+                    android:textColor="?android:attr/textColorPrimary"
+                    app:layout_constraintEnd_toEndOf="@+id/download_iperf_dev"
+                    app:layout_constraintTop_toBottomOf="@+id/download_iperf_dev" />
+
+                <TextView
+                    android:id="@+id/immutable_download_serv_args"
+                    android:layout_width="58dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="8dp"
+                    android:gravity="center"
+                    android:text="@string/user_immutable_down_serv_args"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textSize="12sp" />
+
+
+                <com.google.android.material.textfield.TextInputEditText
+
+                    android:id="@+id/download_server_args"
+                    android:layout_width="531dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="center"
+                    android:baselineAligned="false"
+                    android:focusable="true"
+                    android:hint="@string/default_download_server_iperf_args"
+                    android:focusableInTouchMode="true"
+                    app:hintEnabled="false" />
+
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="5dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/arial_mono_bold"
+
+            android:gravity="center"
+            android:text="@string/uploadText"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="22sp" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="5dp" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:id="@+id/upload_iperf_dev"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+
+                android:text="@string/this_device"
+                android:textAppearance="@style/Headline2"
+                android:textColor="?android:attr/textColorPrimary"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <TextView
+                android:id="@+id/upload_iperf_server"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/server"
+
+                android:textAppearance="@style/Headline2"
+                android:textColor="?android:attr/textColorPrimary"
+                app:layout_constraintEnd_toEndOf="@+id/upload_iperf_dev"
+                app:layout_constraintTop_toBottomOf="@+id/upload_iperf_dev" />
+
+            <TextView
+                android:id="@+id/immutable_upload_dev_args"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_marginStart="8dp"
+                android:gravity="center"
+                android:text="@string/user_immutable_up_dev_args"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textSize="12sp"
+
+                app:layout_constraintBottom_toTopOf="@+id/upload_iperf_server"
+                app:layout_constraintStart_toEndOf="@+id/upload_iperf_dev"
+                app:layout_constraintTop_toTopOf="@+id/upload_iperf_dev" />
+
+
+            <EditText
+                android:id="@+id/upload_device_args"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+
+                android:hint="@string/default_upload_device_iperf_args"
+                android:importantForAutofill="no"
+                android:inputType="text"
+                android:textSize="12sp"
+
+                app:layout_constraintBottom_toTopOf="@id/upload_iperf_server"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/immutable_upload_dev_args"
+                app:layout_constraintTop_toTopOf="@id/upload_iperf_dev" />
+
+            <TextView
+                android:id="@+id/immutable_upload_serv_args"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_marginStart="8dp"
+                android:gravity="center"
+                android:text="@string/user_immutable_up_serv_args"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textSize="12sp"
+
+                app:layout_constraintBottom_toBottomOf="@+id/upload_iperf_server"
+                app:layout_constraintStart_toEndOf="@+id/upload_iperf_server"
+                app:layout_constraintTop_toTopOf="@+id/upload_iperf_server" />
+
+            <EditText
+                android:id="@+id/upload_server_args"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+
+                android:importantForAutofill="no"
+                android:inputType="text"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/immutable_upload_serv_args"
+                app:layout_constraintTop_toBottomOf="@+id/upload_device_args" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

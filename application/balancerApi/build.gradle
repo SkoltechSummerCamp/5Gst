@@ -9,6 +9,7 @@ buildscript {
         jcenter()
     }
     dependencies {
+        //noinspection GradlePluginVersion
         classpath 'com.android.tools.build:gradle:2.3.+'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
     }
@@ -25,11 +26,11 @@ if(hasProperty('target') && target == 'android') {
     apply plugin: 'com.github.dcendents.android-maven'
 
     android {
-        compileSdkVersion 25
+        compileSdkVersion 32
         buildToolsVersion '25.0.2'
         defaultConfig {
             minSdkVersion 14
-            targetSdkVersion 25
+            targetSdkVersion 32
         }
         compileOptions {
             sourceCompatibility JavaVersion.VERSION_1_8
