@@ -1,6 +1,6 @@
 /*
- * Balancer API
- * Speedtest load balancer
+ * Service API
+ * Speedtest iperf service
  *
  * OpenAPI spec version: 0.1.0
  * Contact: dev@5gst.ru
@@ -24,7 +24,6 @@ import com.google.gson.JsonElement;
 import io.gsonfire.GsonFireBuilder;
 import io.gsonfire.TypeSelector;
 
-import ru.scoltech.openran.speedtest.client.balancer.model.*;
 import okio.ByteString;
 
 import java.io.IOException;
