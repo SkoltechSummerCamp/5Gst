@@ -150,7 +150,6 @@ jobs:
         file_pattern: balancer/services/migrations 
         
   balancer-test:
-    needs: balancer-makemigartions
     if: |
       (github.event_name == 'push' && needs.balancer-makemigartions.result == 'success') ||
       (github.event_name == 'pull_request' && needs.balancer-makemigartions.result == 'skipped')
