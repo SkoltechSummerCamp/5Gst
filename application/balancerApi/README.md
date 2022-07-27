@@ -71,10 +71,10 @@ Please follow the [installation](#installation) instruction and execute the foll
 
 ```java
 
-import io.swagger.client.*;
-import io.swagger.client.auth.*;
-import io.swagger.client.model.*;
-import io.swagger.client.api.BalancerApi;
+import ru.scoltech.openran.speedtest.client.balancer.*;
+import ru.scoltech.openran.speedtest.client.balancer.auth.*;
+import ru.scoltech.openran.speedtest.client.balancer.model.*;
+import ru.scoltech.openran.speedtest.client.balancer.api.BalancerApi;
 
 import java.io.File;
 import java.util.*;

@@ -101,7 +101,7 @@ jobs:
         run: |
           rm -rf ../AUTOBUILD
           rm -rf ../application/balancerApi
-          rm -rf ../service/swagger_client
+          rm -rf ../service/balancer_api
 
       - name: Download generated code
         uses: actions/download-artifact@v2
@@ -112,11 +112,11 @@ jobs:
       - name: Move generated code to projects
         run: |
           cp -r ../AUTOBUILD/application2BalancerClient/ ../application/balancerApi
-          cp -r ../AUTOBUILD/service2BalancerClient/swagger_client/ ../service/swagger_client
+          cp -r ../AUTOBUILD/service2BalancerClient/balancer_api/ ../service/balancer_api
           cd ../application
           git apply ./.swagger-codegen-config/balancerApi.patch
 
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
-            commit_message: 'Generate code using swagger-codegen'
-            file_pattern: application/balancerApi service/swagger_client
+            commit_message: 'Generate balancer client using swagger-codegen'
+            file_pattern: application/balancerApi service/balancer_api

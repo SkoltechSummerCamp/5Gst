@@ -1,5 +1,6 @@
 import logging
 import os
+import sys
 
 from django.apps import AppConfig
 from django.core.management.commands import diffsettings
@@ -14,9 +15,14 @@ class MyAppConfig(AppConfig):
     name = 'apps'
 
     def ready(self):
-        if os.getenv(DJANGO_AUTORELOAD_ENV) != 'true':
-            self.print_env()
-            watchdog_service.start()
+        # Workaround for development server with auto reload. (we need to execute initialization once)
+        if 'runserver' in sys.argv \
+                and '--noreload' not in sys.argv \
+                and os.getenv(DJANGO_AUTORELOAD_ENV) != 'true':
+            return
+
+        self.print_env()
+        watchdog_service.start()
 
     def print_env(self):
         django_settings = diffsettings.Command().handle(output='unified', all=True, default=None)
