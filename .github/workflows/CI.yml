@@ -6,6 +6,7 @@ on:
     
 jobs:
 
+
   balancer-generate-swagger:
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
@@ -242,7 +243,7 @@ jobs:
         uses: android-actions/setup-android@v2
 
       - name: Setup Android NDK
-        run: yes | "$ANDROID_HOME/tools/bin/sdkmanager" "ndk;25.0.8775105"
+				run: yes | "$ANDROID_HOME/tools/bin/sdkmanager" "ndk;25.0.8775105"
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
@@ -473,54 +474,9 @@ jobs:
             commit_message: 'Generate service client using swagger-codegen'
             file_pattern: application/serviceApi balancer/service_api
             
-            
-            
-            
-            
-            
-            
-            
-            
-            
-  service-test:
-    runs-on: ubuntu-latest
-    if: |
-      (github.event_name == 'push' && needs.service-push.result == 'success') ||
-      (github.event_name == 'pull_request' && needs.service-push.result == 'skipped')
-    needs: service-push
-    env: 
-      SERVICE_IP_ADDRESS: localhost
-      BALANCER_ADDRESS: localhost:5555
-      IPERF_PORT: 5001
-      SERVICE_PORT: 5000
-      SECRET_KEY: test
-    defaults:
-      run:
-        working-directory: ./service
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          submodules: recursive
-      - name: Compilation
-        run: ./scripts/build-iperf.sh
-        
-      - name: Install pip, pipenv and packages from Pipfile
-        run: |
-          python -m pip install --upgrade pip
-          pip install pipenv
-          pipenv install --dev
-      - name: Run tests
-        run: |
-          pipenv run test
-            
-            
-            
-            
-            
-            
   service-build-iperf-pr:  
-    if: github.event_name == 'pull_request'
-    needs: service-test
+    if: github.event_name == 'pull_request' && needs.service-push.result == 'skipped'
+    needs: service-push
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -608,7 +564,7 @@ jobs:
           
   service-build-iperf-push:
     if: github.event_name == 'push'
-    needs: service-test
+    needs: service-push
     runs-on: ubuntu-latest
     defaults:
       run:
