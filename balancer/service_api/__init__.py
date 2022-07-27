@@ -3,9 +3,9 @@
 # flake8: noqa
 
 """
-    Balancer API
+    Service API
 
-    Speedtest load balancer  # noqa: E501
+    Speedtest iperf service  # noqa: E501
 
     OpenAPI spec version: 0.1.0
     Contact: dev@5gst.ru
@@ -16,11 +16,9 @@
 from __future__ import absolute_import
 
 # import apis into sdk package
-from service_api.api.balancer_api import BalancerApi
+from service_api.api.service_api import ServiceApi
 
 # import ApiClient
 from service_api.api_client import ApiClient
 from service_api.configuration import Configuration
 # import models into sdk package
-from service_api.models.server_address_request import ServerAddressRequest
-from service_api.models.server_address_response import ServerAddressResponse
