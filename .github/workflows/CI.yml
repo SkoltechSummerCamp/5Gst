@@ -482,6 +482,7 @@ jobs:
             
   service-build-iperf-pr:  
     if: github.event_name == 'pull_request' && needs.service-push.result == 'skipped'
+    needs: service-push
     runs-on: ubuntu-latest
     defaults:
       run:
