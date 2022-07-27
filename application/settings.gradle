@@ -1,6 +1,7 @@
 import java.nio.file.Paths
 
 rootProject.name = "SpeedtestApplication"
-include ':app', ':balancerApi'
+include ':app', ':balancerApi', ':serviceApi'
 
 project(':balancerApi').projectDir = file(Paths.get("balancerApi"))
+project(':serviceApi').projectDir = file(Paths.get("serviceApi"))

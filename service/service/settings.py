@@ -15,6 +15,9 @@ import os
 from pathlib import Path
 
 from dotenv import load_dotenv
+from drf_yasg import openapi
+from drf_yasg.generators import OpenAPISchemaGenerator
+from drf_yasg.inspectors import SwaggerAutoSchema
 
 load_dotenv()
 
@@ -110,6 +113,38 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [],
 }
 
+DEFAULT_SWAGGER_TAG = os.getenv('DEFAULT_SWAGGER_TAG', 'service')
+
+
+class SpeedtestAPISchemeGenerator(OpenAPISchemaGenerator):
+    def determine_path_prefix(self, paths):
+        return ''
+
+
+class SpeedtestSwaggerAutoSchema(SwaggerAutoSchema):
+    def get_tags(self, operation_keys=None):
+        tags = self.overrides.get('tags')
+
+        if not tags:
+            tags = [DEFAULT_SWAGGER_TAG]
+
+        return tags
+
+
+SWAGGER_SETTINGS = {
+    'DEFAULT_INFO': openapi.Info(
+        title="Service API",
+        default_version='0.1.0',
+        description="Speedtest iperf service",
+        contact=openapi.Contact(email=os.getenv("SUPPORT_EMAIL", "dev@5gst.ru")),
+        license=openapi.License(name="BSD 3-Clause",
+                                url='https://raw.githubusercontent.com/SkoltechSummerCamp/5Gst/main/LICENSE'),
+    ),
+    'DEFAULT_GENERATOR_CLASS': SpeedtestAPISchemeGenerator,
+    'DEFAULT_AUTO_SCHEMA_CLASS': SpeedtestSwaggerAutoSchema,
+    'SECURITY_DEFINITIONS': {},
+}
+
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
@@ -132,6 +167,5 @@ SERVICE_IP_ADDRESS = os.getenv('SERVICE_IP_ADDRESS')
 BALANCER_ADDRESS = os.getenv('BALANCER_ADDRESS')
 IPERF_PORT = int(os.getenv('IPERF_PORT'))
 SERVICE_PORT = int(os.getenv('SERVICE_PORT'))
-CONNECTING_TIMEOUT = int(os.getenv('CONNECTING_TIMEOUT'))
+CONNECTING_TIMEOUT = int(os.getenv('CONNECTING_TIMEOUT', '15'))
 WATCHDOG_STOP_TIMEOUT_SECONDS = float(os.getenv('WATCHDOG_STOP_TIMEOUT_SECONDS', '1.0'))
-

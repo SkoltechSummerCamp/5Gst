@@ -1,0 +1,9 @@
+{
+  "hideGenerationTimestamp": true,
+  "java8": true,
+  "checkDuplicatedModelName": true,
+  "dateLibrary": "java8",
+  "apiPackage": "ru.scoltech.openran.speedtest.client.service.api",
+  "modelPackage": "ru.scoltech.openran.speedtest.client.service.model",
+  "invokerPackage": "ru.scoltech.openran.speedtest.client.service"
+}

@@ -1,0 +1,29 @@
+Index: application/serviceApi/src/main/java/ru/scoltech/openran/speedtest/client/service/ApiClient.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- application/serviceApi/src/main/java/ru/scoltech/openran/speedtest/client/service/ApiClient.java	(revision bb7f2b60becad303faf6c3f09b4f4a1b8044eb39)
++++ application/serviceApi/src/main/java/ru/scoltech/openran/speedtest/client/service/ApiClient.java	(date 1658850546091)
+@@ -13,6 +13,7 @@
+ 
+ package ru.scoltech.openran.speedtest.client.service;
+ 
++import com.google.gson.JsonSyntaxException;
+ import com.squareup.okhttp.*;
+ import com.squareup.okhttp.internal.http.HttpMethod;
+ import com.squareup.okhttp.logging.HttpLoggingInterceptor;
+@@ -883,6 +884,13 @@
+                 } catch (ApiException e) {
+                     callback.onFailure(e, response.code(), response.headers().toMultimap());
+                     return;
++                } catch (JsonSyntaxException e) {
++                    callback.onFailure(
++                            new ApiException(e.getClass().getName() + ": " + e.getMessage()),
++                            response.code(),
++                            response.headers().toMultimap()
++                    );
++                    return;
+                 }
+                 callback.onSuccess(result, response.code(), response.headers().toMultimap());
+             }

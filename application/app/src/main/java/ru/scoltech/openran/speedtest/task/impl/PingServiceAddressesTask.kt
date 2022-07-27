@@ -1,7 +1,7 @@
 package ru.scoltech.openran.speedtest.task.impl
 
-import io.swagger.client.model.ServerAddressResponse
 import ru.scoltech.openran.speedtest.backend.IcmpPinger
+import ru.scoltech.openran.speedtest.client.balancer.model.ServerAddressResponse
 import ru.scoltech.openran.speedtest.task.Task
 import ru.scoltech.openran.speedtest.util.Promise
 import ru.scoltech.openran.speedtest.util.TaskKiller

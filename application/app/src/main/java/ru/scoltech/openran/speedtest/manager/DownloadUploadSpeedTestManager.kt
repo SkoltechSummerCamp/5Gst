@@ -1,8 +1,8 @@
 package ru.scoltech.openran.speedtest.manager
 
 import android.content.Context
-import io.swagger.client.model.ServerAddressResponse
 import ru.scoltech.openran.speedtest.R
+import ru.scoltech.openran.speedtest.client.balancer.model.ServerAddressResponse
 import ru.scoltech.openran.speedtest.parser.MultithreadedIperfOutputParser
 import ru.scoltech.openran.speedtest.task.TaskChain
 import ru.scoltech.openran.speedtest.task.TaskChainBuilder
