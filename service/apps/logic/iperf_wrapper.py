@@ -73,7 +73,7 @@ class IperfWrapper:
             cmd = shlex.split("./iperf.elf " + '-p ' + str(port_iperf) + ' ' + self.iperf_parameters)
             self.iperf_process = subprocess.Popen(
                 cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
-            logger.info("iPerf is started")
+            logger.info(f"iPerf is started using command {cmd}")
             self.is_started = True
 
             self.iperf_waiting_thread = Thread(target=self.__waiting_thread)
@@ -93,6 +93,9 @@ class IperfWrapper:
             return False
 
     def stop(self):
+        if self.iperf_process is None:
+            return 0
+
         self.iperf_process.terminate()
         self.iperf_waiting_thread.join()
         return_code = self.iperf_process.poll()

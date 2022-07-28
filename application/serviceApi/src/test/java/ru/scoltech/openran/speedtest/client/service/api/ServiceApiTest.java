@@ -13,6 +13,7 @@
 
 package ru.scoltech.openran.speedtest.client.service.api;
 
+import ru.scoltech.openran.speedtest.client.service.model.IperfArgs;
 import org.junit.Test;
 import org.junit.Ignore;
 
@@ -40,9 +41,9 @@ public class ServiceApiTest {
      *          if the Api call fails
      */
     @Test
-    public void startIperfListTest() throws Exception {
-        String args = null;
-        api.startIperfList(args);
+    public void startIperfTest() throws Exception {
+        IperfArgs data = null;
+        api.startIperf(data);
 
         // TODO: test validations
     }
@@ -56,8 +57,69 @@ public class ServiceApiTest {
      *          if the Api call fails
      */
     @Test
-    public void stopIperfListTest() throws Exception {
-        api.stopIperfList();
+    public void startIperfOldTest() throws Exception {
+        String args = null;
+        api.startIperfOld(args);
+
+        // TODO: test validations
+    }
+    
+    /**
+     * 
+     *
+     * 
+     *
+     * @throws Exception
+     *          if the Api call fails
+     */
+    @Test
+    public void startSessionTest() throws Exception {
+        api.startSession();
+
+        // TODO: test validations
+    }
+    
+    /**
+     * 
+     *
+     * 
+     *
+     * @throws Exception
+     *          if the Api call fails
+     */
+    @Test
+    public void stopIperfOldTest() throws Exception {
+        api.stopIperfOld();
+
+        // TODO: test validations
+    }
+    
+    /**
+     * 
+     *
+     * 
+     *
+     * @throws Exception
+     *          if the Api call fails
+     */
+    @Test
+    public void stopSessionTest() throws Exception {
+        api.stopSession();
+
+        // TODO: test validations
+    }
+    
+    /**
+     * 
+     *
+     * 
+     *
+     * @throws Exception
+     *          if the Api call fails
+     */
+    @Test
+    public void stopSession_0Test() throws Exception {
+        api.stopSession_0();
 
         // TODO: test validations
     }
