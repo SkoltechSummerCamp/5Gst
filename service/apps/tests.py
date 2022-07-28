@@ -1,6 +1,6 @@
-from rest_framework.test import APITestCase
+from django.test.testcases import SimpleTestCase
 
 
-class ServiceTestsCase(APITestCase):
-    def startup_tests(self):
+class ServiceTestCase(SimpleTestCase):
+    def test_startup(self):
         pass
