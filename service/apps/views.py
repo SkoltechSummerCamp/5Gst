@@ -11,7 +11,7 @@ from rest_framework.views import APIView
 from apps import serializers
 from apps.logic.balancer_communicator import balancer_communicator
 from apps.logic.iperf_wrapper import iperf
-from apps.logic.session_service import session_web_service, SessionWebService
+from apps.logic.session_web_service import session_web_service, SessionWebService
 from apps.logic.watchdog_service import balancer_communication_watchdog_service
 
 logger = logging.getLogger(__name__)
