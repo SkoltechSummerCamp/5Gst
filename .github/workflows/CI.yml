@@ -183,7 +183,7 @@ jobs:
       - name: Setup version variable
         run: |
           echo "version=$(cat VERSION)" > $GITHUB_ENV &&
-          echo $ {{ github.repository }}
+          echo ${{ github.repository }}
         
       - name: build docker image
         if: $ {{ github.repository }} != "SkoltechSummerCamp/5Gst"
