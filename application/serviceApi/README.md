@@ -84,11 +84,11 @@ public class ServiceApiExample {
     public static void main(String[] args) {
         
         ServiceApi apiInstance = new ServiceApi();
-        String args = "args_example"; // String | Iperf args used to run service iperf
+        IperfArgs data = new IperfArgs(); // IperfArgs | 
         try {
-            apiInstance.startIperfList(args);
+            apiInstance.startIperf(data);
         } catch (ApiException e) {
-            System.err.println("Exception when calling ServiceApi#startIperfList");
+            System.err.println("Exception when calling ServiceApi#startIperf");
             e.printStackTrace();
         }
     }
@@ -102,12 +102,17 @@ All URIs are relative to *https://localhost*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
-*ServiceApi* | [**startIperfList**](docs/ServiceApi.md#startIperfList) | **GET** /start-iperf | 
-*ServiceApi* | [**stopIperfList**](docs/ServiceApi.md#stopIperfList) | **GET** /stop-iperf | 
+*ServiceApi* | [**startIperf**](docs/ServiceApi.md#startIperf) | **POST** /api/v1/iperf/start | 
+*ServiceApi* | [**startIperfOld**](docs/ServiceApi.md#startIperfOld) | **GET** /start-iperf | 
+*ServiceApi* | [**startSession**](docs/ServiceApi.md#startSession) | **POST** /api/v1/session/start | 
+*ServiceApi* | [**stopIperfOld**](docs/ServiceApi.md#stopIperfOld) | **GET** /stop-iperf | 
+*ServiceApi* | [**stopSession**](docs/ServiceApi.md#stopSession) | **POST** /api/v1/iperf/stop | 
+*ServiceApi* | [**stopSession_0**](docs/ServiceApi.md#stopSession_0) | **POST** /api/v1/session/stop | 
 
 
 ## Documentation for Models
 
+ - [IperfArgs](docs/IperfArgs.md)
 
 
 ## Documentation for Authorization
