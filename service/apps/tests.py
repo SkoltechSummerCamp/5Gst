@@ -2,5 +2,5 @@ from rest_framework.test import APITestCase
 
 
 class ServiceTestsCase(APITestCase):
-    def test_startup(self):
+    def startup_tests(self):
         pass
