@@ -1,5 +1,6 @@
 #/bin/sh
-cd ./iPerf
+cd  "$(realpath "${0}" | xargs dirname)"
+cd ../iPerf
 bash configure
 make
 cd ..
