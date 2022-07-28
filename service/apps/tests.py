@@ -1,6 +1,6 @@
 from rest_framework.test import APITestCase
 
 
-class ServiceTestCase(APITestCase):
-    def test_startup(self):
+class ServiceTestsCase(APITestCase):
+    def some_tests(self):
         pass
