@@ -187,12 +187,12 @@ jobs:
           echo ${{env.GITHUB_REPOSITORY}}
         
       - name: build docker image
-        if: ${{github.repository}} != 'SkoltechSummerCamp/5Gst'
+        if: ${{github.repository}} != SkoltechSummerCamp/5Gst
         run: docker build . --tag new_balancer_image
 
       - name: Log in to Docker Hub
         if: |
-          ${{github.repository}} == 'SkoltechSummerCamp/5Gst' && github.event_name == 'push' 
+          '${{github.repository}}' == 'SkoltechSummerCamp/5Gst' && github.event_name == 'push' 
         uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
