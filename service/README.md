@@ -37,7 +37,6 @@
 
     export ALLOWED_HOSTS=127.0.0.1,$YOU_IP; # Hosts on which you want to start service
     export BALANCER_ADDRESS=http://$BALANCER_IP:$BALANCER_PORT;
-    export CONNECTING_TIMEOUT=30;
     export DEBUG=True;
     export DJANGO_SETTINGS_MODULE=service.settings;
     export IPERF_PORT=5005;
@@ -95,4 +94,4 @@ http://localhost:5000/stop-iperf
 
 ```bash
 ./docker_build.sh
-docker run -d -e BALANCER_ADDRESS=http://192.168.1.12:5555 -e SERVICE_IP_ADDRESS=192.168.1.12 -e CONNECTING_TIMEOUT=15 -e SERVICE_PORT=5004 -e IPERF_PORT=5005 -p 5004:5000 -p 5005:5001 -p 5005:5001/udp -e ALLOWED_HOSTS=192.168.1.12 -e DEBUG=True -e DJANGO_SETTINGS_MODULE=service.settings -e SECRET_KEY=123 docker_service:latest
+docker run -d -e BALANCER_ADDRESS=http://192.168.1.12:5555 -e SERVICE_IP_ADDRESS=192.168.1.12 -e SERVICE_PORT=5004 -e IPERF_PORT=5005 -p 5004:5000 -p 5005:5001 -p 5005:5001/udp -e ALLOWED_HOSTS=192.168.1.12 -e DEBUG=True -e DJANGO_SETTINGS_MODULE=service.settings -e SECRET_KEY=123 docker_service:latest
