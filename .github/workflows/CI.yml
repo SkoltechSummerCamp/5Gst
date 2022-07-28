@@ -186,7 +186,7 @@ jobs:
           echo ${{ github.repository }}
         
       - name: build docker image
-        if: $ {{ github.repository }} != "SkoltechSummerCamp/5Gst"
+        if: ${{ github.repository }} != "SkoltechSummerCamp/5Gst"
         run: docker build . --tag new_balancer_image
 
       - name: Log in to Docker Hub
