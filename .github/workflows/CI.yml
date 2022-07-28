@@ -184,6 +184,7 @@ jobs:
         run: |
           echo "version=$(cat VERSION)" > $GITHUB_ENV &&
           echo ${{ github.repository }}
+          echo ${{env.GITHUB_REPOSITORY}}
         
       - name: build docker image
         if: ${{env.GITHUB_REPOSITORY}} != 'SkoltechSummerCamp/5Gst'
