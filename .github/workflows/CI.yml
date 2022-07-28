@@ -504,7 +504,6 @@ jobs:
             
             
   service-build-iperf:  
-    if: ${{ always() }}
     needs: service-test
     runs-on: ubuntu-latest
     defaults:
@@ -534,7 +533,6 @@ jobs:
           path: service/gh-artifacts/*
           
   service-speedtest-service:
-    if: ${{ always() }}
     runs-on: ubuntu-latest
     needs: service-build-iperf
     defaults:
