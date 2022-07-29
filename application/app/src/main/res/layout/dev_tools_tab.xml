@@ -171,7 +171,6 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginTop="5dp"
-        android:showDividers="middle"
         android:baselineAligned="false"
         >
 
@@ -183,7 +182,7 @@
             >
             <Button
                 android:id="@+id/dev_tools_iperf_start_button"
-                android:layout_width="120dp"
+                android:layout_width="140sp"
                 android:layout_height="wrap_content"
                 android:backgroundTint="#0f62fe"
                 android:text="@string/startIperf"
@@ -198,7 +197,7 @@
             >
             <Button
                 android:id="@+id/dev_tools_iperf_clear_button"
-                android:layout_width="120dp"
+                android:layout_width="140sp"
                 android:layout_height="wrap_content"
                 android:backgroundTint="#0f62fe"
                 android:text="@string/clearLogs"
