@@ -636,6 +636,7 @@ jobs:
           
   make_artifacts:
     runs-on: ubuntu-latest
+    if: ${{ always() }}
     needs: [service-publish-to-dockerhub, balancer-publish-to-dockerhub]
     steps:
       - uses: actions/checkout@v3
