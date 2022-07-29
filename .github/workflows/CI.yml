@@ -181,6 +181,7 @@ jobs:
   balancer-publish-to-dockerhub:
     runs-on: ubuntu-latest
     if: ${{ always() }} 
+    needs: balancer-test
     defaults:
       run:
         working-directory: ./balancer
@@ -210,7 +211,7 @@ jobs:
         with:
           context: ./balancer
           push: true
-          tags: skoltech/speedtest-balancer:${{ env.version }}.${{ github.run_number }} skoltech/speedtest-balancer:latest
+          tags: skoltech/speedtest-balancer:${{ env.version }}.${{ github.run_number }} #skoltech/speedtest-balancer:latest
           
           
           
