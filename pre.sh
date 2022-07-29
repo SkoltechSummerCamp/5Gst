@@ -14,7 +14,7 @@ docker save -o postgres.tar postgres:${POSTGRES_VERSION:-14.4}
 
 echo "install script to convert .tar files to images"
 
-wget --no-check-certificate --content-disposition https://raw.githubusercontent.com/AndyForWork/5Gst/develop/docker_unpack.sh
+wget --no-check-certificate --content-disposition https://raw.githubusercontent.com/SkoltechSummerCamp/5Gst/develop/docker_unpack.sh
 
 echo "install docker-compose"
 
