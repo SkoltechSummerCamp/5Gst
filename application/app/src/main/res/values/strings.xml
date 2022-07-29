@@ -2,6 +2,7 @@
     <string name="app_name">5Gst</string>
     <string name="startIperf">start</string>
     <string name="stopIperf">stop</string>
+    <string name="forceStopIperf">terminate</string>
     <string name="clearLogs">clear</string>
     <string name="deviceIp">Device ip :</string>
     <string name="refreshIp">refresh</string>

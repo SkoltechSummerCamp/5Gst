@@ -80,8 +80,8 @@ class DevToolsTab : Fragment() {
     private fun configureIperf(view: View, activity: FragmentActivity) {
         iperfLogsTextView = view.findViewById(R.id.dev_tools_iperf_logs)
         iperfRunner = IperfRunner.Builder(requireContext().filesDir.absolutePath)
-            .stderrLinesHandler(this::onIperfOutputLine)
-            .stdoutLinesHandler(this::onIperfOutputLine)
+            .stderrLinesHandler(this::appendLineToIperfLogs)
+            .stdoutLinesHandler(this::appendLineToIperfLogs)
             .onFinishCallback(this::onIperfFinish)
             .build()
         iperfLogsScrollView = view.findViewById(R.id.dev_tools_iperf_scroll)
@@ -153,27 +153,43 @@ class DevToolsTab : Fragment() {
 
     private fun onStartIperf() {
         try {
-            iperfRunner.start(iperfArgsEditText.text.toString())
+            val args = iperfArgsEditText.text.toString()
+            appendLineToIperfLogs(">> Starting `iperf $args`")
+            iperfRunner.start(args)
             requireActivity().runOnUiThread {
                 iperfStartButton.text = getString(R.string.stopIperf)
                 iperfStartButton.setOnClickListener { onStopIperf() }
             }
         } catch (e: IperfException) {
-            onIperfOutputLine(e.message ?: "Error occurred during iperf start")
+            appendLineToIperfLogs(e.message ?: "Error occurred during iperf start")
         } catch (e: InterruptedException) {
-            onIperfOutputLine(e.message ?: "Error occurred during iperf start")
+            appendLineToIperfLogs(e.message ?: "Error occurred during iperf start")
         }
     }
 
     private fun onStopIperf() {
         try {
-            iperfRunner.sendSigKill()
+            appendLineToIperfLogs(">> Sending SIGINT signal to iperf")
+            iperfRunner.sendSigInt()
+            requireActivity().runOnUiThread {
+                iperfStartButton.text = getString(R.string.forceStopIperf)
+                iperfStartButton.setOnClickListener { onForceStopIperf() }
+            }
         } catch (e: IperfException) {
-            onIperfOutputLine(e.message ?: "Error occurred during iperf stop")
+            appendLineToIperfLogs(e.message ?: "Error occurred during iperf stop")
         }
     }
 
-    private fun onIperfOutputLine(line: String) {
+    private fun onForceStopIperf() {
+        try {
+            appendLineToIperfLogs(">> Sending SIGKILL signal to iperf")
+            iperfRunner.sendSigKill()
+        } catch (e: IperfException) {
+            appendLineToIperfLogs(e.message ?: "Error occurred during iperf stop")
+        }
+    }
+
+    private fun appendLineToIperfLogs(line: String) {
         val lineSeparator = System.lineSeparator()
         requireActivity().runOnUiThread {
             iperfLogsTextView.append("$line$lineSeparator")
@@ -182,11 +198,13 @@ class DevToolsTab : Fragment() {
     }
 
     private fun onIperfFinish() {
-        requireActivity().runOnUiThread {
-            iperfStartButton.text = getString(R.string.startIperf)
-            iperfStartButton.setOnClickListener { onStartIperf() }
+        activity?.let { activity ->
+            activity.runOnUiThread {
+                iperfStartButton.text = getString(R.string.startIperf)
+                iperfStartButton.setOnClickListener { onStartIperf() }
+            }
+            appendLineToIperfLogs(">> Finished executing iPerf")
         }
-        onIperfOutputLine("Successfully stopped iPerf")
     }
 
     private fun refreshAddresses() {
