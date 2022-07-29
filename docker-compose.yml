@@ -17,7 +17,7 @@ services:
 
       
   balancer:
-    image: skoltech/speedtest-balancer:${BALANCER_VERSION-0.3.0.59}
+    image: skoltech/speedtest-balancer:${BALANCER_VERSION-0.3.0.80}
     container_name: balancer
     depends_on:
         postgres:
@@ -27,7 +27,9 @@ services:
         interval: 5s
         timeout: 5s
         retries: 100
+    entrypoint: ["/bin/bash", "-c", "echo start && sleep 15 && echo  1 && pipenv run python manage.py migrate && echo 2 && pipenv run gunicorn balancer.wsgi -b :8080"]
     environment:
+      - SERVICE_URL_SCHEME=${SERVICE_URL_SCHEME-http}
       - SECRET_KEY=${SECRET_KEY-123}
       - DEBUG=${DEBUG-False}
       - ALLOWED_HOSTS=127.0.0.1,${YOUR_IP}
@@ -42,7 +44,7 @@ services:
 
 
   service: 
-    image: skoltech/speedtest-service:${SERVICE_VERSION-0.3.0.59}
+    image: skoltech/speedtest-service:${SERVICE_VERSION-0.3.0.80}
     container_name: serv1 
     depends_on:
         balancer:

@@ -181,6 +181,7 @@ jobs:
   balancer-publish-to-dockerhub:
     runs-on: ubuntu-latest
     if: ${{ always() }} 
+    needs: balancer-test
     defaults:
       run:
         working-directory: ./balancer

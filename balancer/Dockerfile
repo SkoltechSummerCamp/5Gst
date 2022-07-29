@@ -15,4 +15,4 @@ RUN ["pipenv", "install"]
 RUN ["apt-get", "install", "curl", "-y"]
 
 
-CMD /bin/bash -c "sleep 15 | pipenv run python manage.py migrate | pipenv run gunicorn balancer.wsgi -b :8080"
+CMD /bin/bash -c "pipenv run python manage.py migrate | pipenv run gunicorn balancer.wsgi -b :8080"
