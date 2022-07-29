@@ -57,6 +57,8 @@
     <string name="server">server:</string>
 
     <string name="iperfSharedPreferences">iperfPreferences</string>
+    <string name="dev_iperf_args">dev_iperf_args</string>
+    <string name="dev_tools_iperf_args_hint">--help</string>
     <string name="download_device_args">download_device_args</string>
     <string name="download_server_args">download_server_args</string>
     <string name="upload_device_args">upload_device_args</string>

@@ -143,4 +143,58 @@
             android:layout_height="wrap_content" />
 
     </LinearLayout>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="?android:attr/listDivider" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginEnd="8dp"
+        >
+
+        <EditText
+            android:id="@+id/dev_tools_iperf_args"
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:hint="@string/dev_tools_iperf_args_hint"
+            android:layout_marginEnd="3dp"
+            android:layout_weight="1"
+            android:inputType="text"
+            android:textColor="?android:attr/textColorPrimary"
+            android:importantForAutofill="no" />
+
+        <Button
+            android:id="@+id/dev_tools_iperf_start_button"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#0f62fe"
+            android:text="@string/startIperf"
+            android:layout_weight="0"
+            />
+
+    </LinearLayout>
+
+    <ScrollView
+        android:id="@+id/dev_tools_iperf_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:scrollbars="vertical"
+        >
+
+        <TextView
+            android:id="@+id/dev_tools_iperf_logs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="?android:attr/textColorPrimary"
+            android:gravity="bottom"
+            />
+
+    </ScrollView>
+
 </LinearLayout>
