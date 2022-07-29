@@ -585,7 +585,7 @@ jobs:
   #needs нужен для порядка и проверки что предыдущий степ выполнен (тип выполнение нового степа будет ток после того как степ из нидс хорошо отработает, 
   #если не отработает - новый степ не запустится ), а always нужен чтоб если даже из нидс степ не выполнен, 
   #то новый степ в любом случае выполнился (тип гарантирует, что новый степ всегда будет выполнен вне зависимости от других обстоятельств)
-  service-build-image:
+  service-publish-to-dockerhub:
     if: ${{ always() }}
     runs-on: ubuntu-latest
     needs: service-speedtest-service
@@ -623,8 +623,56 @@ jobs:
           context: service/gh-artifacts
           push: true
           tags: skoltech/speedtest-service:${{ env.version }}.${{ github.run_number }}
-        
+          
+          
+          
+          
+          
+          
+            
+          
+          
+          
+          
+  make_artifacts:
+    runs-on: ubuntu-latest
+    needs: |
+      service-publish-to-dockerhub
+      balancer-publish-to-dockerhub
+    steps:
+      - uses: actions/checkout@v3
+      - name: new_artifacts
+        if:  github.repository == 'SkoltechSummerCamp/5Gst' && github.event_name == 'push'
+        run: |
+          docker pull skoltech/speedtest-service:${{ env.version }}.${{ github.run_number }}
+          docker pull skoltech/speedtest-balancer:${{ env.version }}.${{ github.run_number }}
+          docker pull postgres:${POSTGRES_VERSION:-14.4}
+          docker save skoltech/speedtest-service::${{ env.version }}.${{ github.run_number }} | gzip > service.tar.gz
+          docker save skoltech/speedtest-balancer::${{ env.version }}.${{ github.run_number }} | gzip > balancer.tar.gz
+          docker save postgres:${POSTGRES_VERSION:-14.4} | gzip > postgres.tar.gz
+      - name: old artifacts
+        if: github.repository != 'SkoltechSummerCamp/5Gst'
+        run: |
+          docker pull skoltech/speedtest-service:${SERVICE_VERSION:-0.3.0.80}
+          docker pull skoltech/speedtest-balancer:${BALANCER_VERSION:-0.3.0.80}
+          docker pull postgres:${POSTGRES_VERSION:-14.4}
+          docker save skoltech/speedtest-service:${SERVICE_VERSION:-0.3.0.80} | gzip > service.tar.gz
+          docker save skoltech/speedtest-balancer:${BALANCER_VERSION:-0.3.0.80} | gzip > balancer.tar.gz
+          docker save postgres:${POSTGRES_VERSION:-14.4} | gzip > postgres.tar.gz
 
-          
-          
-        
+
+      - name: upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: start-scripts
+          path: |
+            service.tar.gz
+            balancer.tar.gz
+            postgres.tar.gz
+            docker-compose.yml 
+            docker_unpack.sh 
+
+
+
+
+
