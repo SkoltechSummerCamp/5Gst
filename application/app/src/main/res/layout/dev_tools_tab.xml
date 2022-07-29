@@ -154,15 +154,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:layout_marginTop="5dp"
         android:layout_marginEnd="8dp"
         >
 
         <EditText
             android:id="@+id/dev_tools_iperf_args"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_width="fill_parent"
+            android:background="@drawable/light_field_background"
             android:hint="@string/dev_tools_iperf_args_hint"
-            android:layout_marginEnd="3dp"
+            android:layout_marginStart="6dp"
+            android:layout_marginEnd="6dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:paddingStart="7dp"
+            android:paddingEnd="7dp"
             android:layout_weight="1"
             android:inputType="text"
             android:textColor="?android:attr/textColorPrimary"
@@ -183,15 +190,18 @@
         android:id="@+id/dev_tools_iperf_scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/console_background"
         android:fillViewport="true"
         android:scrollbars="vertical"
+        android:layout_marginTop="10dp"
+        android:padding="10dp"
         >
 
         <TextView
             android:id="@+id/dev_tools_iperf_logs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="?android:attr/textColorPrimary"
+            android:textColor="@color/consoleTextColor"
             android:gravity="bottom"
             />
 
