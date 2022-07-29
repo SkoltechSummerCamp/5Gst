@@ -150,39 +150,60 @@
         android:layout_height="2dp"
         android:background="?android:attr/listDivider" />
 
+    <EditText
+        android:id="@+id/dev_tools_iperf_args"
+        android:layout_height="40dp"
+        android:layout_width="match_parent"
+        android:background="@drawable/light_field_background"
+        android:hint="@string/dev_tools_iperf_args_hint"
+        android:layout_marginStart="6dp"
+        android:layout_marginEnd="6dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="5dp"
+        android:paddingStart="7dp"
+        android:paddingEnd="7dp"
+        android:inputType="text"
+        android:textColor="?android:attr/textColorPrimary"
+        android:importantForAutofill="no" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginTop="5dp"
-        android:layout_marginEnd="8dp"
+        android:showDividers="middle"
+        android:baselineAligned="false"
         >
 
-        <EditText
-            android:id="@+id/dev_tools_iperf_args"
-            android:layout_height="match_parent"
-            android:layout_width="fill_parent"
-            android:background="@drawable/light_field_background"
-            android:hint="@string/dev_tools_iperf_args_hint"
-            android:layout_marginStart="6dp"
-            android:layout_marginEnd="6dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:paddingStart="7dp"
-            android:paddingEnd="7dp"
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_weight="1"
-            android:inputType="text"
-            android:textColor="?android:attr/textColorPrimary"
-            android:importantForAutofill="no" />
+            android:layout_height="match_parent"
+            android:gravity="center"
+            >
+            <Button
+                android:id="@+id/dev_tools_iperf_start_button"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#0f62fe"
+                android:text="@string/startIperf"
+                />
+        </LinearLayout>
 
-        <Button
-            android:id="@+id/dev_tools_iperf_start_button"
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
-            android:backgroundTint="#0f62fe"
-            android:text="@string/startIperf"
-            android:layout_weight="0"
-            />
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            >
+            <Button
+                android:id="@+id/dev_tools_iperf_clear_button"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#0f62fe"
+                android:text="@string/clearLogs"
+                />
+        </LinearLayout>
 
     </LinearLayout>
 
@@ -203,6 +224,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/consoleTextColor"
             android:gravity="bottom"
+            android:textIsSelectable="true"
             />
 
     </ScrollView>

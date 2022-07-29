@@ -36,6 +36,7 @@ class DevToolsTab : Fragment() {
     private lateinit var iperfLogsTextView: TextView
     private lateinit var iperfArgsEditText: EditText
     private lateinit var iperfStartButton: Button
+    private lateinit var iperfLogsClearButton: Button
     private lateinit var iperfRunner: IperfRunner
 
     override fun onCreateView(
@@ -87,15 +88,14 @@ class DevToolsTab : Fragment() {
         iperfLogsTextView = view.findViewById(R.id.dev_tools_iperf_logs)
         iperfStartButton = view.findViewById(R.id.dev_tools_iperf_start_button)
         iperfStartButton.setOnClickListener { onStartIperf() }
-
+        iperfLogsClearButton = view.findViewById(R.id.dev_tools_iperf_clear_button)
+        iperfLogsClearButton.setOnClickListener { onIperfLogsClear() }
 
         val iperfPreferences = activity.getSharedPreferences(
-            getString(R.string.iperfSharedPreferences), AppCompatActivity.MODE_PRIVATE
+            getString(R.string.iperfSharedPreferences),
+            AppCompatActivity.MODE_PRIVATE,
         )
-        val defaultIperfArgs = iperfPreferences.getString(
-            getString(R.string.dev_iperf_args),
-            getString(R.string.dev_tools_iperf_args_hint)
-        )
+        val defaultIperfArgs = iperfPreferences.getString(getString(R.string.dev_iperf_args), "")
         iperfArgsEditText = view.findViewById(R.id.dev_tools_iperf_args)
         iperfArgsEditText.setText(defaultIperfArgs)
         iperfArgsEditText.addTextChangedListener(object : TextWatcher {
@@ -145,6 +145,10 @@ class DevToolsTab : Fragment() {
         icmpPing!!.text = getString(R.string.icmpPing)
         icmpPinger!!.stop()
         icmpPing!!.setOnClickListener { startIcmpPing() }
+    }
+
+    private fun onIperfLogsClear() {
+        iperfLogsTextView.text = ""
     }
 
     private fun onStartIperf() {
