@@ -5,6 +5,9 @@
     <color name="colorAccent">#03DAC5</color>
     <color name="colorDarkBackground">#272C32</color>
     <color name="colorLightBackground">#FDFDFD</color>
+    <color name="consoleBackgroundColor">#383737</color>
+    <color name="consoleTextColor">#9CFE83</color>
+    <color name="devIperfLightColor">#D9D9D9</color>
     <color name="neutral_10">#E4E4E4</color>
     <color name="neutral_60">#656565</color>
     <color name="neutral_100">#000000</color>
