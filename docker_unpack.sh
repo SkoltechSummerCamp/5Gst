@@ -1,9 +1,9 @@
 #!/bin/bash
 
 echo "load images from .tar"
-docker load -i service.tar 
-docker load -i balancer.tar 
-docker load -i postgres.tar 
+docker load -i service.tar.gz
+docker load -i balancer.tar.gz 
+docker load -i postgres.tar.gz 
 
 echo "start docker compose"
 docker compose up -d
