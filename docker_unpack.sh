@@ -1,13 +1,11 @@
 #!/bin/bash
 
-mkdir 5GST
-cd 5GST
-
 echo "load images from .tar"
-docker load -i service.tar 
-docker load -i balancer.tar 
-docker load -i postgres.tar 
+docker load -i service.tar.gz
+docker load -i balancer.tar.gz 
+docker load -i postgres.tar.gz 
 
-cd $OLDPWD
-rm -r 5GST
+echo "start docker compose"
+docker compose up -d
+
 echo "all images downladed to your usb drive"
