@@ -61,7 +61,7 @@
     <string name="download_server_args">download_server_args</string>
     <string name="upload_device_args">upload_device_args</string>
     <string name="upload_server_args">upload_server_args</string>
-    <string name="default_download_device_iperf_args">-P 10 -b 120m</string>
+    <string name="default_download_device_iperf_args">-u -R -P 10 -b 120m</string>
     <string name="default_upload_device_iperf_args">-P 10 -b 120m</string>
     <string name="default_download_server_iperf_args"> </string>
     <string name="default_upload_server_iperf_args"> </string>
@@ -76,4 +76,6 @@
     <string name="user_immutable_up_serv_args"> </string>
     <string name="dev_tools">Dev tools</string>
     <string name="setup_pipeline">Setup pipeline</string>
+    <string name="add_pipeline">Add pipeline</string>
+    <string name="pipeline_name">Pipeline name</string>
 </resources>

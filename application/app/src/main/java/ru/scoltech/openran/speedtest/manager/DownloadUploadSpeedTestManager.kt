@@ -1,6 +1,7 @@
 package ru.scoltech.openran.speedtest.manager
 
 import android.content.Context
+import androidx.appcompat.app.AppCompatActivity
 import ru.scoltech.openran.speedtest.R
 import ru.scoltech.openran.speedtest.client.balancer.model.ServerAddressResponse
 import ru.scoltech.openran.speedtest.parser.MultithreadedIperfOutputParser
@@ -47,6 +48,8 @@ private constructor(
         }
     }
 
+
+
     fun buildChainUsingBalancer(idleBetweenTasksMelees: Long): TaskChain<String> {
         val balancerApiBuilder = BalancerApiBuilder()
             .setConnectTimeout(DEFAULT_TIMEOUT)
@@ -75,64 +78,62 @@ private constructor(
             context.getString(R.string.default_upload_server_iperf_args)
         )
 
-        val startServiceIperfTask = StartServiceIperfTask(
-            balancerApiBuilder,
-            "-s ${context.getString(R.string.immutable_download_server_args)} $DOWNLOAD_SERVER_IPERF_ARGS"
-        )
-        val stopServiceIperfTask = StopServiceIperfTask(balancerApiBuilder)
-
-        val startIperfTask = StartIperfTask(
-            context.filesDir.absolutePath,
-            "${context.getString(R.string.immutable_download_device_args)} $DOWNLOAD_DEVICE_IPERF_ARGS",
-            MultithreadedIperfOutputParser(),
-            SkipThenAverageEqualizer(
-                DEFAULT_EQUALIZER_DOWNLOAD_VALUES_SKIP,
-                DEFAULT_EQUALIZER_MAX_STORING
-            ),
-            balancerApiBuilder.connectTimeout.toLong(),
-            onDownloadStart,
-            onDownloadSpeedUpdate,
-            onDownloadFinish,
-            onLog
-        )
+        val pipelineCount = context.getSharedPreferences("pipeline_count",
+            Context.MODE_PRIVATE).getString("0", "0").toString().toInt()
 
         val balancerAddress = AtomicReference<InetSocketAddress>()
         val chainBuilder = TaskChainBuilder<String>().onFatalError(onFatalError).onStop(onStop)
-        chainBuilder.initializeNewChain()
+        var taskConsumer = chainBuilder.initializeNewChain()
             .andThen(ParseAddressTask())
             .andThenUnstoppable {
                 balancerAddress.set(it)
                 it
             }
-            .andThen(obtainServiceAddressesTask)
-            .andThenUnstoppable { listOf(it) }
-            .andThen(
-                PingServiceAddressesTask(
-                    balancerApiBuilder.connectTimeout.toLong(),
-                    onPingUpdate
-                )
+
+//TODO ewdvebre
+        for(index in 0 until pipelineCount) {
+            val (str1, str2, str3) = context.getSharedPreferences(
+            "iperf_args_pipeline_$index", AppCompatActivity.MODE_PRIVATE)
+            .getString("0", "\n\n").toString().split('\n')
+            println("$str1 $str2")
+            val startServiceIperfTask = StartServiceIperfTask(
+                balancerApiBuilder,
+                str2
             )
-            .andThenTry(startServiceIperfTask) {
-                andThen(startIperfTask)
-            }.andThenFinally(stopServiceIperfTask)
-            .andThen(DelayTask(idleBetweenTasksMelees))
-            .andThenUnstoppable { balancerAddress.get() }
-            .andThen(obtainServiceAddressesTask)
-            .andThenTry(startServiceIperfTask.copy(args = "-s ${context.getString(R.string.immutable_upload_server_args)} $UPLOAD_SERVER_IPERF_ARGS")) {
-                andThen(
-                    startIperfTask.copy(
-                        args = "${context.getString(R.string.immutable_upload_device_args)} $UPLOAD_DEVICE_IPERF_ARGS",
-                        speedEqualizer = SkipThenAverageEqualizer(
-                            DEFAULT_EQUALIZER_UPLOAD_VALUES_SKIP,
-                            DEFAULT_EQUALIZER_MAX_STORING
-                        ),
-                        onStart = onUploadStart,
-                        onSpeedUpdate = onUploadSpeedUpdate,
-                        onFinish = onUploadFinish,
+            val stopServiceIperfTask = StopServiceIperfTask(balancerApiBuilder)
+
+            val startIperfTask = StartIperfTask(
+                context.filesDir.absolutePath,
+                str3,
+                MultithreadedIperfOutputParser(),
+                SkipThenAverageEqualizer(
+                    DEFAULT_EQUALIZER_DOWNLOAD_VALUES_SKIP,
+                    DEFAULT_EQUALIZER_MAX_STORING
+                ),
+                balancerApiBuilder.connectTimeout.toLong(),
+                onDownloadStart,
+                onDownloadSpeedUpdate,
+                onDownloadFinish,
+                onLog
+            )
+
+            taskConsumer = taskConsumer.andThen(obtainServiceAddressesTask)
+                .andThenUnstoppable { listOf(it) }
+                .andThen(
+                    PingServiceAddressesTask(
+                        balancerApiBuilder.connectTimeout.toLong(),
+                        onPingUpdate
                     )
                 )
-            }.andThenFinally(stopServiceIperfTask)
-            .andThenUnstoppable { onFinish() }
+                .andThenTry(startServiceIperfTask) {
+                    andThen(startIperfTask)
+                }.andThenFinally(stopServiceIperfTask)
+                //
+                .andThen(DelayTask(idleBetweenTasksMelees))
+                .andThenUnstoppable { balancerAddress.get() }
+        }
+            taskConsumer.andThenUnstoppable { onFinish() }
+// TODO rebewrbe
         return chainBuilder.finishChainCreation()
     }
 
