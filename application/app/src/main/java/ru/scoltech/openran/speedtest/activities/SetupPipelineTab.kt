@@ -1,5 +1,6 @@
 package ru.scoltech.openran.speedtest.activities
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -13,10 +14,10 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.edit
-import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import com.google.android.material.textfield.TextInputEditText
 import ru.scoltech.openran.speedtest.R
+import java.io.File
 
 
 class SetupPipelineTab : Fragment() {
@@ -33,6 +34,7 @@ class SetupPipelineTab : Fragment() {
     }
 
 
+    @SuppressLint("CommitPrefEdits")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -127,24 +129,36 @@ class SetupPipelineTab : Fragment() {
 
         val addPipelineButton = view.findViewById<Button>(R.id.add_pipeline_button)
         val pipelineLayout = view.findViewById<LinearLayout>(R.id.new_pipelines)
-        val delButton = view.findViewById<Button>(R.id.deleteButton)
 
-
+        val pipelineEditor = requireActivity().getSharedPreferences(
+            "iperf_args_pipeline",
+            AppCompatActivity.MODE_PRIVATE)
         println(childCount)
-        for (index in 0 until childCount){
-            val pipelineEditor = requireActivity().getSharedPreferences(
-                "iperf_args_pipeline_$index",
-                AppCompatActivity.MODE_PRIVATE).getString("0", "\n\n").toString()
+        var pipelineList = mutableListOf<Int>()
+        if (childCountPreferences.getString("1", "").toString() != ""){
+            pipelineList = childCountPreferences.getString("1", "").toString()
+                .split(' ').map { it.toInt() }.toMutableList()
+        }
+
+        for (index in pipelineList){
+            val pipelineConfig = pipelineEditor.getString("$index", "\n\n").toString()
                     .split('\n')
             println(pipelineEditor)
+
+            pipelineLayout.getChildAt(index).findViewById<Button>(R.id.deleteButton)
+                .setOnClickListener {
+                    pipelineEditor.edit().remove("$index").apply()
+                    pipelineList.remove(index)
+                }
+
             LayoutInflater.from(requireContext()).inflate(R.layout.pipeline_sample, pipelineLayout)
 
             pipelineLayout.getChildAt(index).findViewById<EditText>(R.id.pipeline_name)
-                    .setText(pipelineEditor[0])
+                    .setText(pipelineConfig[0])
             pipelineLayout.getChildAt(index).findViewById<EditText>(R.id.device_args)
-                    .setText(pipelineEditor[1])
+                    .setText(pipelineConfig[1])
             pipelineLayout.getChildAt(index).findViewById<EditText>(R.id.server_args)
-                    .setText(pipelineEditor[2])
+                    .setText(pipelineConfig[2])
 
             pipelineLayout.getChildAt(index).findViewById<TextView>(R.id.pipeline_name)
                 .addTextChangedListener(object : TextWatcher {
@@ -154,10 +168,10 @@ class SetupPipelineTab : Fragment() {
                         println(123)
 
                         requireActivity().getSharedPreferences(
-                            "iperf_args_pipeline_${index}",
+                            "iperf_args_pipeline",
                             AppCompatActivity.MODE_PRIVATE
                         ).edit {
-                            putString("0", serializePipeline(
+                            putString("$index", serializePipeline(
                                 pipelineLayout.getChildAt(index)))
                         }
                     }
@@ -170,10 +184,10 @@ class SetupPipelineTab : Fragment() {
 
 
                         requireActivity().getSharedPreferences(
-                            "iperf_args_pipeline_${index}",
+                            "iperf_args_pipeline",
                             AppCompatActivity.MODE_PRIVATE
                         ).edit {
-                            putString("0", serializePipeline(
+                            putString("$index", serializePipeline(
                                 pipelineLayout.getChildAt(index)))
                         }
                     }
@@ -186,10 +200,10 @@ class SetupPipelineTab : Fragment() {
 
 
                         requireActivity().getSharedPreferences(
-                            "iperf_args_pipeline_${index}",
+                            "iperf_args_pipeline",
                             AppCompatActivity.MODE_PRIVATE
                         ).edit {
-                            putString("0", serializePipeline(
+                            putString("$index", serializePipeline(
                                 pipelineLayout.getChildAt(index)))
                         }
                     }
@@ -201,10 +215,6 @@ class SetupPipelineTab : Fragment() {
         addPipelineButton.setOnClickListener { newPipeline(pipelineLayout) }
     }
 
-
-    private fun removePipeline(layout : View){
-        layout
-    }
 
     //    ((parent.getChildAt(0) as ViewGroup).children.toList()[2] as TextInputEditText)
 
@@ -225,6 +235,9 @@ class SetupPipelineTab : Fragment() {
 
         val childCountEditor = requireActivity().getSharedPreferences("pipeline_count",
             AppCompatActivity.MODE_PRIVATE)
+        val newList = childCountEditor.getString("1", "") +
+                "${childCountEditor.getString("0", "0").toString().toInt()} "
+        childCountEditor.edit(){putString("1", newList.dropLast(1))}.apply{}
         val childCount = childCountEditor.getString("0", "0")
             .toString().toInt()
         childCountEditor.edit {
@@ -239,10 +252,10 @@ class SetupPipelineTab : Fragment() {
 
 
                     requireActivity().getSharedPreferences(
-                        "iperf_args_pipeline_${childCount + 1}",
+                        "iperf_args_pipeline",
                         AppCompatActivity.MODE_PRIVATE
                     ).edit {
-                        putString("0", serializePipeline(
+                        putString("${childCount + 1}", serializePipeline(
                             pipelineForm))
                     }
                 }
@@ -256,10 +269,10 @@ class SetupPipelineTab : Fragment() {
 
 
                     requireActivity().getSharedPreferences(
-                        "iperf_args_pipeline_${childCount + 1}",
+                        "iperf_args_pipeline",
                         AppCompatActivity.MODE_PRIVATE
                     ).edit {
-                        putString("0", serializePipeline(
+                        putString("${childCount + 1}", serializePipeline(
                             pipelineForm))
                     }
                 }
@@ -273,24 +286,22 @@ class SetupPipelineTab : Fragment() {
 
 
                     requireActivity().getSharedPreferences(
-                        "iperf_args_pipeline_${childCount + 1}",
+                        "iperf_args_pipeline",
                         AppCompatActivity.MODE_PRIVATE
                     ).edit {
-                        putString("0", serializePipeline(
+                        putString("${childCount + 1}", serializePipeline(
                             pipelineForm))
                     }
                 }
             })
 
             requireActivity().getSharedPreferences(
-                "iperf_args_pipeline_${childCount + 1}",
+                "iperf_args_pipeline",
                 AppCompatActivity.MODE_PRIVATE
             ).edit {
-                putString("0", serializePipeline(
+                putString("${childCount + 1}", serializePipeline(
                     pipelineForm))
             }
-
-        val a = 5
 
 
     }
