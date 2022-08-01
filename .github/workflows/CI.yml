@@ -191,7 +191,6 @@ jobs:
       - name: Setup version variable
         run: |
           echo "version=$(cat ../VERSION)" > $GITHUB_ENV
-          echo ${{ env.version }}
           
       - name: build docker image
         if: github.repository != 'SkoltechSummerCamp/5Gst'
@@ -602,7 +601,6 @@ jobs:
       - name: Setup version variable  
         run: |
           echo "version=$(cat ../VERSION)" > $GITHUB_ENV
-          echo ${{ env.version }}
       - name: download artifacts
         uses: actions/download-artifact@v2
         with:
