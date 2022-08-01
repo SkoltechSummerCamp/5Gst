@@ -640,7 +640,7 @@ jobs:
     needs: [service-publish-to-dockerhub, balancer-publish-to-dockerhub]
     steps:
       - name: Setup version variable  
-        run: echo "version=$(cat VERSION)" > $GITHUB_ENV
+        run: echo "version=$(cat ./VERSION)" > $GITHUB_ENV
       - uses: actions/checkout@v3
       - name: new_artifacts
         if:  github.repository == 'SkoltechSummerCamp/5Gst' && github.event_name == 'push'
