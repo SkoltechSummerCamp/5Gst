@@ -190,7 +190,7 @@ jobs:
       
       - name: Setup version variable
         run: |
-          echo "version=$(cat VERSION)" > $GITHUB_ENV
+          echo "version=$(cat ../VERSION)" > $GITHUB_ENV
           
       - name: build docker image
         if: github.repository != 'SkoltechSummerCamp/5Gst'
@@ -253,7 +253,7 @@ jobs:
           REF=$(echo "-${GITHUB_REF#refs/heads/}" | sed 's/\//-/g')
           if [ ${#REF} -eq 1 ]; then REF=""; fi
           ./gradlew :app:writeVersion
-          ARTIFACT_NAME="speedtest-$(cat VERSION)-$GITHUB_RUN_NUMBER$REF"
+          ARTIFACT_NAME="speedtest-$(cat ../VERSION)-$GITHUB_RUN_NUMBER$REF"
           mkdir -p ../.github/variables
           echo "{\"variables\": [{\"name\": \"artifactName\", \"value\": \"$ARTIFACT_NAME\" }]}" > ../.github/variables/variables.json
       - name: Set artifactName variable
@@ -310,7 +310,7 @@ jobs:
           REF=$(echo "-${GITHUB_REF#refs/heads/}" | sed 's/\//-/g')
           if [ ${#REF} -eq 1 ]; then REF=""; fi
           ./gradlew :app:writeVersion
-          ARTIFACT_NAME="speedtest-$(cat VERSION)-$GITHUB_RUN_NUMBER$REF"
+          ARTIFACT_NAME="speedtest-$(cat ../VERSION)-$GITHUB_RUN_NUMBER$REF"
           mkdir -p ../.github/variables
           echo "{\"variables\": [{\"name\": \"artifactName\", \"value\": \"$ARTIFACT_NAME\" }]}" > ../.github/variables/variables.json
       - name: Set artifactName variable
@@ -573,7 +573,7 @@ jobs:
           mkdir gh-artifacts/
           cp -r service/* gh-artifacts/
           
-          echo "artifactName=speedtest-service-$(cat service/VERSION).$GITHUB_RUN_NUMBER" > $GITHUB_ENV
+          echo "artifactName=speedtest-service-$(cat VERSION).$GITHUB_RUN_NUMBER" > $GITHUB_ENV
       
       - name: Upload all server files to artifacts
         uses: actions/upload-artifact@v2
@@ -599,7 +599,7 @@ jobs:
           submodules: recursive
           
       - name: Setup version variable  
-        run: echo "version=$(cat VERSION)" > $GITHUB_ENV
+        run: echo "version=$(cat ../VERSION)" > $GITHUB_ENV
       - name: download artifacts
         uses: actions/download-artifact@v2
         with:
