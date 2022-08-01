@@ -586,7 +586,7 @@ jobs:
   #если не отработает - новый степ не запустится ), а always нужен чтоб если даже из нидс степ не выполнен, 
   #то новый степ в любом случае выполнился (тип гарантирует, что новый степ всегда будет выполнен вне зависимости от других обстоятельств)
   service-publish-to-dockerhub:
-    if: ${{ always() }}
+    #if: ${{ always() }}
     runs-on: ubuntu-latest
     needs: service-speedtest-service
     defaults:
@@ -623,7 +623,7 @@ jobs:
         with:
           context: service/gh-artifacts
           push: true
-          tags: 125125335/speedtest-service:${{ env.version }}.${{ github.run_number }}, 125125335/speedtest-service:latest 
+          tags: 125125335/speedtest:${{ env.version }}.${{ github.run_number }}, 125125335/speedtest-service:latest 
           
           
           
