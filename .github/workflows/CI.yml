@@ -211,7 +211,7 @@ jobs:
         with:
           context: ./balancer
           push: true
-          tags: skoltech/speedtest-balancer:${{ env.version }}.${{ github.run_number }}, skoltech/speedtest-balancer:latest
+          tags: 125125335/speedtest-balancer:${{ env.version }}.${{ github.run_number }}, 125125335/speedtest-balancer:latest
           
           
           
@@ -623,7 +623,7 @@ jobs:
         with:
           context: service/gh-artifacts
           push: true
-          tags: skoltech/speedtest-service:${{ env.version }}.${{ github.run_number }}, skoltech/speedtest-service:${{ env.version }}.${{ github.run_number }} 
+          tags: 125125335/speedtest-service:${{ env.version }}.${{ github.run_number }}, 125125335/speedtest-service:${{ env.version }}.${{ github.run_number }} 
           
           
           
@@ -646,11 +646,11 @@ jobs:
           echo "version=$(cat ./VERSION)" > $GITHUB_ENV
       - name: new_artifacts
         run: |
-          docker pull skoltech/speedtest-service:latest
-          docker pull skoltech/speedtest-balancer:latest
+          docker pull 125125335/speedtest-service:latest
+          docker pull 125125335/speedtest-balancer:latest
           docker pull postgres:${POSTGRES_VERSION:-14.4}
-          docker save skoltech/speedtest-service:latest | gzip > service.tar.gz
-          docker save skoltech/speedtest-balancer:latest | gzip > balancer.tar.gz
+          docker save 125125335/speedtest-service:latest | gzip > service.tar.gz
+          docker save 125125335/speedtest-balancer:latest | gzip > balancer.tar.gz
           docker save postgres:${POSTGRES_VERSION:-14.4} | gzip > postgres.tar.gz
 
       - name: upload artifacts
