@@ -637,7 +637,7 @@ jobs:
   make_artifacts:
     runs-on: ubuntu-latest
     if: ${{ always() }}
-    needs: [service-publish-to-dockerhub, balancer-publish-to-dockerhub]
+    #needs: [service-publish-to-dockerhub, balancer-publish-to-dockerhub]
     steps:
       - name: Setup version variable  
         run: |
