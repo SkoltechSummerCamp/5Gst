@@ -17,7 +17,7 @@ services:
 
       
   balancer:
-    image: skoltech/speedtest-balancer:${BALANCER_VERSION-0.3.0.80}
+    image: skoltech/speedtest-balancer:${BALANCER_VERSION-latest}
     container_name: balancer
     depends_on:
         postgres:
@@ -44,7 +44,7 @@ services:
 
 
   service: 
-    image: skoltech/speedtest-service:${SERVICE_VERSION-0.3.0.80}
+    image: skoltech/speedtest-service:${SERVICE_VERSION-latest}
     container_name: serv1 
     depends_on:
         balancer:
