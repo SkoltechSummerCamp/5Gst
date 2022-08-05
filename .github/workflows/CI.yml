@@ -242,6 +242,11 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v2
 
+      - name: Workaround for build tools executable
+        run: |
+          mv "$ANDROID_SDK_ROOT/d8" "$ANDROID_SDK_ROOT/dx"
+          mv "$ANDROID_SDK_ROOT/lib/d8.jar" "$ANDROID_SDK_ROOT/lib/dx.jar"
+
       - name: Setup Android NDK
         run: yes | "$ANDROID_HOME/tools/bin/sdkmanager" "ndk;25.0.8775105"
 
