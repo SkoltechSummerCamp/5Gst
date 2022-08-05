@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -121,7 +122,6 @@ class SetupPipelineTab : Fragment() {
             }
         })
 
-
         val childCountPreferences = requireActivity().getSharedPreferences("pipeline_count",
             AppCompatActivity.MODE_PRIVATE)
         val childCount = childCountPreferences.getString("0", "0")
@@ -139,20 +139,21 @@ class SetupPipelineTab : Fragment() {
             pipelineList = childCountPreferences.getString("1", "").toString()
                 .split(' ').map { it.toInt() }.toMutableList()
         }
-
+        /*<string name="0">3</string>
+        <string name="1">012</string>*/
+        /*<string name="1">123&#10;werh&#10;    </string>*/
         for (index in pipelineList){
-            val pipelineConfig = pipelineEditor.getString("$index", "\n\n").toString()
-                    .split('\n')
-            println(pipelineEditor)
 
-            pipelineLayout.getChildAt(index).findViewById<Button>(R.id.deleteButton)
-                .setOnClickListener {
-                    pipelineEditor.edit().remove("$index").apply()
-                    pipelineList.remove(index)
-                }
 
             LayoutInflater.from(requireContext()).inflate(R.layout.pipeline_sample, pipelineLayout)
 
+            val pipelineConfig = pipelineEditor.getString("$index", "\n\n").toString()
+                .split('\n')
+            println(pipelineEditor)
+
+
+
+            print("index = $index")
             pipelineLayout.getChildAt(index).findViewById<EditText>(R.id.pipeline_name)
                     .setText(pipelineConfig[0])
             pipelineLayout.getChildAt(index).findViewById<EditText>(R.id.device_args)
@@ -208,7 +209,13 @@ class SetupPipelineTab : Fragment() {
                         }
                     }
                 })
-//            delButton.setOnClickListener {  removePipeline(pipelineLayout, index) }
+            pipelineLayout.getChildAt(index).findViewById<ImageButton>(R.id.deleteButton)
+                .setOnClickListener {
+                    pipelineEditor.edit().remove("$index").apply()
+                    println("remove $index")
+                    pipelineList.remove(index)
+                    pipelineLayout.removeViewAt(index)
+                }
         }
 
 
@@ -235,9 +242,12 @@ class SetupPipelineTab : Fragment() {
 
         val childCountEditor = requireActivity().getSharedPreferences("pipeline_count",
             AppCompatActivity.MODE_PRIVATE)
-        val newList = childCountEditor.getString("1", "") +
-                "${childCountEditor.getString("0", "0").toString().toInt()} "
-        childCountEditor.edit(){putString("1", newList.dropLast(1))}.apply{}
+        var newList =
+            "${childCountEditor.getString("1", "")} " +
+                    "${childCountEditor.getString("0", "0").toString().toInt()}"
+        if (newList[0] == ' ')
+            newList = newList.drop(1)
+        childCountEditor.edit(){putString("1", newList)}.apply{}
         val childCount = childCountEditor.getString("0", "0")
             .toString().toInt()
         childCountEditor.edit {
@@ -302,8 +312,14 @@ class SetupPipelineTab : Fragment() {
                 putString("${childCount + 1}", serializePipeline(
                     pipelineForm))
             }
-
-
+/*
+        parent.getChildAt(index).findViewById<ImageButton>(R.id.deleteButton)
+            .setOnClickListener {
+                pipelineEditor.edit().remove("$index").apply()
+                println("remove $index")
+                pipelineList.remove(index)
+                pipelineLayout.removeViewAt(index)
+            }*/
     }
 
 }
