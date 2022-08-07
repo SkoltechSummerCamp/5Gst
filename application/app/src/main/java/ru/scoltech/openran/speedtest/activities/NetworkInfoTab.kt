@@ -10,22 +10,29 @@ import android.telephony.*
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.HorizontalScrollView
+import android.widget.ScrollView
 import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import kotlinx.coroutines.*
 import ru.scoltech.openran.speedtest.R
 
 class NetworkInfoTab : Fragment() {
 
     private lateinit var consoleTextView: TextView
 
+    private lateinit var verticalScrollView: ScrollView
+
     private lateinit var listenerPermissionRequester: ActivityResultLauncher<Array<String>>
+
+    private lateinit var horizontalScrollView: HorizontalScrollView
 
     private lateinit var telephonyManager: TelephonyManager
 
-    private lateinit var networkInfoChangesListener: NetworkInfoChangesListener
+    private lateinit var networkInfoUpdaterJob: Job
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,32 +45,45 @@ class NetworkInfoTab : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val activity = requireActivity()
 
-        networkInfoChangesListener = NetworkInfoChangesListener()
         consoleTextView = view.findViewById(R.id.console_layout_text)
+        verticalScrollView = view.findViewById(R.id.console_layout_vertical_scroll)
+        horizontalScrollView = view.findViewById(R.id.console_layout_horizontal_scroll)
         telephonyManager = activity.getSystemService(Context.TELEPHONY_SERVICE)
                 as? TelephonyManager
             ?: run {
                 showLoadError("Android Telephony Manager is not available")
                 return
             }
+
         listenerPermissionRequester = registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions(),
         ) { permissions ->
             if (permissions.values.all { it }) {
-                registerListener()
+                launchNetworkInfoUpdaterJob()
             } else {
                 showLoadError("Not enough permissions")
             }
         }
-        registerListener()
+        launchNetworkInfoUpdaterJob()
     }
 
     override fun onDestroyView() {
-        telephonyManager.listen(networkInfoChangesListener, PhoneStateListener.LISTEN_NONE)
+        runBlocking {
+            networkInfoUpdaterJob.cancelAndJoin()
+        }
         super.onDestroyView()
     }
 
-    private fun withRequiredListenerPermissions(block: () -> Unit) {
+    private fun launchNetworkInfoUpdaterJob() {
+        networkInfoUpdaterJob = CoroutineScope(Dispatchers.Main).launch {
+            while (true) {
+                requestNetworkInfoUpdate()
+                delay(1000L)
+            }
+        }
+    }
+
+    private fun requestNetworkInfoUpdate() {
         val activity = requireActivity()
 
         val accessFineLocationPermissionState =
@@ -80,25 +100,39 @@ class NetworkInfoTab : Fragment() {
                     Manifest.permission.READ_PHONE_STATE,
                 )
             )
-            telephonyManager.listen(networkInfoChangesListener, PhoneStateListener.LISTEN_NONE)
+            runBlocking {
+                networkInfoUpdaterJob.cancel()
+            }
             return
         }
 
-        block()
-    }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            telephonyManager.requestCellInfoUpdate(
+                Dispatchers.Main.asExecutor(),
+                object : TelephonyManager.CellInfoCallback() {
+                    override fun onCellInfo(cellInfo: MutableList<CellInfo>) {
+                        updateNetworkInfo(cellInfo)
+                    }
 
-    private fun registerListener() {
-        withRequiredListenerPermissions {
-            telephonyManager.listen(
-                networkInfoChangesListener,
-                PhoneStateListener.LISTEN_SIGNAL_STRENGTHS
-                        or PhoneStateListener.LISTEN_CELL_INFO
-                        or PhoneStateListener.LISTEN_CELL_LOCATION,
+                    override fun onError(errorCode: Int, detail: Throwable?) {
+                        val detailMessage = detail?.let {
+                            ", detail: ${it.message}"
+                        }
+                        appendLineToConsole(
+                            "Could not update cell info, " +
+                                    "error code is $errorCode$detailMessage"
+                        )
+                    }
+                },
             )
+        } else {
+            updateNetworkInfo(telephonyManager.allCellInfo)
         }
     }
 
     private fun updateNetworkInfo(cellsInfo: List<CellInfo>) {
+        val horizontalScroll = horizontalScrollView.scrollX to horizontalScrollView.scrollY
+        val verticalScroll = verticalScrollView.scrollX to verticalScrollView.scrollY
         clearConsole()
 
         if (cellsInfo.isEmpty()) {
@@ -109,7 +143,7 @@ class NetworkInfoTab : Fragment() {
             return
         }
 
-        cellsInfo.forEach { cellInfo ->
+        cellsInfo.filter { it.isRegistered }.forEach { cellInfo ->
             when {
                 cellInfo is CellInfoGsm -> showGsmCellInfo(cellInfo)
                 cellInfo is CellInfoCdma -> showCdmaCellInfo(cellInfo)
@@ -121,8 +155,12 @@ class NetworkInfoTab : Fragment() {
                     showNrCellInfo(cellInfo)
                 else -> appendLineToConsole("Unknown cell info ${cellInfo::class}")
             }
-            appendLineToConsole("===")
             appendLineToConsole("")
+        }
+
+        consoleTextView.post {
+            horizontalScrollView.scrollTo(horizontalScroll.first, horizontalScroll.second)
+            verticalScrollView.scrollTo(verticalScroll.first, verticalScroll.second)
         }
     }
 
@@ -328,25 +366,5 @@ class NetworkInfoTab : Fragment() {
 
     private fun clearConsole() {
         consoleTextView.text = ""
-    }
-
-    private inner class NetworkInfoChangesListener : PhoneStateListener() {
-        private fun updateCellInfo() {
-            withRequiredListenerPermissions @SuppressLint("MissingPermission") {
-                updateNetworkInfo(telephonyManager.allCellInfo)
-            }
-        }
-
-        override fun onCellInfoChanged(cellInfo: List<CellInfo>) {
-            updateCellInfo()
-        }
-
-        override fun onSignalStrengthsChanged(signalStrength: SignalStrength) {
-            updateCellInfo()
-        }
-
-        override fun onCellLocationChanged(location: CellLocation) {
-            updateCellInfo()
-        }
     }
 }
