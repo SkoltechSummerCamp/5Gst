@@ -10,7 +10,6 @@ import android.telephony.*
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.HorizontalScrollView
 import android.widget.ScrollView
 import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
@@ -24,15 +23,13 @@ class NetworkInfoTab : Fragment() {
 
     private lateinit var consoleTextView: TextView
 
-    private lateinit var verticalScrollView: ScrollView
+    private lateinit var consoleScrollView: ScrollView
 
     private lateinit var listenerPermissionRequester: ActivityResultLauncher<Array<String>>
 
-    private lateinit var horizontalScrollView: HorizontalScrollView
-
     private lateinit var telephonyManager: TelephonyManager
 
-    private lateinit var networkInfoUpdaterJob: Job
+    private var networkInfoUpdaterJob: Job? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,14 +43,7 @@ class NetworkInfoTab : Fragment() {
         val activity = requireActivity()
 
         consoleTextView = view.findViewById(R.id.console_layout_text)
-        verticalScrollView = view.findViewById(R.id.console_layout_vertical_scroll)
-        horizontalScrollView = view.findViewById(R.id.console_layout_horizontal_scroll)
-        telephonyManager = activity.getSystemService(Context.TELEPHONY_SERVICE)
-                as? TelephonyManager
-            ?: run {
-                showLoadError("Android Telephony Manager is not available")
-                return
-            }
+        consoleScrollView = view.findViewById(R.id.console_layout_scroll)
 
         listenerPermissionRequester = registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions(),
@@ -64,12 +54,19 @@ class NetworkInfoTab : Fragment() {
                 showLoadError("Not enough permissions")
             }
         }
+
+        telephonyManager = activity.getSystemService(Context.TELEPHONY_SERVICE) as? TelephonyManager
+            ?: run {
+                showLoadError("Android Telephony Manager is not available")
+                return
+            }
+
         launchNetworkInfoUpdaterJob()
     }
 
     override fun onDestroyView() {
         runBlocking {
-            networkInfoUpdaterJob.cancelAndJoin()
+            networkInfoUpdaterJob?.cancel()
         }
         super.onDestroyView()
     }
@@ -101,7 +98,7 @@ class NetworkInfoTab : Fragment() {
                 )
             )
             runBlocking {
-                networkInfoUpdaterJob.cancel()
+                networkInfoUpdaterJob?.cancel()
             }
             return
         }
@@ -131,8 +128,7 @@ class NetworkInfoTab : Fragment() {
     }
 
     private fun updateNetworkInfo(cellsInfo: List<CellInfo>) {
-        val horizontalScroll = horizontalScrollView.scrollX to horizontalScrollView.scrollY
-        val verticalScroll = verticalScrollView.scrollX to verticalScrollView.scrollY
+        val scrollPosition = consoleScrollView.scrollX to consoleScrollView.scrollY
         clearConsole()
 
         if (cellsInfo.isEmpty()) {
@@ -159,8 +155,7 @@ class NetworkInfoTab : Fragment() {
         }
 
         consoleTextView.post {
-            horizontalScrollView.scrollTo(horizontalScroll.first, horizontalScroll.second)
-            verticalScrollView.scrollTo(verticalScroll.first, verticalScroll.second)
+            consoleScrollView.scrollTo(scrollPosition.first, scrollPosition.second)
         }
     }
 
