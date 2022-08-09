@@ -12,13 +12,11 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import com.google.android.material.textfield.TextInputEditText
 import ru.scoltech.openran.speedtest.R
-import java.io.File
 
 
 class SetupPipelineTab : Fragment() {
@@ -30,10 +28,59 @@ class SetupPipelineTab : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         return inflater.inflate(R.layout.fragment_setup_pipeline, container, true)
     }
 
+    private fun getPipleineCount() = run {
+            requireActivity().getSharedPreferences("pipeline_count",
+                AppCompatActivity.MODE_PRIVATE).getString("0", "0")
+            .toString().toInt()
+    }
+
+    private fun serializePipeline(pipeline : View): String {
+        val name = pipeline.findViewById<TextInputEditText>(R.id.pipeline_name).text.toString()
+        val device = pipeline.findViewById<TextInputEditText>(R.id.device_args).text.toString()
+        val server = pipeline.findViewById<TextInputEditText>(R.id.server_args).text.toString()
+        println("$name\n$device\n$server".split('\n'))
+        return "$name\n$device\n$server"
+    }
+
+    private fun editCallback(name : Int, parent : ViewGroup, pipelineForm : View){
+        val pipelineCount = getPipleineCount()
+        parent.getChildAt(pipelineCount).findViewById<EditText>(name)
+            .addTextChangedListener(object : TextWatcher {
+                override fun afterTextChanged(s: Editable) {}
+                override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+                override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+
+
+                    requireActivity().getSharedPreferences(
+                        "iperf_args_pipeline",
+                        AppCompatActivity.MODE_PRIVATE
+                    ).edit {
+                        putString("${pipelineCount + 1}", serializePipeline(
+                            pipelineForm))
+                    }
+                }
+            })
+    }
+
+    private fun addChild2List(){
+        val childCountEditor = requireActivity().getSharedPreferences("pipeline_count",
+            AppCompatActivity.MODE_PRIVATE)
+
+        var newList =
+            "${childCountEditor.getString("1", "")} " +
+                    "${childCountEditor.getString("0", "0").toString().toInt()}"
+
+        if (newList[0] == ' ')
+            newList = newList.drop(1)
+        childCountEditor.edit {putString("1", newList)}.apply{}
+        childCountEditor.edit {
+            putString("0", (getPipleineCount() + 1).toString())
+        }
+
+    }
 
     @SuppressLint("CommitPrefEdits")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -60,24 +107,28 @@ class SetupPipelineTab : Fragment() {
             getString(R.string.upload_server_args),
             getString(R.string.default_upload_server_iperf_args)
         )
+
         val iperfUploadDevText = view.findViewById<EditText>(R.id.upload_device_args)
         iperfUploadDevText.setText(UPLOAD_DEVICE_IPERF_ARGS)
-        iperfUploadDevText.addTextChangedListener(object : TextWatcher {
+//        editCallback(R.id.upload_device_args, view, )
+        view.findViewById<EditText>(R.id.upload_device_args)
+            .addTextChangedListener(object : TextWatcher {
+
             override fun afterTextChanged(s: Editable) {}
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                val editor = activity.getSharedPreferences(
+                requireActivity().getSharedPreferences(
                     getString(R.string.iperfSharedPreferences),
                     AppCompatActivity.MODE_PRIVATE
-                ).edit()
-                editor.putString(getString(R.string.upload_device_args), s.toString())
-                editor.apply()
+                ).edit{ putString(getString(R.string.upload_device_args), s.toString()) }
                 Log.d(TAG, "update UploadDeviceArgs = $s")
             }
         })
+
         val iperfUploadServText = view.findViewById<EditText>(R.id.upload_server_args)
         iperfUploadServText.setText(UPLOAD_SERVER_IPERF_ARGS)
         iperfUploadServText.addTextChangedListener(object : TextWatcher {
+
             override fun afterTextChanged(s: Editable) {}
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
@@ -94,6 +145,7 @@ class SetupPipelineTab : Fragment() {
         val iperfDownloadDevText = view.findViewById<EditText>(R.id.download_device_args)
         iperfDownloadDevText.setText(DOWNLOAD_DEVICE_IPERF_ARGS)
         iperfDownloadDevText.addTextChangedListener(object : TextWatcher {
+
             override fun afterTextChanged(s: Editable) {}
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
@@ -106,9 +158,11 @@ class SetupPipelineTab : Fragment() {
                 Log.d(TAG, "update DownloadDeviceArgs = $s")
             }
         })
+
         val iperfDownloadServText = view.findViewById<EditText>(R.id.download_server_args)
         iperfDownloadServText.setText(DOWNLOAD_SERVER_IPERF_ARGS)
         iperfDownloadServText.addTextChangedListener(object : TextWatcher {
+
             override fun afterTextChanged(s: Editable) {}
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
@@ -139,19 +193,14 @@ class SetupPipelineTab : Fragment() {
             pipelineList = childCountPreferences.getString("1", "").toString()
                 .split(' ').map { it.toInt() }.toMutableList()
         }
-        /*<string name="0">3</string>
-        <string name="1">012</string>*/
-        /*<string name="1">123&#10;werh&#10;    </string>*/
-        for (index in pipelineList){
 
+        for (index in pipelineList){
 
             LayoutInflater.from(requireContext()).inflate(R.layout.pipeline_sample, pipelineLayout)
 
             val pipelineConfig = pipelineEditor.getString("$index", "\n\n").toString()
                 .split('\n')
             println(pipelineEditor)
-
-
 
             print("index = $index")
             pipelineLayout.getChildAt(index).findViewById<EditText>(R.id.pipeline_name)
@@ -161,54 +210,12 @@ class SetupPipelineTab : Fragment() {
             pipelineLayout.getChildAt(index).findViewById<EditText>(R.id.server_args)
                     .setText(pipelineConfig[2])
 
-            pipelineLayout.getChildAt(index).findViewById<TextView>(R.id.pipeline_name)
-                .addTextChangedListener(object : TextWatcher {
-                    override fun afterTextChanged(s: Editable) {}
-                    override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-                    override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                        println(123)
 
-                        requireActivity().getSharedPreferences(
-                            "iperf_args_pipeline",
-                            AppCompatActivity.MODE_PRIVATE
-                        ).edit {
-                            putString("$index", serializePipeline(
-                                pipelineLayout.getChildAt(index)))
-                        }
-                    }
-                })
-            pipelineLayout.getChildAt(index).findViewById<TextView>(R.id.device_args)
-                .addTextChangedListener(object : TextWatcher {
-                    override fun afterTextChanged(s: Editable) {}
-                    override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-                    override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+            editCallback(R.id.pipeline_name, pipelineLayout, pipelineLayout)
+            editCallback(R.id.device_args, pipelineLayout, pipelineLayout)
+            editCallback(R.id.server_args, pipelineLayout, pipelineLayout)
 
 
-                        requireActivity().getSharedPreferences(
-                            "iperf_args_pipeline",
-                            AppCompatActivity.MODE_PRIVATE
-                        ).edit {
-                            putString("$index", serializePipeline(
-                                pipelineLayout.getChildAt(index)))
-                        }
-                    }
-                })
-            pipelineLayout.getChildAt(index).findViewById<TextView>(R.id.server_args)
-                .addTextChangedListener(object : TextWatcher {
-                    override fun afterTextChanged(s: Editable) {}
-                    override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-                    override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-
-
-                        requireActivity().getSharedPreferences(
-                            "iperf_args_pipeline",
-                            AppCompatActivity.MODE_PRIVATE
-                        ).edit {
-                            putString("$index", serializePipeline(
-                                pipelineLayout.getChildAt(index)))
-                        }
-                    }
-                })
             pipelineLayout.getChildAt(index).findViewById<ImageButton>(R.id.deleteButton)
                 .setOnClickListener {
                     pipelineEditor.edit().remove("$index").apply()
@@ -218,108 +225,28 @@ class SetupPipelineTab : Fragment() {
                 }
         }
 
-
         addPipelineButton.setOnClickListener { newPipeline(pipelineLayout) }
     }
-
-
-    //    ((parent.getChildAt(0) as ViewGroup).children.toList()[2] as TextInputEditText)
-
-//TODO: rewrite the code so it uses editor map as map, not string
-    private fun serializePipeline(pipeline : View): String {
-        val name = pipeline.findViewById<TextInputEditText>(R.id.pipeline_name).text.toString()
-        val device = pipeline.findViewById<TextInputEditText>(R.id.device_args).text.toString()
-        val server = pipeline.findViewById<TextInputEditText>(R.id.server_args).text.toString()
-        println("$name\n$device\n$server".split('\n'))
-        return "$name\n$device\n$server"
-    }
-
-
 
     private fun newPipeline(parent: ViewGroup) {
         val pipelineForm = LayoutInflater.from(requireContext())
             .inflate(R.layout.pipeline_sample, parent)
 
-        val childCountEditor = requireActivity().getSharedPreferences("pipeline_count",
-            AppCompatActivity.MODE_PRIVATE)
-        var newList =
-            "${childCountEditor.getString("1", "")} " +
-                    "${childCountEditor.getString("0", "0").toString().toInt()}"
-        if (newList[0] == ' ')
-            newList = newList.drop(1)
-        childCountEditor.edit(){putString("1", newList)}.apply{}
-        val childCount = childCountEditor.getString("0", "0")
-            .toString().toInt()
-        childCountEditor.edit {
-            putString("0", (childCount + 1).toString())
+        addChild2List()
+
+        editCallback(R.id.pipeline_name, parent, pipelineForm)
+        editCallback( R.id.device_args, parent, pipelineForm)
+        editCallback(R.id.server_args, parent, pipelineForm)
+
+        requireActivity().getSharedPreferences(
+            "iperf_args_pipeline",
+            AppCompatActivity.MODE_PRIVATE
+        ).edit {
+            putString("${getPipleineCount() + 1}", serializePipeline(
+                pipelineForm))
         }
-
-        parent.getChildAt(childCount).findViewById<EditText>(R.id.pipeline_name)
-            .addTextChangedListener(object : TextWatcher {
-                override fun afterTextChanged(s: Editable) {}
-                override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-                override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-
-
-                    requireActivity().getSharedPreferences(
-                        "iperf_args_pipeline",
-                        AppCompatActivity.MODE_PRIVATE
-                    ).edit {
-                        putString("${childCount + 1}", serializePipeline(
-                            pipelineForm))
-                    }
-                }
-            })
-
-        parent.getChildAt(childCount).findViewById<EditText>(R.id.device_args)
-            .addTextChangedListener(object : TextWatcher {
-                override fun afterTextChanged(s: Editable) {}
-                override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-                override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-
-
-                    requireActivity().getSharedPreferences(
-                        "iperf_args_pipeline",
-                        AppCompatActivity.MODE_PRIVATE
-                    ).edit {
-                        putString("${childCount + 1}", serializePipeline(
-                            pipelineForm))
-                    }
-                }
-            })
-
-        parent.getChildAt(childCount).findViewById<EditText>(R.id.server_args)
-            .addTextChangedListener(object : TextWatcher {
-                override fun afterTextChanged(s: Editable) {}
-                override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-                override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-
-
-                    requireActivity().getSharedPreferences(
-                        "iperf_args_pipeline",
-                        AppCompatActivity.MODE_PRIVATE
-                    ).edit {
-                        putString("${childCount + 1}", serializePipeline(
-                            pipelineForm))
-                    }
-                }
-            })
-
-            requireActivity().getSharedPreferences(
-                "iperf_args_pipeline",
-                AppCompatActivity.MODE_PRIVATE
-            ).edit {
-                putString("${childCount + 1}", serializePipeline(
-                    pipelineForm))
-            }
-/*
-        parent.getChildAt(index).findViewById<ImageButton>(R.id.deleteButton)
-            .setOnClickListener {
-                pipelineEditor.edit().remove("$index").apply()
-                println("remove $index")
-                pipelineList.remove(index)
-                pipelineLayout.removeViewAt(index)
-            }*/
     }
 
 }
+
+
