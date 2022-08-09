@@ -187,42 +187,43 @@ class SetupPipelineTab : Fragment() {
         val pipelineEditor = requireActivity().getSharedPreferences(
             "iperf_args_pipeline",
             AppCompatActivity.MODE_PRIVATE)
-        println(childCount)
+        println(" [][]" + childCount)
         var pipelineList = mutableListOf<Int>()
-        if (childCountPreferences.getString("1", "").toString() != ""){
+        if (childCountPreferences.getString("1", "").toString() != "") {
             pipelineList = childCountPreferences.getString("1", "").toString()
                 .split(' ').map { it.toInt() }.toMutableList()
-        }
 
-        for (index in pipelineList){
+            for (index in pipelineList) {
 
-            LayoutInflater.from(requireContext()).inflate(R.layout.pipeline_sample, pipelineLayout)
+                LayoutInflater.from(requireContext())
+                    .inflate(R.layout.pipeline_sample, pipelineLayout)
 
-            val pipelineConfig = pipelineEditor.getString("$index", "\n\n").toString()
-                .split('\n')
-            println(pipelineEditor)
+                val pipelineConfig = pipelineEditor.getString("$index", "\n\n").toString()
+                    .split('\n')
+                println(pipelineEditor)
 
-            print("index = $index")
-            pipelineLayout.getChildAt(index).findViewById<EditText>(R.id.pipeline_name)
+                print("index = $index")
+                pipelineLayout.getChildAt(index).findViewById<EditText>(R.id.pipeline_name)
                     .setText(pipelineConfig[0])
-            pipelineLayout.getChildAt(index).findViewById<EditText>(R.id.device_args)
+                pipelineLayout.getChildAt(index).findViewById<EditText>(R.id.device_args)
                     .setText(pipelineConfig[1])
-            pipelineLayout.getChildAt(index).findViewById<EditText>(R.id.server_args)
+                pipelineLayout.getChildAt(index).findViewById<EditText>(R.id.server_args)
                     .setText(pipelineConfig[2])
 
 
-            editCallback(R.id.pipeline_name, pipelineLayout, pipelineLayout)
-            editCallback(R.id.device_args, pipelineLayout, pipelineLayout)
-            editCallback(R.id.server_args, pipelineLayout, pipelineLayout)
+                editCallback(R.id.pipeline_name, pipelineLayout, pipelineLayout)
+                editCallback(R.id.device_args, pipelineLayout, pipelineLayout)
+                editCallback(R.id.server_args, pipelineLayout, pipelineLayout)
 
 
-            pipelineLayout.getChildAt(index).findViewById<ImageButton>(R.id.deleteButton)
-                .setOnClickListener {
-                    pipelineEditor.edit().remove("$index").apply()
-                    println("remove $index")
-                    pipelineList.remove(index)
-                    pipelineLayout.removeViewAt(index)
-                }
+                pipelineLayout.getChildAt(index).findViewById<ImageButton>(R.id.deleteButton)
+                    .setOnClickListener {
+                        pipelineEditor.edit().remove("$index").apply()
+                        println("remove $index")
+                        pipelineList.remove(index)
+                        pipelineLayout.removeViewAt(index)
+                    }
+            }
         }
 
         addPipelineButton.setOnClickListener { newPipeline(pipelineLayout) }
