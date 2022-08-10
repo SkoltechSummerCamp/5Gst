@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/console_background"
     android:fillViewport="true"
+    android:layout_margin="10dp"
     android:padding="10dp"
     android:scrollbars="vertical">
 
