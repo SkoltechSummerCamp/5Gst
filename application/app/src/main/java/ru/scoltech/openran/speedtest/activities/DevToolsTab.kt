@@ -78,7 +78,6 @@ class DevToolsTab : Fragment() {
     }
 
     private fun configureIperf(view: View, activity: FragmentActivity) {
-        iperfLogsTextView = view.findViewById(R.id.dev_tools_iperf_logs)
         iperfRunner = IperfRunner.Builder(requireContext().filesDir.absolutePath)
             .stderrLinesHandler(this::appendLineToIperfLogs)
             .stdoutLinesHandler(this::appendLineToIperfLogs)
