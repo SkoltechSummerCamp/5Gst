@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.util.Pair;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -29,6 +30,7 @@ import ru.scoltech.openran.speedtest.manager.DownloadUploadSpeedTestManager;
 public class SpeedActivity extends AppCompatActivity {
 
     private Wave cWave;
+    private TextView stageNameTextView;
     private CardView mCard;
     private SubResultView mSubResults; // in progress result
     private HeaderView mHeader;
@@ -60,6 +62,7 @@ public class SpeedActivity extends AppCompatActivity {
 
         actionBtn = findViewById(R.id.action_btn);
 
+        stageNameTextView = findViewById(R.id.current_stage_name);
         mCard = findViewById(R.id.card);
         cWave = mCard.getWave();
 
@@ -72,11 +75,12 @@ public class SpeedActivity extends AppCompatActivity {
 
         speedTestManager = new DownloadUploadSpeedTestManager.Builder(this)
                 .onPingUpdate((ping) -> runOnUiThread(() -> mCard.setPing((int) ping)))
-                .onDownloadStart(() -> runOnUiThread(() -> {
+                .onDownloadStart((stageInfo) -> runOnUiThread(() -> {
                     mCard.setInstantSpeed(0, 0);
 
                     cWave.start();
                     cWave.attachSpeed(0);
+                    stageNameTextView.setText(stageInfo.getName());
                 }))
                 .onDownloadSpeedUpdate((statistics, speedBitsPS) -> runOnUiThread(() -> {
                     Pair<Integer, Integer> instSpeed = sm.getSpeedWithPrecision(speedBitsPS.intValue(), 2);

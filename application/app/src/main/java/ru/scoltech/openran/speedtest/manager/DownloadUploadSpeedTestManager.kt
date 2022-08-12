@@ -22,7 +22,7 @@ class DownloadUploadSpeedTestManager
 private constructor(
     private val context: Context,
     private val onPingUpdate: (Long) -> Unit,
-    private val onDownloadStart: () -> Unit,
+    private val onDownloadStart: (StageInfo) -> Unit,
     private val onDownloadSpeedUpdate: (LongSummaryStatistics, Long) -> Unit,
     private val onDownloadFinish: (LongSummaryStatistics) -> Unit,
     private val onUploadStart: () -> Unit,
@@ -111,11 +111,12 @@ private constructor(
                     DEFAULT_EQUALIZER_MAX_STORING
                 ),
                 balancerApiBuilder.connectTimeout.toLong(),
-                onDownloadStart,
                 onDownloadSpeedUpdate,
                 onDownloadFinish,
                 onLog
             )
+
+            val stageInfo = StageInfo(str1)
 
             taskConsumer = taskConsumer.andThen(obtainServiceAddressesTask)
                 .andThenUnstoppable { listOf(it) }
@@ -126,7 +127,11 @@ private constructor(
                     )
                 )
                 .andThenTry(startServiceIperfTask) {
-                    andThen(startIperfTask)
+                    andThenUnstoppable {
+                        onDownloadStart(stageInfo)
+                        it
+                    }
+                        .andThen(startIperfTask)
                 }.andThenFinally(stopServiceIperfTask)
                 //
                 .andThen(DelayTask(idleBetweenTasksMelees))
@@ -152,6 +157,10 @@ private constructor(
                 listOf(ServerAddressResponse().ip(it.address.hostAddress).portIperf(it.port))
             }
             .andThen(PingServiceAddressesTask(DEFAULT_TIMEOUT.toLong(), onPingUpdate))
+            .andThenUnstoppable {
+                onDownloadStart(StageInfo("Direct iperf stage"))
+                it
+            }
             .andThen(
                 StartIperfTask(
                     context.filesDir.absolutePath,
@@ -162,7 +171,6 @@ private constructor(
                         DEFAULT_EQUALIZER_MAX_STORING
                     ),
                     DEFAULT_TIMEOUT.toLong(),
-                    onDownloadStart,
                     onDownloadSpeedUpdate,
                     onDownloadFinish,
                     onLog
@@ -178,9 +186,14 @@ private constructor(
         }
     }
 
+    // TODO use in SetupPipelineTab
+    data class StageInfo(
+        val name: String,
+    )
+
     class Builder(private val context: Context) {
         private var onPingUpdate: LongConsumer = LongConsumer {}
-        private var onDownloadStart: Runnable = Runnable {}
+        private var onDownloadStart: Consumer<StageInfo> = Consumer {}
         private var onDownloadSpeedUpdate: BiConsumer<LongSummaryStatistics, Long> =
             BiConsumer { _, _ -> }
         private var onDownloadFinish: Consumer<LongSummaryStatistics> = Consumer {}
@@ -197,7 +210,7 @@ private constructor(
             return DownloadUploadSpeedTestManager(
                 context,
                 onPingUpdate::accept,
-                onDownloadStart::run,
+                onDownloadStart::accept,
                 onDownloadSpeedUpdate::accept,
                 onDownloadFinish::accept,
                 onUploadStart::run,
@@ -215,7 +228,7 @@ private constructor(
             return this
         }
 
-        fun onDownloadStart(onDownloadStart: Runnable): Builder {
+        fun onDownloadStart(onDownloadStart: Consumer<StageInfo>): Builder {
             this.onDownloadStart = onDownloadStart
             return this
         }
