@@ -32,6 +32,7 @@ class FiveGstLoginView(APIView):
             201: openapi.Response('Authentication succeeded', serializers.FiveGstTokenSerializer),
             500: openapi.Response('Could not generate token, please try again'),
         },
+        security=[],
     )
     def post(self, request):
         try:
@@ -99,6 +100,7 @@ class ServiceRegistrationView(mixins.DestroyModelMixin,
             201: openapi.Response('Service registered', serializers.ServerAddressRequestSerializer),
             400: openapi.Response('Invalid request body'),
         },
+        security=[],
     )
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
@@ -112,6 +114,7 @@ class ServiceRegistrationView(mixins.DestroyModelMixin,
             400: openapi.Response('Invalid request body'),
             404: openapi.Response('Service was not found'),
         },
+        security=[],
     )
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
@@ -160,6 +163,7 @@ class PingView(APIView):
     @swagger_auto_schema(
         operation_description='Check that server is up',
         operation_id='ping',
+        security=[],
     )
     def get(self, request):
         return Response(status=status.HTTP_200_OK)

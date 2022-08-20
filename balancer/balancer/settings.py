@@ -205,7 +205,14 @@ SWAGGER_SETTINGS = {
     ),
     'DEFAULT_GENERATOR_CLASS': SpeedtestAPISchemeGenerator,
     'DEFAULT_AUTO_SCHEMA_CLASS': SpeedtestSwaggerAutoSchema,
-    'SECURITY_DEFINITIONS': {},
+    'SECURITY_DEFINITIONS': {
+        '5Gst': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+        },
+    },
+
 }
 
 # Internationalization
