@@ -232,6 +232,13 @@ class Configuration(object):
         :return: The Auth Settings information dict.
         """
         return {
+            '5Gst':
+                {
+                    'type': 'api_key',
+                    'in': 'header',
+                    'key': 'Authorization',
+                    'value': self.get_api_key_with_prefix('Authorization')
+                },
 
         }
 

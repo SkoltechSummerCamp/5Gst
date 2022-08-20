@@ -82,7 +82,14 @@ import java.util.*;
 public class BalancerApiExample {
 
     public static void main(String[] args) {
+        ApiClient defaultClient = Configuration.getDefaultApiClient();
         
+        // Configure API key authorization: 5Gst
+        ApiKeyAuth 5Gst = (ApiKeyAuth) defaultClient.getAuthentication("5Gst");
+        5Gst.setApiKey("YOUR API KEY");
+        // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+        //5Gst.setApiKeyPrefix("Token");
+
         BalancerApi apiInstance = new BalancerApi();
         try {
             ServerAddressResponse result = apiInstance.acquireService();
@@ -119,8 +126,13 @@ Class | Method | HTTP request | Description
 
 ## Documentation for Authorization
 
-All endpoints do not require authorization.
 Authentication schemes defined for the API:
+### 5Gst
+
+- **Type**: API key
+- **API key parameter name**: Authorization
+- **Location**: HTTP header
+
 
 ## Recommendation
 

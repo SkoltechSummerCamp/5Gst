@@ -106,7 +106,7 @@ class BalancerApi(object):
             ['application/json'])  # noqa: E501
 
         # Authentication setting
-        auth_settings = []  # noqa: E501
+        auth_settings = ['5Gst']  # noqa: E501
 
         return self.api_client.call_api(
             '/Skoltech_OpenRAN_5G/iperf_load_balancer/0.1.0/service/acquire/', 'POST',
@@ -288,7 +288,7 @@ class BalancerApi(object):
             ['application/json'])  # noqa: E501
 
         # Authentication setting
-        auth_settings = []  # noqa: E501
+        auth_settings = ['5Gst']  # noqa: E501
 
         return self.api_client.call_api(
             '/Skoltech_OpenRAN_5G/iperf_load_balancer/0.1.0/logout/', 'POST',
