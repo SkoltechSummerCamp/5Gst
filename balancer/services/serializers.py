@@ -42,3 +42,9 @@ class ServerAddressRequestSerializer(serializers.Serializer):
 
     def update(self, instance, validated_data):
         raise NotImplementedError('`update()` must not be used.')
+
+
+class FiveGstTokenSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.FiveGstToken
+        fields = ('token', 'expires_at')

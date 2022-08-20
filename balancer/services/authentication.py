@@ -1,4 +1,7 @@
+import datetime
+
 from django.contrib.auth.models import AnonymousUser
+from django.utils.timezone import make_aware
 from rest_framework import exceptions
 from rest_framework.authentication import TokenAuthentication
 
@@ -37,7 +40,12 @@ class FiveGstAuthentication(TokenAuthentication):
 
     def authenticate_credentials(self, key):
         tokens = list(models.FiveGstToken.objects.filter(token=key))
-        if len(tokens) == 1:
-            return TokenAnonymousUser(tokens[0]), tokens[0]
-        else:
+        if len(tokens) != 1:
             raise exceptions.AuthenticationFailed('Invalid token.')
+
+        token = tokens[0]
+        if token.expires_at < make_aware(datetime.datetime.now()):
+            token.delete()
+            raise exceptions.AuthenticationFailed('Token expired.')
+
+        return TokenAnonymousUser(token), token

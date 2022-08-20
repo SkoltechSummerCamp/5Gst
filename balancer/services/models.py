@@ -23,10 +23,15 @@ class ServerAddress(models.Model):
 
 
 class FiveGstToken(models.Model):
-    token = models.CharField(max_length=64)
+    token = models.CharField(max_length=64, unique=True)
     expires_at = models.DateTimeField()
     reserved_service = models.ForeignKey(ServerAddress,
                                          null=True,
                                          blank=True,
                                          on_delete=models.SET_NULL,
                                          related_name='anonymously_reserved_by')
+
+    class Meta:
+        indexes = [
+            models.Index(fields=('expires_at',))
+        ]

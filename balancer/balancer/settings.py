@@ -220,3 +220,5 @@ USE_TZ = True
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 SERVICE_URL_SCHEME = os.getenv('SERVICE_URL_SCHEME', 'https')
+
+FIVE_GST_TOKEN_LIFETIME_SECONDS = int(os.getenv('FIVE_GST_TOKEN_LIFETIME_SECONDS', 60 * 5))

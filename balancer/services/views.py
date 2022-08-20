@@ -1,8 +1,11 @@
 import logging
+import datetime
+import secrets
 
 import urllib3.util
 from django.conf import settings
-from django.db import transaction
+from django.db import transaction, IntegrityError
+from django.utils.timezone import make_aware
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import mixins, status
@@ -14,8 +17,51 @@ from rest_framework.views import APIView
 import service_api
 from services import serializers, models
 from services.authentication import FiveGstAuthentication
+from services.models import FiveGstToken
 
 logger = logging.getLogger(__name__)
+
+
+class FiveGstLoginView(APIView):
+    permission_classes = []
+    authentication_classes = [FiveGstAuthentication]
+
+    @swagger_auto_schema(
+        operation_description='Log in to 5Gst service',
+        operation_id='login',
+        responses={
+            201: openapi.Response('Authentication succeeded', serializers.FiveGstTokenSerializer),
+            500: openapi.Response('Could not generate token, please try again'),
+        },
+    )
+    def post(self, request):
+        try:
+            token = FiveGstToken.objects.create(
+                token=secrets.token_hex(32),
+                expires_at=make_aware(datetime.datetime.now()
+                                      + datetime.timedelta(seconds=settings.FIVE_GST_TOKEN_LIFETIME_SECONDS)),
+            )
+        except IntegrityError:
+            return Response('Could not generate token, please try again', status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        response = serializers.FiveGstTokenSerializer(instance=token).data
+        return Response(response, status=status.HTTP_201_CREATED)
+
+
+class FiveGstLogoutView(APIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [FiveGstAuthentication]
+
+    @swagger_auto_schema(
+        operation_description='Log out from 5Gst service',
+        operation_id='logout',
+        responses={
+            200: openapi.Response('Logged out successfully'),
+        },
+    )
+    def post(self, request):
+        request.user.token.delete()
+        return Response("Logged out successfully", status=status.HTTP_200_OK)
 
 
 class ServiceRegistrationView(mixins.DestroyModelMixin,
