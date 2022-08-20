@@ -20,3 +20,13 @@ class ServerAddress(models.Model):
 
     class Meta:
         unique_together = ('ip', 'port', 'port_iperf')
+
+
+class FiveGstToken(models.Model):
+    token = models.CharField(max_length=64)
+    expires_at = models.DateTimeField()
+    reserved_service = models.ForeignKey(ServerAddress,
+                                         null=True,
+                                         blank=True,
+                                         on_delete=models.SET_NULL,
+                                         related_name='anonymously_reserved_by')

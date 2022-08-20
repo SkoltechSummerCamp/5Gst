@@ -161,9 +161,14 @@ LOGGING = {
     },
 }
 
+# TODO not importing because of drf_yasg :(
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [],
-    'DEFAULT_PERMISSION_CLASSES': [],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'services.authentication.FiveGstAnonymousAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
 }
 
 DEFAULT_SWAGGER_TAG = os.getenv('DEFAULT_SWAGGER_TAG', 'balancer')

@@ -7,11 +7,13 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import mixins, status
 from rest_framework.generics import GenericAPIView, get_object_or_404
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 import service_api
 from services import serializers, models
+from services.authentication import FiveGstAuthentication
 
 logger = logging.getLogger(__name__)
 
@@ -19,6 +21,8 @@ logger = logging.getLogger(__name__)
 class ServiceRegistrationView(mixins.DestroyModelMixin,
                               mixins.CreateModelMixin,
                               GenericAPIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [FiveGstAuthentication]
     serializer_class = serializers.ServerAddressRequestSerializer
 
     def get_queryset(self):
@@ -58,6 +62,9 @@ class ServiceRegistrationView(mixins.DestroyModelMixin,
 
 
 class ServiceAcquirementView(APIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [FiveGstAuthentication]
+
     @swagger_auto_schema(
         operation_description='Acquires service for further iperf tests',
         operation_id='acquire_service',
@@ -87,6 +94,9 @@ class ServiceAcquirementView(APIView):
 
 
 class PingView(APIView):
+    permission_classes = []
+    authentication_classes = [FiveGstAuthentication]
+
     @swagger_auto_schema(
         operation_description='Check that server is up',
         operation_id='ping',
