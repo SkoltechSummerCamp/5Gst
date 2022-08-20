@@ -159,6 +159,11 @@ LOGGING = {
         'handlers': ['console'],
         'level': os.getenv('LOG_LEVEL', 'DEBUG'),
     },
+    'loggers': {
+        'django.db.backends': {
+            'level': os.getenv('DB_LOG_LEVEL', 'INFO'),
+        }
+    }
 }
 
 # TODO not importing because of drf_yasg :(

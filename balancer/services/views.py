@@ -1,8 +1,7 @@
-import logging
 import datetime
+import logging
 import secrets
 
-import urllib3.util
 from django.conf import settings
 from django.db import transaction, IntegrityError
 from django.utils.timezone import make_aware
@@ -14,7 +13,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-import service_api
+import service_api.rest
 from services import serializers, models
 from services.authentication import FiveGstAuthentication
 from services.models import FiveGstToken
@@ -57,9 +56,18 @@ class FiveGstLogoutView(APIView):
         operation_id='logout',
         responses={
             200: openapi.Response('Logged out successfully'),
+            502: openapi.Response('Could not stop session on service'),
         },
     )
     def post(self, request):
+        acquired_service = request.user.token.acquired_service
+        if acquired_service is not None:
+            try:
+                acquired_service.to_api_instance().stop_session()
+            except service_api.rest.ApiException as e:
+                logger.error('Could not stop session on service', exc_info=e)
+                return Response('Could not stop session on service', status=status.HTTP_502_BAD_GATEWAY)
+
         request.user.token.delete()
         return Response("Logged out successfully", status=status.HTTP_200_OK)
 
@@ -67,8 +75,10 @@ class FiveGstLogoutView(APIView):
 class ServiceRegistrationView(mixins.DestroyModelMixin,
                               mixins.CreateModelMixin,
                               GenericAPIView):
-    permission_classes = [IsAuthenticated]
-    authentication_classes = [FiveGstAuthentication]
+    # TODO add service authentication
+    # permission_classes = [IsAuthenticated]
+    permission_classes = []
+    authentication_classes = []
     serializer_class = serializers.ServerAddressRequestSerializer
 
     def get_queryset(self):
@@ -116,25 +126,29 @@ class ServiceAcquirementView(APIView):
         operation_id='acquire_service',
         responses={
             200: openapi.Response('Service acquired', serializers.ServerAddressResponseSerializer),
+            409: openapi.Response('Could not acquire service due to a conflict, try again',
+                                  serializers.ServerAddressResponseSerializer),
             503: openapi.Response('No available services found'),
         },
     )
     @transaction.atomic
     def post(self, request, *args, **kwargs):
-        acquired_address = models.ServerAddress.objects.select_for_update(skip_locked=True).first()
-        if not acquired_address:
-            return Response(status=status.HTTP_503_SERVICE_UNAVAILABLE)
+        if request.user.token.acquired_service is not None:
+            acquired_address = request.user.token.acquired_service
+        else:
+            acquired_address = models.ServerAddress.objects.select_for_update(skip_locked=True).first()
+            if not acquired_address:
+                return Response(status=status.HTTP_503_SERVICE_UNAVAILABLE)
 
-        base_url = urllib3.util.Url(scheme=settings.SERVICE_URL_SCHEME,
-                                    host=acquired_address.ip,
-                                    port=acquired_address.port).url
-        logger.info(f"Built base url {base_url} for acquired service")
-        configuration = service_api.Configuration()
-        configuration.host = base_url
-        api_instance = service_api.ServiceApi(service_api.ApiClient(configuration))
-        api_instance.start_session()
+            was_acquired = models.FiveGstToken.objects\
+                .filter(token=request.user.token.token, acquired_service__isnull=True)\
+                .update(acquired_service=acquired_address)
+            if not was_acquired:
+                return Response('Could not acquire service due to a conflict, try again',
+                                status=status.HTTP_409_CONFLICT)
 
-        acquired_address.delete()
+        acquired_address.to_api_instance().start_session()
+
         serializer = serializers.ServerAddressResponseSerializer(instance=acquired_address)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
