@@ -75,41 +75,23 @@ public class SpeedActivity extends AppCompatActivity {
 
         speedTestManager = new DownloadUploadSpeedTestManager.Builder(this)
                 .onPingUpdate((ping) -> runOnUiThread(() -> mCard.setPing((int) ping)))
-                .onDownloadStart((stageInfo) -> runOnUiThread(() -> {
+                .onStageStart((stageConfiguration) -> runOnUiThread(() -> {
                     mCard.setInstantSpeed(0, 0);
 
                     cWave.start();
                     cWave.attachSpeed(0);
-                    stageNameTextView.setText(stageInfo.getName());
+                    stageNameTextView.setText(stageConfiguration.getName());
                 }))
-                .onDownloadSpeedUpdate((statistics, speedBitsPS) -> runOnUiThread(() -> {
+                .onStageSpeedUpdate((statistics, speedBitsPS) -> runOnUiThread(() -> {
                     Pair<Integer, Integer> instSpeed = sm.getSpeedWithPrecision(speedBitsPS.intValue(), 2);
                     mCard.setInstantSpeed(instSpeed.first, instSpeed.second);
 
                     //animation
                     cWave.attachSpeed(instSpeed.first);
                 }))
-                .onDownloadFinish((statistics) -> runOnUiThread(() -> {
+                .onStageFinish((statistics) -> runOnUiThread(() -> {
                     mSubResults.setDownloadSpeed(getSpeedString(sm.getAverageSpeed(statistics)));
                     cWave.stop();
-                }))
-                .onUploadStart(() -> runOnUiThread(() -> {
-                    mCard.setInstantSpeed(0, 0);
-
-                    cWave.start();
-                    cWave.attachColor(getColor(R.color.gold));
-                    cWave.attachSpeed(0);
-                }))
-                .onUploadSpeedUpdate((statistics, speedBitsPS) -> runOnUiThread(() -> {
-                    Pair<Integer, Integer> instSpeed = sm.getSpeedWithPrecision(speedBitsPS.intValue(), 2);
-                    mCard.setInstantSpeed(instSpeed.first, instSpeed.second);
-
-                    //animation
-                    cWave.attachSpeed(instSpeed.first);
-                }))
-                .onUploadFinish((statistics) -> runOnUiThread(() -> {
-                    cWave.stop();
-                    mSubResults.setUploadSpeed(getSpeedString(sm.getAverageSpeed(statistics)));
                 }))
                 .onFinish(() -> runOnUiThread(() -> {
                     actionBtn.setPlay();

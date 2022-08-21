@@ -23,7 +23,7 @@ android:orientation="vertical">
         android:orientation="horizontal">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/pipeline_name"
+            android:id="@+id/stage_name"
             android:layout_width="231dp"
             android:layout_height="48dp"
             android:layout_gravity="center"
@@ -77,7 +77,6 @@ android:orientation="vertical">
             android:baselineAligned="false"
             android:focusable="true"
             android:focusableInTouchMode="true"
-            android:hint="@string/default_upload_device_iperf_args"
             android:paddingStart="10dp"
             app:hintEnabled="false" />
 
@@ -114,7 +113,6 @@ android:orientation="vertical">
             android:baselineAligned="false"
             android:focusable="true"
             android:focusableInTouchMode="true"
-            android:hint="@string/default_upload_server_iperf_args"
             android:paddingStart="10dp"
             app:hintEnabled="false" />
 
