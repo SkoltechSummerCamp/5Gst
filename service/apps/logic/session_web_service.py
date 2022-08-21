@@ -84,7 +84,7 @@ class SessionWebService:
             return Response("Failed to start iperf", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     stop_iperf_swagger_auto_schema = swagger_auto_schema(
-        operation_id='stop_session',
+        operation_id='stop_iperf',
     )
 
     def stop_iperf(self) -> Response:
