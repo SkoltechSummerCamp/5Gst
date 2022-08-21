@@ -2,6 +2,8 @@
     <string name="app_name">5Gst</string>
     <string name="startIperf">start</string>
     <string name="stopIperf">stop</string>
+    <string name="forceStopIperf">terminate</string>
+    <string name="clearLogs">clear</string>
     <string name="deviceIp">Device ip :</string>
     <string name="refreshIp">refresh</string>
     <string name="hideIp">hide</string>
@@ -57,6 +59,8 @@
     <string name="server">server:</string>
 
     <string name="iperfSharedPreferences">iperfPreferences</string>
+    <string name="dev_iperf_args">dev_iperf_args</string>
+    <string name="dev_tools_iperf_args_hint">Enter iPerf script</string>
     <string name="download_device_iperf_args">-u -R -P 10 -b 120m</string>
     <string name="upload_device_iperf_args">-P 10 -b 120m</string>
     <string name="download_server_iperf_args">-u</string>

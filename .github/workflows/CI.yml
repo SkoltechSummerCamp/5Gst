@@ -1,0 +1,680 @@
+name: "Grouped CI of balancer, service and applications"
+
+on: 
+  push:
+  pull_request:
+    
+jobs:
+
+
+  balancer-generate-swagger:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    env:
+      SECRET_KEY: test
+      DB_NAME: test
+      DB_USER: test
+      DB_PASSWORD: test
+      DB_HOST: test
+      DB_PORT: test
+    defaults:
+      run:
+        working-directory: ./balancer
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install pip, pipenv and packages from Pipfile
+        run: |
+          python -m pip install --upgrade pip
+          pip install pipenv
+          pipenv install
+      - name: Generate swagger schema
+        run: |
+          pipenv run python manage.py generate_swagger swagger-balancer.yaml
+      - name: Upload swagger schema to artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: swagger-schema-balancer
+          path: balancer/swagger-balancer.yaml
+
+  balancer-generate-code:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    needs: balancer-generate-swagger
+    container: swaggerapi/swagger-codegen-cli:2.4.27
+    defaults:
+      run:
+        working-directory: ./balancer
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Download swagger schema
+        uses: actions/download-artifact@v2
+        with:
+          name: swagger-schema-balancer
+          path: balancer
+
+      - name: Clear AUTOBUILD directory
+        run: rm -rf ../AUTOBUILD-balancer
+
+      - name: Generate client for service
+        run: >
+          java
+          -jar
+          /opt/swagger-codegen-cli/swagger-codegen-cli.jar
+          generate
+          -i swagger-balancer.yaml
+          -l python
+          -o ../AUTOBUILD-balancer/service2BalancerClient/
+          -c ../service/.swagger-codegen-config/balancerApi.json
+      - name: Generate client for application
+        run: >
+          java
+          -jar
+          /opt/swagger-codegen-cli/swagger-codegen-cli.jar
+          generate
+          -i swagger-balancer.yaml
+          -l java
+          -o ../AUTOBUILD-balancer/application2BalancerClient/
+          -c ../application/.swagger-codegen-config/balancerApi.json
+      # Swagger codegen container has invalid git installed,
+      # so we need another container to push changes
+      - name: Upload generated code to artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: AUTOBUILD-balancer
+          path: AUTOBUILD-balancer
+
+  balancer-push:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    needs: balancer-generate-code
+    defaults:
+      run:
+        working-directory: ./balancer
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Clear previously generated code
+        run: |
+          rm -rf ../AUTOBUILD-balancer
+          rm -rf ../application/balancerApi
+          rm -rf ../service/balancer_api
+      - name: Download generated code
+        uses: actions/download-artifact@v2
+        with:
+          name: AUTOBUILD-balancer
+          path: AUTOBUILD-balancer
+
+      - name: Move generated code to projects
+        run: |
+          cp -r ../AUTOBUILD-balancer/application2BalancerClient/ ../application/balancerApi
+          cp -r ../AUTOBUILD-balancer/service2BalancerClient/balancer_api/ ../service/balancer_api
+          cd ../application
+          git apply ./.swagger-codegen-config/balancerApi.patch
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+            commit_message: 'Generate balancer client using swagger-codegen'
+            file_pattern: application/balancerApi service/balancer_api
+
+  balancer-makemigartions:
+    if: github.event_name == 'push'
+    needs: balancer-push
+    runs-on: ubuntu-latest
+    env:
+      SECRET_KEY: test
+      DB_NAME: test
+      DB_USER: test
+      DB_PASSWORD: test
+      DB_HOST: test
+      DB_PORT: test
+    defaults:
+      run:
+        working-directory: ./balancer
+    steps:
+    - uses: actions/checkout@v2
+    - name: make migrations
+      run: |
+       python -m pip install --upgrade pip
+       pip install pipenv
+       pipenv install
+       pipenv run python manage.py makemigrations
+       
+    - name: push changes to git
+      uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        commit_message: "generated migration scripts"
+        file_pattern: balancer/services/migrations 
+        
+        
+        
+  #needs нужен для порядка и проверки что предыдущий степ выполнен (тип выполнение нового степа будет ток после того как степ из нидс хорошо отработает, 
+  #если не отработает - новый степ не запустится ), а always нужен чтоб если даже из нидс степ не выполнен, 
+  #то новый степ в любом случае выполнился (тип гарантирует, что новый степ всегда будет выполнен вне зависимости от других обстоятельств)
+  balancer-test:
+    needs: balancer-makemigartions
+    if: ${{ always() }} &&
+    runs-on: ubuntu-latest
+    env:
+      SECRET_KEY: test
+      TEST_MODE: "True"
+    defaults:
+      run:
+        working-directory: ./balancer
+    steps:
+    - uses: actions/checkout@main
+    - name: Install pip, pipenv and packages from Pipfile
+      run: |
+        python -m pip install --upgrade pip
+        pip install pipenv
+        pipenv install --dev
+    - name: Run tests
+      run: |
+        pipenv run test
+
+  #needs нужен для порядка и проверки что предыдущий степ выполнен (тип выполнение нового степа будет ток после того как степ из нидс хорошо отработает, 
+  #если не отработает - новый степ не запустится ), а always нужен чтоб если даже из нидс степ не выполнен, 
+  #то новый степ в любом случае выполнился (тип гарантирует, что новый степ всегда будет выполнен вне зависимости от других обстоятельств)
+  balancer-publish-to-dockerhub:
+    runs-on: ubuntu-latest
+    if: ${{ always() }} 
+    needs: balancer-test
+    defaults:
+      run:
+        working-directory: ./balancer
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Setup version variable
+        run: |
+          echo "version=$(cat ../VERSION)" > $GITHUB_ENV
+          
+      - name: build docker image
+        if: github.repository != 'SkoltechSummerCamp/5Gst'
+        run: docker build . --tag new_balancer_image:${{ env.version }}.${{ github.run_number }}
+
+      - name: Log in to Docker Hub
+        if: |
+          github.repository == 'SkoltechSummerCamp/5Gst' && github.event_name == 'push'
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push Docker image
+        if: |
+          github.repository == 'SkoltechSummerCamp/5Gst' && github.event_name == 'push' 
+        uses: docker/build-push-action@v2
+        with:
+          context: ./balancer
+          push: true
+          tags: skoltech/speedtest-balancer:${{ env.version }}.${{ github.run_number }}, skoltech/speedtest-balancer:latest
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+  application-debug-build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./application
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
+
+      - name: Set up JDK 8
+        uses: actions/setup-java@v2
+        with:
+          java-version: '8'
+          distribution: 'adopt'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v2
+
+      - name: Workaround for build tools executable
+        run: |
+          mv "$ANDROID_SDK_ROOT/build-tools/33.0.0/d8" "$ANDROID_SDK_ROOT/build-tools/33.0.0/dx"
+          mv "$ANDROID_SDK_ROOT/build-tools/33.0.0/lib/d8.jar" "$ANDROID_SDK_ROOT/build-tools/33.0.0/lib/dx.jar"
+
+      - name: Setup Android NDK
+        run: yes | "$ANDROID_HOME/tools/bin/sdkmanager" "ndk;25.0.8775105"
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Create file with artifactName variable
+        run: |
+          REF=$(echo "-${GITHUB_REF#refs/heads/}" | sed 's/\//-/g')
+          if [ ${#REF} -eq 1 ]; then REF=""; fi
+          ./gradlew :app:writeVersion
+          ARTIFACT_NAME="speedtest-$(cat ../VERSION)-$GITHUB_RUN_NUMBER$REF"
+          mkdir -p ../.github/variables
+          echo "{\"variables\": [{\"name\": \"artifactName\", \"value\": \"$ARTIFACT_NAME\" }]}" > ../.github/variables/variables.json
+      - name: Set artifactName variable
+        uses: deep-mm/set-variables@v1.0
+        with:
+          variableFileName: 'variables'
+
+      - name: Build with Gradle
+        run: ./gradlew :app:assembleDebug
+
+      - name: Rename apk
+        run: |
+          mkdir gh-artifacts-debug-build
+          mv app/build/outputs/apk/debug/app-debug.apk gh-artifacts-debug-build/${{ env.artifactName }}-debug.apk
+      - name: Upload apk to artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.artifactName }}-debug
+          path: application/gh-artifacts-debug-build/*
+          
+  application-release-build:
+    runs-on: ubuntu-latest
+    if: ${{ startsWith(github.ref, 'refs/tags/') }}
+    defaults:
+      run:
+        working-directory: ./application
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
+
+      - name: Set up JDK 8
+        uses: actions/setup-java@v2
+        with:
+          java-version: '8'
+          distribution: 'adopt'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v2
+
+      - name: Workaround for build tools executable
+        run: |
+          mv "$ANDROID_SDK_ROOT/build-tools/33.0.0/d8" "$ANDROID_SDK_ROOT/build-tools/33.0.0/dx"
+          mv "$ANDROID_SDK_ROOT/build-tools/33.0.0/lib/d8.jar" "$ANDROID_SDK_ROOT/build-tools/33.0.0/lib/dx.jar"
+
+      - name: Setup Android NDK
+        run: yes | "$ANDROID_HOME/tools/bin/sdkmanager" "ndk;25.0.8775105"
+
+      - name: Patch balancer API
+        run: |
+          cd balancerApi
+          git apply ../balancerApi.patch
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Create file with artifactName variable
+        run: |
+          REF=$(echo "-${GITHUB_REF#refs/heads/}" | sed 's/\//-/g')
+          if [ ${#REF} -eq 1 ]; then REF=""; fi
+          ./gradlew :app:writeVersion
+          ARTIFACT_NAME="speedtest-$(cat ../VERSION)-$GITHUB_RUN_NUMBER$REF"
+          mkdir -p ../.github/variables
+          echo "{\"variables\": [{\"name\": \"artifactName\", \"value\": \"$ARTIFACT_NAME\" }]}" > ../.github/variables/variables.json
+      - name: Set artifactName variable
+        uses: deep-mm/set-variables@v1.0
+        with:
+          variableFileName: 'variables'
+
+      - name: Get signing key
+        uses: actions/checkout@v2
+        with:
+          repository: ${{ secrets.RELEASE_KEYSTORE_GIT_REPOSITORY }}
+          path: application/release-keystore
+
+      - name: Move signing key
+        run: mv release-keystore/release.keystore keystores
+
+      - name: Build with Gradle
+        env:
+          RELEASE_KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
+          RELEASE_SIGN_KEY_ALIAS: ${{ secrets.RELEASE_SIGN_KEY_ALIAS }}
+          RELEASE_SIGN_KEY_PASSWORD: ${{ secrets.RELEASE_SIGN_KEY_PASSWORD }}
+        run: |
+          ./gradlew :app:assembleRelease
+          ./gradlew :app:bundleRelease
+      - name: Rename artifacts
+        run: |
+          mkdir gh-artifacts-release-build
+          mv app/build/outputs/apk/release/app-release.apk gh-artifacts-release-build/${{ env.artifactName }}-release.apk
+          mv app/build/outputs/bundle/release/app-release.aab gh-artifacts-release-build/${{ env.artifactName }}-release.aab
+      - name: Upload apk to artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.artifactName }}-release
+          path: application/gh-artifacts-release-build/*
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+
+  service-generate-swagger:
+    runs-on: ubuntu-latest  
+    if: github.event_name == 'push'
+    env:
+      SERVICE_IP_ADDRESS: localhost
+      BALANCER_ADDRESS: localhost:5555
+      IPERF_PORT: 5001
+      SERVICE_PORT: 5000
+      SECRET_KEY: test
+    defaults:
+      run:
+        working-directory: ./service
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      # TODO fix service so it can generate swagger schema without iperf built
+      - name: Iperf compilation
+        run: ./scripts/build-iperf.sh
+
+      - name: Install pip, pipenv and packages from Pipfile
+        run: |
+          python -m pip install --upgrade pip
+          pip install pipenv
+          pipenv install
+      - name: Generate swagger schema
+        run: |
+          pipenv run python manage.py generate_swagger swagger-service.yaml
+      - name: Upload swagger schema to artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: swagger-schema-service
+          path: service/swagger-service.yaml
+          
+  service-generate-code:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    needs: service-generate-swagger
+    container: swaggerapi/swagger-codegen-cli:2.4.27
+    defaults:
+      run:
+        working-directory: ./service
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Download swagger schema
+        uses: actions/download-artifact@v2
+        with:
+          name: swagger-schema-service
+          path: service
+
+      - name: Clear AUTOBUILD directory
+        run: rm -rf ../AUTOBUILD-service
+
+      - name: Generate client for service
+        run: >
+          java
+          -jar
+          /opt/swagger-codegen-cli/swagger-codegen-cli.jar
+          generate
+          -i swagger-service.yaml
+          -l python
+          -o ../AUTOBUILD-service/balancer2ServiceClient/
+          -c ../balancer/.swagger-codegen-config/serviceApi.json
+      - name: Generate client for application
+        run: >
+          java
+          -jar
+          /opt/swagger-codegen-cli/swagger-codegen-cli.jar
+          generate
+          -i swagger-service.yaml
+          -l java
+          -o ../AUTOBUILD-service/application2ServiceClient/
+          -c ../application/.swagger-codegen-config/serviceApi.json
+      # Swagger codegen container has invalid git installed,
+      # so we need another container to push changes
+      - name: Upload generated code to artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: AUTOBUILD-service
+          path: AUTOBUILD-service
+          
+  service-push:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    needs: service-generate-code
+    defaults:
+      run:
+        working-directory: ./service
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Clear previously generated code
+        run: |
+          rm -rf ../AUTOBUILD-service
+          rm -rf ../application/serviceApi
+          rm -rf ../balancer/service_api
+      - name: Download generated code
+        uses: actions/download-artifact@v2
+        with:
+          name: AUTOBUILD-service
+          path: AUTOBUILD-service
+
+      - name: Move generated code to projects
+        run: |
+          cp -r ../AUTOBUILD-service/application2ServiceClient/ ../application/serviceApi
+          cp -r ../AUTOBUILD-service/balancer2ServiceClient/service_api/ ../balancer/service_api
+          cd ../application
+          git apply ./.swagger-codegen-config/serviceApi.patch
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+            commit_message: 'Generate service client using swagger-codegen'
+            file_pattern: application/serviceApi balancer/service_api
+            
+            
+  #needs нужен для порядка и проверки что предыдущий степ выполнен (тип выполнение нового степа будет ток после того как степ из нидс хорошо отработает, 
+  #если не отработает - новый степ не запустится ), а always нужен чтоб если даже из нидс степ не выполнен, 
+  #то новый степ в любом случае выполнился (тип гарантирует, что новый степ всегда будет выполнен вне зависимости от других обстоятельств)
+  service-test:
+    runs-on: ubuntu-latest
+    if:  ${{ always() }}
+    needs: service-push
+    env: 
+      SERVICE_IP_ADDRESS: localhost
+      BALANCER_ADDRESS: localhost:5555
+      IPERF_PORT: 5001
+      SERVICE_PORT: 5000
+      SECRET_KEY: test
+    defaults:
+      run:
+        working-directory: ./service
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - name: Compilation
+        run: ./scripts/build-iperf.sh
+        
+      - name: Install pip, pipenv and packages from Pipfile
+        run: |
+          python -m pip install --upgrade pip
+          pip install pipenv
+          pipenv install --dev
+      - name: Run tests
+        run: |
+          pipenv run test
+            
+            
+  #needs нужен для порядка и проверки что предыдущий степ выполнен (тип выполнение нового степа будет ток после того как степ из нидс хорошо отработает, 
+  #если не отработает - новый степ не запустится ), а always нужен чтоб если даже из нидс степ не выполнен, 
+  #то новый степ в любом случае выполнился (тип гарантирует, что новый степ всегда будет выполнен вне зависимости от других обстоятельств)
+  service-build-iperf:
+    if: ${{ always() }}
+    needs: service-test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./service
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - name: Compilation
+        run: ./scripts/build-iperf.sh
+
+      - name: Setup artifact content
+        run: |
+          mkdir gh-artifacts
+          mv iperf.elf gh-artifacts/
+          
+          IPERF_VERSION=$(cat ../iPerf/VERSION)
+          echo "artifactName=iperf-$IPERF_VERSION.$GITHUB_RUN_NUMBER" > $GITHUB_ENV
+      
+      - name: Upload iperf binary to artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.artifactName }}
+          path: service/gh-artifacts/*
+          
+          
+  #needs нужен для порядка и проверки что предыдущий степ выполнен (тип выполнение нового степа будет ток после того как степ из нидс хорошо отработает, 
+  #если не отработает - новый степ не запустится ), а always нужен чтоб если даже из нидс степ не выполнен, 
+  #то новый степ в любом случае выполнился (тип гарантирует, что новый степ всегда будет выполнен вне зависимости от других обстоятельств)
+  service-speedtest-service:
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    needs: service-build-iperf
+    defaults:
+      run:
+        working-directory: ./service
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - name: Setup artifact name in env
+        run: |
+          IPERF_VERSION=$(cat ../iPerf/VERSION)
+          echo "iPerfArtifactName=iperf-$IPERF_VERSION.$GITHUB_RUN_NUMBER" > $GITHUB_ENV
+      - uses: actions/download-artifact@v2
+        with:
+          name: ${{ env.iPerfArtifactName }}
+          path: service
+      
+      - name: Setup artifact content
+        run: |
+          cd ..
+          mkdir gh-artifacts/
+          cp -r service/* gh-artifacts/
+          
+          echo "artifactName=speedtest-service-$(cat VERSION).$GITHUB_RUN_NUMBER" > $GITHUB_ENV
+      
+      - name: Upload all server files to artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.artifactName }}
+          path: gh-artifacts/*
+          
+          
+  #needs нужен для порядка и проверки что предыдущий степ выполнен (тип выполнение нового степа будет ток после того как степ из нидс хорошо отработает, 
+  #если не отработает - новый степ не запустится ), а always нужен чтоб если даже из нидс степ не выполнен, 
+  #то новый степ в любом случае выполнился (тип гарантирует, что новый степ всегда будет выполнен вне зависимости от других обстоятельств)
+  service-publish-to-dockerhub:
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    needs: service-speedtest-service
+    defaults:
+      run:
+        working-directory: ./service
+    steps:
+      - name: checkout    
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+          
+      - name: Setup version variable  
+        run: |
+          echo "version=$(cat ../VERSION)" > $GITHUB_ENV
+      - name: download artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: speedtest-service-${{ env.version }}.${{ github.run_number }}
+          path: service/gh-artifacts
+      - name: build docker image
+        if:  github.repository != 'SkoltechSummerCamp/5Gst'
+        run: docker build . --tag new_service_image:${{ env.version }}.${{ github.run_number }}
+          
+      - name: Log in to Docker Hub
+        if:  github.repository == 'SkoltechSummerCamp/5Gst' && github.event_name == 'push'
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push Docker image
+        if:  github.repository == 'SkoltechSummerCamp/5Gst' && github.event_name == 'push'
+        uses: docker/build-push-action@v2
+        with:
+          context: service/gh-artifacts
+          push: true
+          tags: skoltech/speedtest-service:${{ env.version }}.${{ github.run_number }}, skoltech/speedtest-service:latest
+          
+          
+          
+          
+          
+          
+            
+          
+          
+          
+          
+  make_artifacts:
+    runs-on: ubuntu-latest
+    if: ${{ always() }}
+    needs: [service-publish-to-dockerhub, balancer-publish-to-dockerhub]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup version variable  
+        run: |
+          echo "version=$(cat ./VERSION)" > $GITHUB_ENV
+      - name: install images and convert to .tar
+        run: |
+          docker pull skoltech/speedtest-service:latest
+          docker pull skoltech/speedtest-balancer:latest
+          docker pull postgres:${POSTGRES_VERSION:-14.4}
+          docker save skoltech/speedtest-service:latest | gzip > service.tar.gz
+          docker save skoltech/speedtest-balancer:latest | gzip > balancer.tar.gz
+          docker save postgres:${POSTGRES_VERSION:-14.4} | gzip > postgres.tar.gz
+
+      - name: upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: start-scripts
+          path: |
+            service.tar.gz
+            balancer.tar.gz
+            postgres.tar.gz
+            docker-compose.yml 
+            docker_unpack.sh 
+
+
+
+
+

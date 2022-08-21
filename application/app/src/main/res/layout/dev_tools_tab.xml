@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="10dp"
     android:orientation="vertical">
 
     <LinearLayout
@@ -143,4 +144,90 @@
             android:layout_height="wrap_content" />
 
     </LinearLayout>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="?android:attr/listDivider" />
+
+    <EditText
+        android:id="@+id/dev_tools_iperf_args"
+        android:layout_height="40dp"
+        android:layout_width="match_parent"
+        android:background="@drawable/light_field_background"
+        android:hint="@string/dev_tools_iperf_args_hint"
+        android:layout_marginStart="6dp"
+        android:layout_marginEnd="6dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="5dp"
+        android:paddingStart="7dp"
+        android:paddingEnd="7dp"
+        android:inputType="text"
+        android:textColor="?android:attr/textColorPrimary"
+        android:importantForAutofill="no" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="5dp"
+        android:baselineAligned="false"
+        >
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            >
+            <Button
+                android:id="@+id/dev_tools_iperf_start_button"
+                android:layout_width="140sp"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#0f62fe"
+                android:text="@string/startIperf"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            >
+            <Button
+                android:id="@+id/dev_tools_iperf_clear_button"
+                android:layout_width="140sp"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#0f62fe"
+                android:text="@string/clearLogs"
+                />
+        </LinearLayout>
+
+    </LinearLayout>
+
+<!--  TODO extract as some kind of component, view is similar to network_info_tab  -->
+    <ScrollView
+        android:id="@+id/dev_tools_iperf_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/console_background"
+        android:fillViewport="true"
+        android:scrollbars="vertical"
+        android:layout_marginTop="10dp"
+        android:padding="10dp"
+        >
+
+        <TextView
+            android:id="@+id/dev_tools_iperf_logs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/consoleTextColor"
+            android:gravity="bottom"
+            android:textIsSelectable="true"
+            />
+
+    </ScrollView>
+
 </LinearLayout>

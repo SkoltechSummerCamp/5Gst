@@ -6,7 +6,7 @@ from django.apps import AppConfig
 from django.core.management.commands import diffsettings
 from django.utils.autoreload import DJANGO_AUTORELOAD_ENV
 
-from apps.logic.watchdog import watchdog_service
+from apps.logic.watchdog_service import balancer_communication_watchdog_service
 
 logger = logging.getLogger(__name__)
 
@@ -22,7 +22,7 @@ class MyAppConfig(AppConfig):
             return
 
         self.print_env()
-        watchdog_service.start()
+        balancer_communication_watchdog_service.start()
 
     def print_env(self):
         django_settings = diffsettings.Command().handle(output='unified', all=True, default=None)
