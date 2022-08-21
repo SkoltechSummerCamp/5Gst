@@ -21,7 +21,6 @@ data class StartIperfTask(
     private val speedParser: IperfOutputParser,
     private val speedEqualizer: Equalizer<*>,
     private val idleTimeoutMillis: Long,
-    private val onStart: () -> Unit,
     private val onSpeedUpdate: (LongSummaryStatistics, Long) -> Unit,
     private val onFinish: (LongSummaryStatistics) -> Unit,
     private val onLog: (String, String, Exception?) -> Unit,
@@ -41,7 +40,6 @@ data class StartIperfTask(
             .onFinishCallback(processor::onIperfFinish)
             .build()
 
-        onStart()
         while (true) {
             try {
                 // TODO validate not to have -c and -p in command

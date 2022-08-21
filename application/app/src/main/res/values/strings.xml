@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">5Gst</string>
     <string name="startIperf">start</string>
     <string name="stopIperf">stop</string>
@@ -61,18 +61,12 @@
     <string name="iperfSharedPreferences">iperfPreferences</string>
     <string name="dev_iperf_args">dev_iperf_args</string>
     <string name="dev_tools_iperf_args_hint">Enter iPerf script</string>
-    <string name="download_device_args">download_device_args</string>
-    <string name="download_server_args">download_server_args</string>
-    <string name="upload_device_args">upload_device_args</string>
-    <string name="upload_server_args">upload_server_args</string>
-    <string name="default_download_device_iperf_args">-P 10 -b 120m</string>
-    <string name="default_upload_device_iperf_args">-P 10 -b 120m</string>
-    <string name="default_download_server_iperf_args"> </string>
-    <string name="default_upload_server_iperf_args"> </string>
-    <string name="immutable_download_device_args">-f b -i 0.1 --sum-only -u -R</string>
-    <string name="immutable_download_server_args">-u</string>
-    <string name="immutable_upload_device_args">-f b -i 0.1 --sum-only</string>
-    <string name="immutable_upload_server_args"> </string>
+    <string name="download_device_iperf_args">-u -R -P 10 -b 120m</string>
+    <string name="upload_device_iperf_args">-P 10 -b 120m</string>
+    <string name="download_server_iperf_args">-u</string>
+    <string name="upload_server_iperf_args"> </string>
+    <string name="immutable_device_args" tools:ignore="TypographyDashes">-f b -i 0.1 --sum-only</string>
+    <string name="immutable_server_args">-s</string>
 
     <string name="user_immutable_down_dev_args">-u -R</string>
     <string name="user_immutable_down_serv_args">-u</string>
@@ -80,4 +74,6 @@
     <string name="user_immutable_up_serv_args"> </string>
     <string name="dev_tools">Dev tools</string>
     <string name="setup_pipeline">Setup pipeline</string>
+    <string name="add_pipeline">Add pipeline</string>
+    <string name="pipeline_name">Pipeline name</string>
 </resources>

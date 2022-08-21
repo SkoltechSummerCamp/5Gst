@@ -22,6 +22,12 @@
             app:is_active_button_group="true"
             app:section_name="5G Speedtest" />
 
+        <TextView
+            android:id="@+id/current_stage_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="DELETE ME"/>
+
         <ru.scoltech.openran.speedtest.customViews.CardView
             android:id="@+id/card"
 
