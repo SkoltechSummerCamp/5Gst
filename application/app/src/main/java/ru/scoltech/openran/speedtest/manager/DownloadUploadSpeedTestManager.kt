@@ -108,11 +108,13 @@ private constructor(
                         onPingUpdate
                     )
                 )
-                .andThenTry(startServiceIperfTask) {
-                    andThenUnstoppable {
-                        onStageStart(stageConfiguration)
-                        it
-                    }
+                .andThenTry {
+                    initializeNewChain()
+                        .andThen(startServiceIperfTask)
+                        .andThenUnstoppable {
+                            onStageStart(stageConfiguration)
+                            it
+                        }
                         .andThen(startIperfTask)
                 }.andThenFinally(stopServiceIperfTask)
                 .andThen(DelayTask(idleBetweenTasksMelees))

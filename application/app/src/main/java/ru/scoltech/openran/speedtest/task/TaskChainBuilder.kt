@@ -6,12 +6,12 @@ import kotlinx.coroutines.launch
 import ru.scoltech.openran.speedtest.util.Promise
 import ru.scoltech.openran.speedtest.util.TaskKiller
 
-class TaskChainBuilder<S : Any?> {
+class TaskChainBuilder<S : Any?> : TaskConsumer.ChainInitializer<S> {
     private var tasks = mutableListOf<Task<out Any?, out Any?>>()
     private var onStop: () -> Unit = {}
     private var onFatalError: (String, Exception?) -> Unit = { _, _ -> }
 
-    fun initializeNewChain(): TaskConsumer<S> {
+    override fun initializeNewChain(): TaskConsumer<S> {
         tasks = mutableListOf()
         return TasksCollector(tasks)
     }
@@ -45,15 +45,16 @@ class TaskChainBuilder<S : Any?> {
 
         override fun <A : Any?, R : Any?> andThenTry(
             startTask: Task<T, A>,
-            buildBlock: TaskConsumer<A>.() -> TaskConsumer<R>,
+            buildBlock: TaskConsumer.ChainInitializer<A>.() -> TaskConsumer<R>,
         ): TaskConsumer.FinallyTaskConsumer<A, R> {
             tasks.add(startTask)
-            return object : TaskConsumer.FinallyTaskConsumer<A, R> {
-                override fun andThenFinally(task: (A) -> Unit): TaskConsumer<R> {
-                    tasks.add(TryTask(buildBlock, task))
-                    return TasksCollector(tasks)
-                }
-            }
+            return FinallyTaskConsumerImpl(tasks, buildBlock)
+        }
+
+        override fun <R : Any?> andThenTry(
+            buildBlock: TaskConsumer.ChainInitializer<T>.() -> TaskConsumer<R>,
+        ): TaskConsumer.FinallyTaskConsumer<T, R> {
+            return FinallyTaskConsumerImpl(tasks, buildBlock)
         }
     }
 
@@ -70,17 +71,27 @@ class TaskChainBuilder<S : Any?> {
         }
     }
 
+    private class FinallyTaskConsumerImpl<T : Any?, R : Any?>(
+        private val tasks: MutableList<Task<out Any?, out Any?>>,
+        private val buildBlock: TaskConsumer.ChainInitializer<T>.() -> TaskConsumer<R>,
+    ) : TaskConsumer.FinallyTaskConsumer<T, R> {
+        override fun andThenFinally(task: (T) -> Unit): TaskConsumer<R> {
+            tasks.add(TryTask(buildBlock, task))
+            return TasksCollector(tasks)
+        }
+    }
+
     private class TryTask<T : Any?, R : Any?>(
-        buildBlock: TaskConsumer<T>.() -> TaskConsumer<R>,
+        buildBlock: TaskConsumer.ChainInitializer<T>.() -> TaskConsumer<R>,
         private val finallyTask: (T) -> Unit,
     ) : Task<T, R> {
         private val tasks: List<Task<Any?, Any?>>
 
         init {
-            val mutableTasks = mutableListOf<Task<*, *>>()
-            buildBlock(TasksCollector(mutableTasks))
+            val taskChainBuilder = TaskChainBuilder<T>()
+            buildBlock(taskChainBuilder)
             @Suppress("UNCHECKED_CAST")
-            tasks = mutableTasks as MutableList<Task<Any?, Any?>>
+            tasks = taskChainBuilder.tasks as MutableList<Task<Any?, Any?>>
         }
 
         private fun ((String, Exception?) -> Unit)?.withEndTask(
