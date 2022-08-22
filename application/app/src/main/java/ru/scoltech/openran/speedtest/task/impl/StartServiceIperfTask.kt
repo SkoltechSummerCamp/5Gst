@@ -1,28 +1,18 @@
 package ru.scoltech.openran.speedtest.task.impl
 
-import ru.scoltech.openran.speedtest.backend.ServiceApi
-import ru.scoltech.openran.speedtest.client.balancer.model.ServerAddressResponse
-import ru.scoltech.openran.speedtest.task.Task
-import ru.scoltech.openran.speedtest.util.Promise
-import ru.scoltech.openran.speedtest.util.TaskKiller
+import com.squareup.okhttp.Call
+import ru.scoltech.openran.speedtest.client.service.ApiCallback
+import ru.scoltech.openran.speedtest.client.service.model.IperfArgs
+import ru.scoltech.openran.speedtest.task.impl.model.ApiClientHolder
 
 data class StartServiceIperfTask(
-    private val balancerApiBuilder: BalancerApiBuilder,
     private val args: String,
-) : Task<ServerAddressResponse, ServerAddressResponse> {
-    override fun prepare(
-        argument: ServerAddressResponse,
-        killer: TaskKiller
-    ): Promise<(ServerAddressResponse) -> Unit, (String, Exception?) -> Unit> = Promise { onSuccess, onError ->
-        val serviceApi = ServiceApi(balancerApiBuilder.httpClient)
+) : AbstractServiceRequestTask<ApiClientHolder, Void, ApiClientHolder>() {
+    override fun sendRequest(argument: ApiClientHolder, callback: ApiCallback<Void>): Call {
+        return argument.serviceApiClient.startIperfAsync(IperfArgs().iperfArgs(args), callback)
+    }
 
-        killer.register(serviceApi::cancelStartIperf)
-        // TODO check request/response body for memory leaks
-        serviceApi.startIperf(argument.ip, argument.port, args)
-            .onSuccess { onSuccess?.invoke(argument) }
-            .onError { _, e ->
-                onError?.invoke("Could not connect to the server", e)
-            }
-            .start()
+    override fun processApiResult(argument: ApiClientHolder, apiResult: Void): ApiClientHolder {
+        return argument
     }
 }

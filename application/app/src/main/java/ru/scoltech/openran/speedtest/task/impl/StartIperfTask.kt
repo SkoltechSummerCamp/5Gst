@@ -2,10 +2,10 @@ package ru.scoltech.openran.speedtest.task.impl
 
 import ru.scoltech.openran.speedtest.backend.IperfException
 import ru.scoltech.openran.speedtest.backend.IperfRunner
-import ru.scoltech.openran.speedtest.client.balancer.model.ServerAddressResponse
 import ru.scoltech.openran.speedtest.parser.IperfOutputParser
 import ru.scoltech.openran.speedtest.task.FatalException
 import ru.scoltech.openran.speedtest.task.Task
+import ru.scoltech.openran.speedtest.task.impl.model.ServerAddress
 import ru.scoltech.openran.speedtest.util.Equalizer
 import ru.scoltech.openran.speedtest.util.IdleTaskKiller
 import ru.scoltech.openran.speedtest.util.Promise
@@ -24,11 +24,11 @@ data class StartIperfTask(
     private val onSpeedUpdate: (LongSummaryStatistics, Long) -> Unit,
     private val onFinish: (LongSummaryStatistics) -> Unit,
     private val onLog: (String, String, Exception?) -> Unit,
-) : Task<ServerAddressResponse, ServerAddressResponse> {
+) : Task<ServerAddress, ServerAddress> {
     override fun prepare(
-        argument: ServerAddressResponse,
+        argument: ServerAddress,
         killer: TaskKiller
-    ): Promise<(ServerAddressResponse) -> Unit, (String, Exception?) -> Unit> = Promise { onSuccess, _ ->
+    ): Promise<(ServerAddress) -> Unit, (String, Exception?) -> Unit> = Promise { onSuccess, _ ->
         val idleTaskKiller = IdleTaskKiller()
         val processor = IperfOutputProcessor(idleTaskKiller, speedEqualizer.copy()) {
             onSuccess?.invoke(argument)
@@ -44,7 +44,7 @@ data class StartIperfTask(
             try {
                 // TODO validate not to have -c and -p in command
                 iperfRunner.start(
-                    "-c ${argument.ip} -p ${argument.portIperf} $args"
+                    "-c ${argument.host} -p ${argument.port} $args"
                 )
 
                 val task = {
