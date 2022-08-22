@@ -7,9 +7,9 @@ Method | HTTP request | Description
 [**startIperf**](ServiceApi.md#startIperf) | **POST** /api/v1/iperf/start | 
 [**startIperfOld**](ServiceApi.md#startIperfOld) | **GET** /start-iperf | 
 [**startSession**](ServiceApi.md#startSession) | **POST** /api/v1/session/start | 
+[**stopIperf**](ServiceApi.md#stopIperf) | **POST** /api/v1/iperf/stop | 
 [**stopIperfOld**](ServiceApi.md#stopIperfOld) | **GET** /stop-iperf | 
-[**stopSession**](ServiceApi.md#stopSession) | **POST** /api/v1/iperf/stop | 
-[**stopSession_0**](ServiceApi.md#stopSession_0) | **POST** /api/v1/session/stop | 
+[**stopSession**](ServiceApi.md#stopSession) | **POST** /api/v1/session/stop | 
 
 
 <a name="startIperf"></a>
@@ -140,6 +140,46 @@ No authorization required
  - **Content-Type**: application/json
  - **Accept**: application/json
 
+<a name="stopIperf"></a>
+# **stopIperf**
+> stopIperf()
+
+
+
+
+
+### Example
+```java
+// Import classes:
+//import ru.scoltech.openran.speedtest.client.service.ApiException;
+//import ru.scoltech.openran.speedtest.client.service.api.ServiceApi;
+
+
+ServiceApi apiInstance = new ServiceApi();
+try {
+    apiInstance.stopIperf();
+} catch (ApiException e) {
+    System.err.println("Exception when calling ServiceApi#stopIperf");
+    e.printStackTrace();
+}
+```
+
+### Parameters
+This endpoint does not need any parameter.
+
+### Return type
+
+null (empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
 <a name="stopIperfOld"></a>
 # **stopIperfOld**
 > stopIperfOld()
@@ -200,46 +240,6 @@ try {
     apiInstance.stopSession();
 } catch (ApiException e) {
     System.err.println("Exception when calling ServiceApi#stopSession");
-    e.printStackTrace();
-}
-```
-
-### Parameters
-This endpoint does not need any parameter.
-
-### Return type
-
-null (empty response body)
-
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
- - **Content-Type**: application/json
- - **Accept**: application/json
-
-<a name="stopSession_0"></a>
-# **stopSession_0**
-> stopSession_0()
-
-
-
-
-
-### Example
-```java
-// Import classes:
-//import ru.scoltech.openran.speedtest.client.service.ApiException;
-//import ru.scoltech.openran.speedtest.client.service.api.ServiceApi;
-
-
-ServiceApi apiInstance = new ServiceApi();
-try {
-    apiInstance.stopSession_0();
-} catch (ApiException e) {
-    System.err.println("Exception when calling ServiceApi#stopSession_0");
     e.printStackTrace();
 }
 ```
