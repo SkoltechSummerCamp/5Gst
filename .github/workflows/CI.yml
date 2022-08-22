@@ -666,13 +666,13 @@ jobs:
       - name: upload artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: start-scripts
+          name: 5gst-selfhost
           path: |
             service.tar.gz
             balancer.tar.gz
             postgres.tar.gz
             docker-compose.yml 
-            docker_unpack.sh 
+            run-5gst-selfhost.sh 
 
 
 
