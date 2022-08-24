@@ -5,11 +5,10 @@ import ru.scoltech.openran.speedtest.client.service.ApiCallback
 import ru.scoltech.openran.speedtest.client.service.model.IperfArgs
 import ru.scoltech.openran.speedtest.task.impl.model.ApiClientHolder
 
-class StartServiceIperfTask(
-    private val args: String,
-) : AbstractServiceRequestTask<ApiClientHolder, Void?, ApiClientHolder>() {
+class StartServiceSessionTask :
+    AbstractServiceRequestTask<ApiClientHolder, Void?, ApiClientHolder>() {
     override fun sendRequest(argument: ApiClientHolder, callback: ApiCallback<Void?>): Call {
-        return argument.serviceApiClient.startIperfAsync(IperfArgs().iperfArgs(args), callback)
+        return argument.serviceApiClient.startSessionAsync(callback)
     }
 
     override fun processApiResult(argument: ApiClientHolder, apiResult: Void?): ApiClientHolder {

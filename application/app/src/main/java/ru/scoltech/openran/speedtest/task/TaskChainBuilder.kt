@@ -7,18 +7,24 @@ import ru.scoltech.openran.speedtest.util.Promise
 import ru.scoltech.openran.speedtest.util.TaskKiller
 
 class TaskChainBuilder<S : Any?> : TaskConsumer.ChainInitializer<S> {
-    private var tasks = mutableListOf<Task<out Any?, out Any?>>()
     private var onStop: () -> Unit = {}
     private var onFatalError: (String, Exception?) -> Unit = { _, _ -> }
 
     override fun initializeNewChain(): TaskConsumer<S> {
-        tasks = mutableListOf()
-        return TasksCollector(tasks)
+        return TasksCollector(mutableListOf())
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun finishChainCreation(): TaskChain<S> {
-        return TaskChain(tasks as MutableList<Task<Any?, Any?>>, onStop, onFatalError)
+    fun <R : Any?> finishChainCreation(
+        taskConsumer: TaskConsumer<R>,
+        onSuccess: (R) -> Unit,
+    ): TaskChain<S> {
+        return TaskChain(
+            taskConsumer.asTasksCollector().tasks as MutableList<Task<Any?, Any?>>,
+            onSuccess as (Any?) -> Unit,
+            onStop,
+            onFatalError,
+        )
     }
 
     fun onStop(onStop: () -> Unit): TaskChainBuilder<S> {
@@ -31,8 +37,16 @@ class TaskChainBuilder<S : Any?> : TaskConsumer.ChainInitializer<S> {
         return this
     }
 
-    private class TasksCollector<T : Any?>(
-        private val tasks: MutableList<Task<*, *>>
+    private fun <T : Any?> TaskConsumer<T>.asTasksCollector(): TasksCollector<T> {
+        @Suppress("UNCHECKED_CAST")
+        return this as? TasksCollector<T>
+            ?: throw IllegalArgumentException(
+                "Unexpected task consumer ${this::class}, expected ${TasksCollector::class}"
+            )
+    }
+
+    private inner class TasksCollector<T : Any?>(
+        val tasks: MutableList<Task<*, *>>
     ) : TaskConsumer<T> {
         override fun <R : Any?> andThen(task: Task<T, R>): TaskConsumer<R> {
             tasks.add(task)
@@ -71,55 +85,96 @@ class TaskChainBuilder<S : Any?> : TaskConsumer.ChainInitializer<S> {
         }
     }
 
-    private class FinallyTaskConsumerImpl<T : Any?, R : Any?>(
+    private inner class FinallyTaskConsumerImpl<T : Any?, R : Any?>(
         private val tasks: MutableList<Task<out Any?, out Any?>>,
         private val buildBlock: TaskConsumer.ChainInitializer<T>.() -> TaskConsumer<R>,
     ) : TaskConsumer.FinallyTaskConsumer<T, R> {
-        override fun andThenFinally(task: (T) -> Unit): TaskConsumer<R> {
-            tasks.add(TryTask(buildBlock, task))
+        override fun andThenFinally(task: Task<T, out Any?>): TaskConsumer<R> {
+            @Suppress("UNCHECKED_CAST")
+            tasks.add(TryTask(buildBlock, task as Task<T, Any?>))
             return TasksCollector(tasks)
         }
     }
 
-    private class TryTask<T : Any?, R : Any?>(
+    private inner class TryTask<T : Any?, R : Any?>(
         buildBlock: TaskConsumer.ChainInitializer<T>.() -> TaskConsumer<R>,
-        private val finallyTask: (T) -> Unit,
+        private val finallyTask: Task<T, Any?>,
     ) : Task<T, R> {
         private val tasks: List<Task<Any?, Any?>>
 
         init {
-            val taskChainBuilder = TaskChainBuilder<T>()
-            buildBlock(taskChainBuilder)
             @Suppress("UNCHECKED_CAST")
-            tasks = taskChainBuilder.tasks as MutableList<Task<Any?, Any?>>
+            tasks = buildBlock(TaskChainBuilder()).asTasksCollector().tasks
+                    as MutableList<Task<Any?, Any?>>
         }
 
-        private fun ((String, Exception?) -> Unit)?.withEndTask(
-            finallyArgument: T
-        ): ((String, Exception?) -> Unit) {
-            return { message, exception ->
-                finallyTask(finallyArgument)
-                this?.invoke(message, exception)
-            }
+        private fun buildTryChainOnSuccess(
+            argument: T,
+            onSuccess: ((R) -> Unit)?,
+            onError: ((String, Exception?) -> Unit)?,
+        ): (Any?) -> Unit = { chainResult ->
+            finallyTask.prepare(argument, TaskKiller())
+                .onSuccess {
+                    @Suppress("UNCHECKED_CAST")
+                    onSuccess?.invoke(chainResult as R)
+                }
+                .onError { message, exception ->
+                    onError?.invoke(message, exception)
+                }
+                .start()
+        }
+
+        private fun buildTryChainOnStop(
+            argument: T,
+            onError: ((String, Exception?) -> Unit)?,
+        ): () -> Unit = {
+            finallyTask.prepare(argument, TaskKiller())
+                .onSuccess {
+                    onError?.invoke("Stopped", null)
+                }
+                .onError { message, exception ->
+                    onError?.invoke("Caught {$message} during stop", exception)
+                }
+                .start()
+        }
+
+        private fun buildTryChainOnError(
+            argument: T,
+            onError: ((String, Exception?) -> Unit)?,
+        ): (String, Exception?) -> Unit = { rootMessage, rootException ->
+            finallyTask.prepare(argument, TaskKiller())
+                .onSuccess {
+                    onError?.invoke(rootMessage, rootException)
+                }
+                .onError { message, exception ->
+                    val resultException = when {
+                        rootException == null -> exception
+                        exception == null -> rootException
+                        else -> rootException.apply { addSuppressed(exception) }
+                    }
+
+                    onError?.invoke(
+                        "During catching error {$rootMessage} caught {$message}",
+                        resultException,
+                    )
+                }
+                .start()
         }
 
         override fun prepare(
             argument: T,
             killer: TaskKiller,
         ): Promise<(R) -> Unit, (String, Exception?) -> Unit> = Promise { onSuccess, onError ->
-            @Suppress("UNCHECKED_CAST")
-            val onSuccessTask = UnstoppableTask<R, Unit> {
-                finallyTask(argument)
-                onSuccess?.invoke(it)
-            } as Task<Any?, Any?>
-
             val tryChain = TaskChain<T>(
-                tasks + listOf(onSuccessTask),
-                { onError.withEndTask(argument).invoke("Stopped", null) },
-                onError.withEndTask(argument)
+                tasks,
+                buildTryChainOnSuccess(argument, onSuccess, onError),
+                buildTryChainOnStop(argument, onError),
+                buildTryChainOnError(argument, onError),
             )
 
-            killer.register { tryChain.stop() }
+            killer.register {
+                tryChain.stop()
+            }
             tryChain.start(argument)
         }
     }

@@ -19,6 +19,6 @@ interface TaskConsumer<T> {
     }
 
     interface FinallyTaskConsumer<T, R> {
-        fun andThenFinally(task: (T) -> Unit): TaskConsumer<R>
+        fun andThenFinally(task: Task<T, out Any?>): TaskConsumer<R>
     }
 }

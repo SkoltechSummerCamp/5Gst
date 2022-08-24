@@ -4,18 +4,18 @@ import com.squareup.okhttp.Call
 import ru.scoltech.openran.speedtest.client.balancer.ApiCallback
 import ru.scoltech.openran.speedtest.task.impl.model.ApiClientHolder
 
-class FiveGstLogoutTask : AbstractBalancerRequestTask<ApiClientHolder, Void, ApiClientHolder>() {
+class FiveGstLogoutTask : AbstractBalancerRequestTask<BalancerApi, Void?, BalancerApi>() {
     override fun sendRequest(
-        argument: ApiClientHolder,
-        callback: ApiCallback<Void>,
+        argument: BalancerApi,
+        callback: ApiCallback<Void?>,
     ): Call {
-        return argument.balancerApiClient.logoutAsync(callback)
+        return argument.logoutAsync(callback)
     }
 
     override fun processApiResult(
-        argument: ApiClientHolder,
-        apiResult: Void,
-    ): ApiClientHolder {
+        argument: BalancerApi,
+        apiResult: Void?,
+    ): BalancerApi {
         return argument
     }
 }

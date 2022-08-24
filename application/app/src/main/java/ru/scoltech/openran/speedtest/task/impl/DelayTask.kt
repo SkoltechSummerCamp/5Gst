@@ -5,7 +5,7 @@ import ru.scoltech.openran.speedtest.task.Task
 import ru.scoltech.openran.speedtest.util.Promise
 import ru.scoltech.openran.speedtest.util.TaskKiller
 
-data class DelayTask<T>(private val delayMillis: Long) : Task<T, T> {
+class DelayTask<T>(private val delayMillis: Long) : Task<T, T> {
     override fun prepare(
         argument: T,
         killer: TaskKiller

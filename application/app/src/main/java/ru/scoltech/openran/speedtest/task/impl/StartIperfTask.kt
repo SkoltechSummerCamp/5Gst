@@ -15,7 +15,7 @@ import java.util.*
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 
-data class StartIperfTask(
+class StartIperfTask(
     private val writableDir: String,
     private val args: String,
     private val speedParser: IperfOutputParser,

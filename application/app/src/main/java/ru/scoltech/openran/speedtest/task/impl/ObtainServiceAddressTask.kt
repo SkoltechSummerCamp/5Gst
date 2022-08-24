@@ -9,8 +9,7 @@ import ru.scoltech.openran.speedtest.client.service.api.ServiceApi
 import ru.scoltech.openran.speedtest.task.impl.model.ApiClientHolder
 import ru.scoltech.openran.speedtest.task.impl.model.ServerAddress
 
-data class ObtainServiceAddressesTask(
-    private val balancerApiBuilder: BalancerApiBuilder,
+class ObtainServiceAddressTask(
     private val serviceConnectTimeout: Int,
     private val serviceReadTimeout: Int,
     private val serviceWriteTimeout: Int,

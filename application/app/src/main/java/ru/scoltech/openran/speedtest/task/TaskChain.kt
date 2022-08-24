@@ -6,6 +6,7 @@ import kotlin.concurrent.withLock
 
 class TaskChain<S : Any?>(
     private val tasks: List<Task<Any?, Any?>>,
+    private val onSuccess: (Any?) -> Unit,
     private val onStop: () -> Unit,
     private val onFatalError: (String, Exception?) -> Unit,
 ) {
@@ -20,6 +21,7 @@ class TaskChain<S : Any?>(
     private fun prepare(argument: Any?, tasks: List<Task<Any?, Any?>>) {
         lock.withLock {
             if (tasks.isEmpty()) {
+                onSuccess(argument)
                 return
             } else if (stopped) {
                 onStop()
