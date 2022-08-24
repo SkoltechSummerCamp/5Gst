@@ -103,10 +103,8 @@ All URIs are relative to *https://localhost*
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
 *ServiceApi* | [**startIperf**](docs/ServiceApi.md#startIperf) | **POST** /api/v1/iperf/start | 
-*ServiceApi* | [**startIperfOld**](docs/ServiceApi.md#startIperfOld) | **GET** /start-iperf | 
 *ServiceApi* | [**startSession**](docs/ServiceApi.md#startSession) | **POST** /api/v1/session/start | 
 *ServiceApi* | [**stopIperf**](docs/ServiceApi.md#stopIperf) | **POST** /api/v1/iperf/stop | 
-*ServiceApi* | [**stopIperfOld**](docs/ServiceApi.md#stopIperfOld) | **GET** /stop-iperf | 
 *ServiceApi* | [**stopSession**](docs/ServiceApi.md#stopSession) | **POST** /api/v1/session/stop | 
 
 

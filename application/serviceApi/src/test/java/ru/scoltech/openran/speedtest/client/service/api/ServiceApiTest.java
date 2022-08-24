@@ -57,22 +57,6 @@ public class ServiceApiTest {
      *          if the Api call fails
      */
     @Test
-    public void startIperfOldTest() throws Exception {
-        String args = null;
-        api.startIperfOld(args);
-
-        // TODO: test validations
-    }
-    
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws Exception
-     *          if the Api call fails
-     */
-    @Test
     public void startSessionTest() throws Exception {
         api.startSession();
 
@@ -90,21 +74,6 @@ public class ServiceApiTest {
     @Test
     public void stopIperfTest() throws Exception {
         api.stopIperf();
-
-        // TODO: test validations
-    }
-    
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws Exception
-     *          if the Api call fails
-     */
-    @Test
-    public void stopIperfOldTest() throws Exception {
-        api.stopIperfOld();
 
         // TODO: test validations
     }
