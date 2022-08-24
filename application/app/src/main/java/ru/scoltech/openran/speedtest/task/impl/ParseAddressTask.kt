@@ -5,16 +5,16 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ru.scoltech.openran.speedtest.backend.parseInetSocketAddress
 import ru.scoltech.openran.speedtest.task.Task
+import ru.scoltech.openran.speedtest.task.impl.model.ServerAddress
 import ru.scoltech.openran.speedtest.util.Promise
 import ru.scoltech.openran.speedtest.util.TaskKiller
-import java.net.InetSocketAddress
 import java.net.UnknownHostException
 
-class ParseAddressTask : Task<String, InetSocketAddress> {
+class ParseAddressTask : Task<String, ServerAddress> {
     override fun prepare(
         argument: String,
         killer: TaskKiller
-    ): Promise<(InetSocketAddress) -> Unit, (String, Exception?) -> Unit> {
+    ): Promise<(ServerAddress) -> Unit, (String, Exception?) -> Unit> {
         return Promise { onSuccess, onError ->
             CoroutineScope(Dispatchers.IO).launch {
                 val address = try {
@@ -27,7 +27,12 @@ class ParseAddressTask : Task<String, InetSocketAddress> {
                     onError?.invoke("Unknown host $argument", e)
                     return@launch
                 }
-                onSuccess?.invoke(address)
+                val host = address.address.hostAddress
+                    ?: kotlin.run {
+                        onError?.invoke("Parsed address $address has no hostAddress", null)
+                        return@launch
+                    }
+                onSuccess?.invoke(ServerAddress(host, address.port))
             }
         }
     }

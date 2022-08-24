@@ -34,9 +34,6 @@ class SessionWebService:
     )
 
     def start_session(self) -> Response:
-        if self._is_in_session:
-            return Response("Session was already started", status=status.HTTP_200_OK)
-
         balancer_communication_watchdog_service.stop()
         self._stop_watchdog_service.start()
         self._is_in_session = True

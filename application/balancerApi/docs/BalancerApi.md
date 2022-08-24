@@ -5,6 +5,8 @@ All URIs are relative to *https://localhost*
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**acquireService**](BalancerApi.md#acquireService) | **POST** /Skoltech_OpenRAN_5G/iperf_load_balancer/0.1.0/service/acquire/ | 
+[**login**](BalancerApi.md#login) | **POST** /Skoltech_OpenRAN_5G/iperf_load_balancer/0.1.0/login/ | 
+[**logout**](BalancerApi.md#logout) | **POST** /Skoltech_OpenRAN_5G/iperf_load_balancer/0.1.0/logout/ | 
 [**ping**](BalancerApi.md#ping) | **GET** /Skoltech_OpenRAN_5G/iperf_load_balancer/0.1.0/ping/ | 
 [**registerService**](BalancerApi.md#registerService) | **POST** /Skoltech_OpenRAN_5G/iperf_load_balancer/0.1.0/service/ | 
 [**unregisterService**](BalancerApi.md#unregisterService) | **DELETE** /Skoltech_OpenRAN_5G/iperf_load_balancer/0.1.0/service/ | 
@@ -21,9 +23,19 @@ Acquires service for further iperf tests
 ### Example
 ```java
 // Import classes:
+//import ru.scoltech.openran.speedtest.client.balancer.ApiClient;
 //import ru.scoltech.openran.speedtest.client.balancer.ApiException;
+//import ru.scoltech.openran.speedtest.client.balancer.Configuration;
+//import ru.scoltech.openran.speedtest.client.balancer.auth.*;
 //import ru.scoltech.openran.speedtest.client.balancer.api.BalancerApi;
 
+ApiClient defaultClient = Configuration.getDefaultApiClient();
+
+// Configure API key authorization: 5Gst
+ApiKeyAuth 5Gst = (ApiKeyAuth) defaultClient.getAuthentication("5Gst");
+5Gst.setApiKey("YOUR API KEY");
+// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+//5Gst.setApiKeyPrefix("Token");
 
 BalancerApi apiInstance = new BalancerApi();
 try {
@@ -44,7 +56,98 @@ This endpoint does not need any parameter.
 
 ### Authorization
 
+[5Gst](../README.md#5Gst)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+<a name="login"></a>
+# **login**
+> FiveGstToken login()
+
+
+
+Log in to 5Gst service
+
+### Example
+```java
+// Import classes:
+//import ru.scoltech.openran.speedtest.client.balancer.ApiException;
+//import ru.scoltech.openran.speedtest.client.balancer.api.BalancerApi;
+
+
+BalancerApi apiInstance = new BalancerApi();
+try {
+    FiveGstToken result = apiInstance.login();
+    System.out.println(result);
+} catch (ApiException e) {
+    System.err.println("Exception when calling BalancerApi#login");
+    e.printStackTrace();
+}
+```
+
+### Parameters
+This endpoint does not need any parameter.
+
+### Return type
+
+[**FiveGstToken**](FiveGstToken.md)
+
+### Authorization
+
 No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+<a name="logout"></a>
+# **logout**
+> logout()
+
+
+
+Log out from 5Gst service
+
+### Example
+```java
+// Import classes:
+//import ru.scoltech.openran.speedtest.client.balancer.ApiClient;
+//import ru.scoltech.openran.speedtest.client.balancer.ApiException;
+//import ru.scoltech.openran.speedtest.client.balancer.Configuration;
+//import ru.scoltech.openran.speedtest.client.balancer.auth.*;
+//import ru.scoltech.openran.speedtest.client.balancer.api.BalancerApi;
+
+ApiClient defaultClient = Configuration.getDefaultApiClient();
+
+// Configure API key authorization: 5Gst
+ApiKeyAuth 5Gst = (ApiKeyAuth) defaultClient.getAuthentication("5Gst");
+5Gst.setApiKey("YOUR API KEY");
+// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+//5Gst.setApiKeyPrefix("Token");
+
+BalancerApi apiInstance = new BalancerApi();
+try {
+    apiInstance.logout();
+} catch (ApiException e) {
+    System.err.println("Exception when calling BalancerApi#logout");
+    e.printStackTrace();
+}
+```
+
+### Parameters
+This endpoint does not need any parameter.
+
+### Return type
+
+null (empty response body)
+
+### Authorization
+
+[5Gst](../README.md#5Gst)
 
 ### HTTP request headers
 

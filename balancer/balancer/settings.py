@@ -159,11 +159,21 @@ LOGGING = {
         'handlers': ['console'],
         'level': os.getenv('LOG_LEVEL', 'DEBUG'),
     },
+    'loggers': {
+        'django.db.backends': {
+            'level': os.getenv('DB_LOG_LEVEL', 'INFO'),
+        }
+    }
 }
 
+# TODO not importing because of drf_yasg :(
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [],
-    'DEFAULT_PERMISSION_CLASSES': [],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'services.authentication.FiveGstAnonymousAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
 }
 
 DEFAULT_SWAGGER_TAG = os.getenv('DEFAULT_SWAGGER_TAG', 'balancer')
@@ -195,7 +205,14 @@ SWAGGER_SETTINGS = {
     ),
     'DEFAULT_GENERATOR_CLASS': SpeedtestAPISchemeGenerator,
     'DEFAULT_AUTO_SCHEMA_CLASS': SpeedtestSwaggerAutoSchema,
-    'SECURITY_DEFINITIONS': {},
+    'SECURITY_DEFINITIONS': {
+        '5Gst': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+        },
+    },
+
 }
 
 # Internationalization
@@ -215,3 +232,5 @@ USE_TZ = True
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 SERVICE_URL_SCHEME = os.getenv('SERVICE_URL_SCHEME', 'https')
+
+FIVE_GST_TOKEN_LIFETIME_SECONDS = int(os.getenv('FIVE_GST_TOKEN_LIFETIME_SECONDS', 60 * 5))

@@ -2,18 +2,16 @@ package ru.scoltech.openran.speedtest.manager
 
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
+import com.squareup.okhttp.HttpUrl
 import ru.scoltech.openran.speedtest.R
-import ru.scoltech.openran.speedtest.client.balancer.model.ServerAddressResponse
 import ru.scoltech.openran.speedtest.domain.StageConfiguration
 import ru.scoltech.openran.speedtest.parser.MultithreadedIperfOutputParser
 import ru.scoltech.openran.speedtest.parser.StageConfigurationParser
-import ru.scoltech.openran.speedtest.task.TaskChain
-import ru.scoltech.openran.speedtest.task.TaskChainBuilder
+import ru.scoltech.openran.speedtest.task.*
 import ru.scoltech.openran.speedtest.task.impl.*
+import ru.scoltech.openran.speedtest.task.impl.model.ApiClientHolder
 import ru.scoltech.openran.speedtest.util.SkipThenAverageEqualizer
-import java.net.InetSocketAddress
 import java.util.*
-import java.util.concurrent.atomic.AtomicReference
 import java.util.concurrent.locks.ReentrantLock
 import java.util.function.BiConsumer
 import java.util.function.Consumer
@@ -49,22 +47,52 @@ private constructor(
     }
 
     fun buildChainUsingBalancer(idleBetweenTasksMelees: Long): TaskChain<String> {
-        val balancerApiBuilder = BalancerApiBuilder()
-            .setConnectTimeout(DEFAULT_TIMEOUT)
-            .setReadTimeout(DEFAULT_TIMEOUT)
-            .setWriteTimeout(DEFAULT_TIMEOUT)
-
-        val obtainServiceAddressesTask = ObtainServiceAddressesTask(balancerApiBuilder)
-
-        val balancerAddress = AtomicReference<InetSocketAddress>()
         val chainBuilder = TaskChainBuilder<String>().onFatalError(onFatalError).onStop(onStop)
-        var taskConsumer = chainBuilder.initializeNewChain()
+        val taskConsumer = chainBuilder.initializeNewChain()
             .andThen(ParseAddressTask())
-            .andThenUnstoppable {
-                balancerAddress.set(it)
-                it
-            }
+            .andThenUnstoppable { balancerAddress ->
+                val balancerBasePath = HttpUrl.Builder()
+                    .scheme("http")  // TODO https
+                    .host(balancerAddress.host)
+                    .port(balancerAddress.port)
+                    .build()
+                    .toString()
+                    .dropLast(1)  // drops trailing '/'
 
+                BalancerApiBuilder()
+                    .setConnectTimeout(DEFAULT_TIMEOUT)
+                    .setReadTimeout(DEFAULT_TIMEOUT)
+                    .setWriteTimeout(DEFAULT_TIMEOUT)
+                    .setBasePath(balancerBasePath)
+                    .let { BalancerApi(it) }
+            }
+            .andThenTry(FiveGstLoginTask()) {
+                val obtainServiceAddressTask = ObtainServiceAddressTask(
+                    DEFAULT_TIMEOUT,
+                    DEFAULT_TIMEOUT,
+                    DEFAULT_TIMEOUT,
+                )
+
+                initializeNewChain()
+                    .andThen(obtainServiceAddressTask)
+                    .andThenTry {
+                        initializeNewChain()
+                            .andThen(StartServiceSessionTask())
+                            .let { addStagesToChain(it, idleBetweenTasksMelees) }
+                    }
+                    .andThenFinally(StopServiceSessionTask())
+            }
+            .andThenFinally(FiveGstLogoutTask())
+
+        return chainBuilder.finishChainCreation(taskConsumer) {
+            onFinish()
+        }
+    }
+
+    private fun addStagesToChain(
+        taskConsumer: TaskConsumer<ApiClientHolder>,
+        idleBetweenTasksMelees: Long,
+    ): TaskConsumer<ApiClientHolder> {
         val pipelinePreferences = context.getSharedPreferences(
             "iperf_args_pipeline",
             AppCompatActivity.MODE_PRIVATE,
@@ -72,6 +100,7 @@ private constructor(
         val immutableDeviceArgsPrefix = context.getString(R.string.immutable_device_args)
         val immutableServerArgsPrefix = context.getString(R.string.immutable_server_args)
 
+        var mutableTaskConsumer = taskConsumer
         stageConfigurationParser.parseFromPreferences(
             pipelinePreferences,
             context::getString,
@@ -81,10 +110,9 @@ private constructor(
             }
 
             val startServiceIperfTask = StartServiceIperfTask(
-                balancerApiBuilder,
                 "$immutableServerArgsPrefix ${stageConfiguration.serverArgs}",
             )
-            val stopServiceIperfTask = StopServiceIperfTask(balancerApiBuilder)
+            val stopServiceIperfTask = StopServiceIperfTask()
 
             val startIperfTask = StartIperfTask(
                 context.filesDir.absolutePath,
@@ -94,34 +122,26 @@ private constructor(
                     DEFAULT_EQUALIZER_DOWNLOAD_VALUES_SKIP,
                     DEFAULT_EQUALIZER_MAX_STORING
                 ),
-                balancerApiBuilder.connectTimeout.toLong(),
+                DEFAULT_TIMEOUT.toLong(),
                 onStageSpeedUpdate,
                 onStageFinish,
                 onLog
             )
 
-            taskConsumer = taskConsumer.andThen(obtainServiceAddressesTask)
-                .andThenUnstoppable { listOf(it) }
-                .andThen(
-                    PingServiceAddressesTask(
-                        balancerApiBuilder.connectTimeout.toLong(),
-                        onPingUpdate
-                    )
-                )
+            mutableTaskConsumer = mutableTaskConsumer
+                .withArgumentExtracted { it.iperfAddress }
+                .doTask(PingAddressTask(DEFAULT_TIMEOUT.toLong(), onPingUpdate))
                 .andThenTry {
                     initializeNewChain()
                         .andThen(startServiceIperfTask)
-                        .andThenUnstoppable {
-                            onStageStart(stageConfiguration)
-                            it
-                        }
-                        .andThen(startIperfTask)
-                }.andThenFinally(stopServiceIperfTask)
+                        .withArgumentKeptDoUnstoppableTask { onStageStart(stageConfiguration) }
+                        .withArgumentExtracted { it.iperfAddress }
+                        .doTask(startIperfTask)
+                }
+                .andThenFinally(stopServiceIperfTask)
                 .andThen(DelayTask(idleBetweenTasksMelees))
-                .andThenUnstoppable { balancerAddress.get() }
         }
-            taskConsumer.andThenUnstoppable { onFinish() }
-        return chainBuilder.finishChainCreation()
+        return mutableTaskConsumer
     }
 
     fun buildDirectIperfChain(): TaskChain<String> {
@@ -130,12 +150,9 @@ private constructor(
                 context.getString(R.string.download_device_iperf_args)
 
         val chainBuilder = TaskChainBuilder<String>().onFatalError(onFatalError).onStop(onStop)
-        chainBuilder.initializeNewChain()
+        val taskConsumer = chainBuilder.initializeNewChain()
             .andThen(ParseAddressTask())
-            .andThenUnstoppable {
-                listOf(ServerAddressResponse().ip(it.address.hostAddress).portIperf(it.port))
-            }
-            .andThen(PingServiceAddressesTask(DEFAULT_TIMEOUT.toLong(), onPingUpdate))
+            .andThen(PingAddressTask(DEFAULT_TIMEOUT.toLong(), onPingUpdate))
             .andThenUnstoppable {
                 onStageStart(StageConfiguration("Direct iperf stage", "?", deviceArgs))
                 it
@@ -155,8 +172,9 @@ private constructor(
                     onLog
                 )
             )
-            .andThenUnstoppable { onFinish() }
-        return chainBuilder.finishChainCreation()
+        return chainBuilder.finishChainCreation(taskConsumer) {
+            onFinish()
+        }
     }
 
     fun stop() {

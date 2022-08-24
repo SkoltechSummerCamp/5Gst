@@ -13,6 +13,7 @@
 
 package ru.scoltech.openran.speedtest.client.balancer.api;
 
+import ru.scoltech.openran.speedtest.client.balancer.model.FiveGstToken;
 import ru.scoltech.openran.speedtest.client.balancer.model.ServerAddressRequest;
 import ru.scoltech.openran.speedtest.client.balancer.model.ServerAddressResponse;
 import org.junit.Test;
@@ -44,6 +45,36 @@ public class BalancerApiTest {
     @Test
     public void acquireServiceTest() throws Exception {
         ServerAddressResponse response = api.acquireService();
+
+        // TODO: test validations
+    }
+    
+    /**
+     * 
+     *
+     * Log in to 5Gst service
+     *
+     * @throws Exception
+     *          if the Api call fails
+     */
+    @Test
+    public void loginTest() throws Exception {
+        FiveGstToken response = api.login();
+
+        // TODO: test validations
+    }
+    
+    /**
+     * 
+     *
+     * Log out from 5Gst service
+     *
+     * @throws Exception
+     *          if the Api call fails
+     */
+    @Test
+    public void logoutTest() throws Exception {
+        api.logout();
 
         // TODO: test validations
     }

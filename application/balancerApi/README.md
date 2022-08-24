@@ -82,7 +82,14 @@ import java.util.*;
 public class BalancerApiExample {
 
     public static void main(String[] args) {
+        ApiClient defaultClient = Configuration.getDefaultApiClient();
         
+        // Configure API key authorization: 5Gst
+        ApiKeyAuth 5Gst = (ApiKeyAuth) defaultClient.getAuthentication("5Gst");
+        5Gst.setApiKey("YOUR API KEY");
+        // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+        //5Gst.setApiKeyPrefix("Token");
+
         BalancerApi apiInstance = new BalancerApi();
         try {
             ServerAddressResponse result = apiInstance.acquireService();
@@ -103,6 +110,8 @@ All URIs are relative to *https://localhost*
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
 *BalancerApi* | [**acquireService**](docs/BalancerApi.md#acquireService) | **POST** /Skoltech_OpenRAN_5G/iperf_load_balancer/0.1.0/service/acquire/ | 
+*BalancerApi* | [**login**](docs/BalancerApi.md#login) | **POST** /Skoltech_OpenRAN_5G/iperf_load_balancer/0.1.0/login/ | 
+*BalancerApi* | [**logout**](docs/BalancerApi.md#logout) | **POST** /Skoltech_OpenRAN_5G/iperf_load_balancer/0.1.0/logout/ | 
 *BalancerApi* | [**ping**](docs/BalancerApi.md#ping) | **GET** /Skoltech_OpenRAN_5G/iperf_load_balancer/0.1.0/ping/ | 
 *BalancerApi* | [**registerService**](docs/BalancerApi.md#registerService) | **POST** /Skoltech_OpenRAN_5G/iperf_load_balancer/0.1.0/service/ | 
 *BalancerApi* | [**unregisterService**](docs/BalancerApi.md#unregisterService) | **DELETE** /Skoltech_OpenRAN_5G/iperf_load_balancer/0.1.0/service/ | 
@@ -110,14 +119,20 @@ Class | Method | HTTP request | Description
 
 ## Documentation for Models
 
+ - [FiveGstToken](docs/FiveGstToken.md)
  - [ServerAddressRequest](docs/ServerAddressRequest.md)
  - [ServerAddressResponse](docs/ServerAddressResponse.md)
 
 
 ## Documentation for Authorization
 
-All endpoints do not require authorization.
 Authentication schemes defined for the API:
+### 5Gst
+
+- **Type**: API key
+- **API key parameter name**: Authorization
+- **Location**: HTTP header
+
 
 ## Recommendation
 
